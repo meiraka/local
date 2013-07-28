@@ -16,6 +16,14 @@ SOFT_LEFT_ARROW=` echo "\u2b83"`
 
 #print out left prompt
 function left_prompt {
+  sec=`date "+%s"`
+  if [ `expr $sec % 2` -eq 1 ]; then
+    COLOR_BG_LPROMPT=${COLOR_BG_LPROMPT1}
+    COLOR_FG_LPROMPT=${COLOR_FG_LPROMPT1}
+  else
+    COLOR_BG_LPROMPT=${COLOR_BG_LPROMPT2}
+    COLOR_FG_LPROMPT=${COLOR_FG_LPROMPT2}
+  fi
   PROMPT_TEXT="> "
 
   # toggle arrow by vi INSERT/NORMAL mode
@@ -49,24 +57,22 @@ ${VCS_BRANCH_TEXT}\
   if [ -n "$TMUX" ]; then
     HOSTNAME_TEXT=""
     HOSTNAME_TMUX_TEXT="\
-#[bg=colour${COLOR_LPROMPT}]\
+#[bg=colour${COLOR_BG_LPROMPT}]\
 ${HARD_RIGHT_ARROW}\
-#[default,bg=colour${COLOR_LPROMPT}]\
+#[default,fg=colour${COLOR_FG_LPROMPT},bg=colour${COLOR_BG_LPROMPT}]\
 #(whoami)\
 #[bold]\
 ${SOFT_RIGHT_ARROW}\
-#[default]\
-#[bg=colour${COLOR_LPROMPT}]\
+#[default,fg=colour${COLOR_FG_LPROMPT},bg=colour${COLOR_BG_LPROMPT}]\
 #(hostname)\
-#[bg=colour236,fg=colour${COLOR_LPROMPT}]\
+#[bg=colour236,fg=colour${COLOR_BG_LPROMPT}]\
 ${HARD_RIGHT_ARROW}\
 "
     tmux set -g status-left "${VCS_TMUX_TEXT}${HOSTNAME_TMUX_TEXT}" > /dev/null
   else
     HOSTNAME_TEXT="%n@%m "
   fi
-  
-  echo "%F{$COLOR_LPROMPT}${HOSTNAME_TEXT}${PROMPT_TEXT}%f%F{$COLOR_MAIN}"
+  echo "%F{$COLOR_BG_LPROMPT}${HOSTNAME_TEXT}${PROMPT_TEXT}%f%F{$COLOR_MAIN}"
 }
 
 
@@ -106,4 +112,4 @@ setopt prompt_subst
 
 PROMPT="`left_prompt`"
 RPROMPT="`right_prompt`"
-SPROMPT="%F{$COLOR_LPROMPT}%{$suggest%}(＠ﾟ△ﾟ%)ノ < もしかして %B%r%b かな? [そう!(y), 違う!(n),a,e] > "
+SPROMPT="%F{$COLOR_BG_LPROMPT}%{$suggest%}(＠ﾟ△ﾟ%)ノ < もしかして %B%r%b かな? [そう!(y), 違う!(n),a,e] > "
