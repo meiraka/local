@@ -1,5 +1,18 @@
 # zsh prompt settings.
 
+autoload -Uz vcs_info
+
+HARD_RIGHT_ARROW=`echo "\u2b80"`
+SOFT_RIGHT_ARROW=`echo "\u2b81"`
+HARD_LEFT_ARROW=` echo "\u2b82"`
+SOFT_LEFT_ARROW=` echo "\u2b83"`
+
+# if not power lined fonts.
+#HARD_RIGHT_ARROW=""
+#SOFT_RIGHT_ARROW=""
+#HARD_LEFT_ARROW=""
+#SOFT_LEFT_ARROW=""
+
 
 #print out left prompt
 function left_prompt {
@@ -15,15 +28,45 @@ function left_prompt {
     ;;
   esac
 
+  # vcs branch
+  if [ -e ".git" ]; then
+    VCS_TEXT="git"
+    VCS_REMOTE_TEXT=`git config --list | grep "origin.url" | cut -d"=" -f 2`
+    VCS_BRANCH_TEXT=`git branch | grep "\*" | sed "s/\* //"`
+    VCS_TMUX_TEXT="\
+#[bg=colour${COLOR_VCS_REMOTE}]\
+${VCS_REMOTE_TEXT}\
+#[fg=colour${COLOR_VCS_REMOTE},bg=colour${COLOR_VCS_BRANCH}]\
+${HARD_RIGHT_ARROW}\
+#[default,bg=colour${COLOR_VCS_BRANCH}]\
+${VCS_BRANCH_TEXT}\
+#[fg=colour${COLOR_VCS_BRANCH}]"
+  else
+    VCS_BRANCH=""
+  fi
+
   # show user and hostname tmux status or zsh prompt
   if [ -n "$TMUX" ]; then
     HOSTNAME_TEXT=""
-    tmux set -g status-left "#(whoami)@#(hostname)" > /dev/null
+    HOSTNAME_TMUX_TEXT="\
+#[bg=colour${COLOR_LPROMPT}]\
+${HARD_RIGHT_ARROW}\
+#[default,bg=colour${COLOR_LPROMPT}]\
+#(whoami)\
+#[bold]\
+${SOFT_RIGHT_ARROW}\
+#[default]\
+#[bg=colour${COLOR_LPROMPT}]\
+#(hostname)\
+#[bg=colour236,fg=colour${COLOR_LPROMPT}]\
+${HARD_RIGHT_ARROW}\
+"
+    tmux set -g status-left "${VCS_TMUX_TEXT}${HOSTNAME_TMUX_TEXT}" > /dev/null
   else
     HOSTNAME_TEXT="%n@%m "
   fi
   
-  echo "%F{$COLOR_LPROMPT}${HOSTNAME_TEXT}${PROMPT_TEXT}%F{$COLOR_MAIN}"
+  echo "%F{$COLOR_LPROMPT}${HOSTNAME_TEXT}${PROMPT_TEXT}%f%F{$COLOR_MAIN}"
 }
 
 

@@ -8,6 +8,8 @@ fi
  
 COLOR_MAIN=255
 COLOR_LPROMPT=213
+COLOR_VCS_REMOTE=042
+COLOR_VCS_BRANCH=044
 
 # load from dircolors
 # echo > $LS_COLORS >> ~/local/etc/zsh/colorrc
