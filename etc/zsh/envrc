@@ -1,0 +1,10 @@
+export PATH=$PATH:~/local/bin:~/bin
+eval $(dircolors -b ~/local/etc/dir_colors)
+
+export LANG=ja_JP.UTF-8
+
+HISTFILE="$HOME/.zhistory"
+HISTSIZE=100000
+SAVEHIST=100000
+export EDITOR=vi
+

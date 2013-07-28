@@ -1,0 +1,66 @@
+# zsh prompt settings.
+
+
+#print out left prompt
+function left_prompt {
+  PROMPT_TEXT="> "
+
+  # toggle arrow by vi INSERT/NORMAL mode
+  case $KEYMAP in
+    vicmd)
+      PROMPT_TEXT="< "
+    ;;
+    main|viins)
+      PROMPT_TEXT="> "
+    ;;
+  esac
+
+  # show user and hostname tmux status or zsh prompt
+  if [ -n "$TMUX" ]; then
+    HOSTNAME_TEXT=""
+    tmux set -g status-left "#(whoami)@#(hostname)" > /dev/null
+  else
+    HOSTNAME_TEXT="%n@%m "
+  fi
+  
+  echo "%F{$COLOR_LPROMPT}${HOSTNAME_TEXT}${PROMPT_TEXT}%F{$COLOR_MAIN}"
+}
+
+
+# print out right prompt
+function right_prompt {
+  PROMPT_TEXT="[zsh@%~]"
+
+  # show NORMAL message if vi NORMAL mode.
+  case $KEYMAP in
+    vicmd)
+      PROMPT_TEXT="--NORMAL--"
+    ;;
+    viins)
+      PROMPT_TEXT="--INSERT--"
+    ;;
+  esac
+
+  echo "${PROMPT_TEXT}"
+}
+
+
+# re eval prompt text
+function zle-line-init zle-keymap-select {
+
+  PROMPT="`left_prompt`"
+  RPROMPT="`right_prompt`"
+
+  zle reset-prompt
+}
+
+
+zle -N zle-line-init
+zle -N zle-keymap-select
+
+setopt print_exit_value
+setopt prompt_subst
+
+PROMPT="`left_prompt`"
+RPROMPT="`right_prompt`"
+SPROMPT="%F{$COLOR_LPROMPT}%{$suggest%}(＠ﾟ△ﾟ%)ノ < もしかして %B%r%b かな? [そう!(y), 違う!(n),a,e] > "
