@@ -24,39 +24,38 @@ function left_prompt {
     COLOR_BG_LPROMPT=${COLOR_BG_LPROMPT2}
     COLOR_FG_LPROMPT=${COLOR_FG_LPROMPT2}
   fi
-  PROMPT_TEXT="> "
+  LEFT_TMUX_TEXT=""
+  LEFT_PROMPT_TEXT="> "
 
   # toggle arrow by vi INSERT/NORMAL mode
   case $KEYMAP in
     vicmd)
-      PROMPT_TEXT="< "
+      LEFT_PROMPT_TEXT="< "
     ;;
     main|viins)
-      PROMPT_TEXT="> "
+      LEFT_PROMPT_TEXT="> "
     ;;
   esac
 
   # vcs branch
-  if [ -e ".git" ]; then
+  if git status > /dev/null 2> /dev/null; then
     VCS_TEXT="git"
     VCS_REMOTE_TEXT=`git config --list | grep "origin.url" | cut -d"=" -f 2`
     VCS_BRANCH_TEXT=`git branch | grep "\*" | sed "s/\* //"`
-    VCS_TMUX_TEXT="\
-#[bg=colour${COLOR_VCS_REMOTE}]\
+    LEFT_TMUX_TEXT=${LEFT_TMUX_TEXT}"\
+#[fg=colour${COLOR_FG_VCS_REMOTE},bg=colour${COLOR_BG_VCS_REMOTE}]\
 ${VCS_REMOTE_TEXT}\
-#[fg=colour${COLOR_VCS_REMOTE},bg=colour${COLOR_VCS_BRANCH}]\
+#[fg=colour${COLOR_BG_VCS_REMOTE},bg=colour${COLOR_BG_VCS_BRANCH}]\
 ${HARD_RIGHT_ARROW}\
-#[default,bg=colour${COLOR_VCS_BRANCH}]\
+#[default,fg=colour${COLOR_FG_VCS_BRANCH},bg=colour${COLOR_BG_VCS_BRANCH}]\
 ${VCS_BRANCH_TEXT}\
-#[fg=colour${COLOR_VCS_BRANCH}]"
-  else
-    VCS_BRANCH=""
+#[fg=colour${COLOR_BG_VCS_BRANCH}]"
   fi
+
 
   # show user and hostname tmux status or zsh prompt
   if [ -n "$TMUX" ]; then
-    HOSTNAME_TEXT=""
-    HOSTNAME_TMUX_TEXT="\
+    LEFT_TMUX_TEXT=${LEFT_TMUX_TEXT}"\
 #[bg=colour${COLOR_BG_LPROMPT}]\
 ${HARD_RIGHT_ARROW}\
 #[default,fg=colour${COLOR_FG_LPROMPT},bg=colour${COLOR_BG_LPROMPT}]\
@@ -68,11 +67,11 @@ ${SOFT_RIGHT_ARROW}\
 #[bg=colour236,fg=colour${COLOR_BG_LPROMPT}]\
 ${HARD_RIGHT_ARROW}\
 "
-    tmux set -g status-left "${VCS_TMUX_TEXT}${HOSTNAME_TMUX_TEXT}" > /dev/null
+    tmux set -g status-left "${LEFT_TMUX_TEXT}" > /dev/null
   else
-    HOSTNAME_TEXT="%n@%m "
+    LEFT_PROMPT_TEXT="%n@%m "${LEFT_PROMPT_TEXT}
   fi
-  echo "%F{$COLOR_BG_LPROMPT}${HOSTNAME_TEXT}${PROMPT_TEXT}%f%F{$COLOR_MAIN}"
+  echo "%F{$COLOR_BG_LPROMPT}${LEFT_PROMPT_TEXT}%f%F{$COLOR_MAIN}"
 }
 
 
