@@ -24,7 +24,10 @@ function left_prompt {
     COLOR_BG_LPROMPT=${COLOR_BG_LPROMPT2}
     COLOR_FG_LPROMPT=${COLOR_FG_LPROMPT2}
   fi
-  LEFT_TMUX_TEXT=""
+  LEFT_TMUX_TEXT="\
+#[fg=colour${COLOR_FG_TMUX},bg=colour${COLOR_BG_TMUX}]\
+#S:#I\
+#[fg=colour${COLOR_BG_TMUX}]"
   LEFT_PROMPT_TEXT="> "
 
   # toggle arrow by vi INSERT/NORMAL mode
@@ -43,7 +46,9 @@ function left_prompt {
     VCS_REMOTE_TEXT=`git config --list | grep "origin.url" | cut -d"=" -f 2`
     VCS_BRANCH_TEXT=`git branch | grep "\*" | sed "s/\* //"`
     LEFT_TMUX_TEXT=${LEFT_TMUX_TEXT}"\
-#[fg=colour${COLOR_FG_VCS_REMOTE},bg=colour${COLOR_BG_VCS_REMOTE}]\
+#[bg=colour${COLOR_BG_VCS_REMOTE}]\
+${HARD_RIGHT_ARROW}
+#[default,fg=colour${COLOR_FG_VCS_REMOTE},bg=colour${COLOR_BG_VCS_REMOTE}]\
 ${VCS_REMOTE_TEXT}\
 #[fg=colour${COLOR_BG_VCS_REMOTE},bg=colour${COLOR_BG_VCS_BRANCH}]\
 ${HARD_RIGHT_ARROW}\
@@ -67,7 +72,7 @@ ${SOFT_RIGHT_ARROW}\
 #[bg=colour236,fg=colour${COLOR_BG_LPROMPT}]\
 ${HARD_RIGHT_ARROW}\
 "
-    tmux set -g status-left "${LEFT_TMUX_TEXT}" > /dev/null
+    tmux set -g status-left "${LEFT_TMUX_TEXT}" > /dev/null 2> /dev/null
   else
     LEFT_PROMPT_TEXT="%n@%m "${LEFT_PROMPT_TEXT}
   fi
