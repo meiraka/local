@@ -1,10 +1,9 @@
 # modules
 source ~/local/etc/zsh/mods/*rc
-source ~/local/etc/zsh/options
-source ~/local/etc/zsh/keybindrc
-source ~/local/etc/zsh/colorrc
-source ~/local/etc/zsh/promptrc
-source ~/local/etc/zsh/aliasrc
-source ~/local/etc/zsh/envrc
+source ~/local/etc/zsh/env.zsh
+source ~/local/etc/zsh/color.zsh
+source ~/local/etc/zsh/keybind.zsh
+source ~/local/etc/zsh/prompt.zsh
+source ~/local/etc/zsh/alias.zsh
 
 
