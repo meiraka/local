@@ -8,3 +8,5 @@ HISTSIZE=100000
 SAVEHIST=100000
 export EDITOR=vi
 setopt correct
+setopt hist_ignore_dups
+setopt share_history

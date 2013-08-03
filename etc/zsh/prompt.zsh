@@ -91,7 +91,7 @@ ${HARD_RIGHT_ARROW}"
 
 # print out right prompt
 function right_prompt {
-  PROMPT_TEXT="[zsh@%~]"
+  PROMPT_TEXT="%F{$COLOR_BG_RPROMPT}[zsh@%~]"
 
   # show NORMAL message if vi NORMAL mode.
   case $KEYMAP in

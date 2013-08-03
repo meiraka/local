@@ -8,8 +8,8 @@ zle -A .backward-delete-char vi-backward-delete-char
 bindkey "[3~" delete-char
 
 
-function history-all { history -E 1 }
 # tcsh like history search
+function history-all { history -E 1 }
 autoload history-search-end
 zle -N history-beginning-search-backward-end history-search-end
 zle -N history-beginning-search-forward-end history-search-end
