@@ -1,8 +1,12 @@
 bindkey -v
 
-# vim like backspace key
+# vim like settings
+# backspace removes cursor backword
 zle -A .backward-kill-word vi-backward-kill-word
 zle -A .backward-delete-char vi-backward-delete-char
+# delete removes cursor forward
+bindkey "[3~" delete-char
+
 
 function history-all { history -E 1 }
 # tcsh like history search
