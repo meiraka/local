@@ -1,11 +1,5 @@
 # color settings for zshrc
 
-if [ -n "$TMUX" ]; then
-  export TERM=xterm-256color
-else
-  export TERM=xterm-256color
-fi
-
 RED=161
 PINK=163
 PURPLE=092

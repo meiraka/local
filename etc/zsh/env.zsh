@@ -1,7 +1,12 @@
 export PATH=$PATH:~/local/bin:~/bin
-eval $(dircolors -b ~/local/etc/dir_colors) > /dev/null 2> /dev/null
+export CLICOLOR=1
+if which dircolors > /dev/null; then
+  eval $(dircolors -b ~/local/etc/dir_colors) > /dev/null 2> /dev/null
+fi
 
 export LANG=ja_JP.UTF-8
+export LC_LANG=${LANG}
+export LC_ALL=${LANG}
 
 HISTFILE="$HOME/.zhistory"
 HISTSIZE=100000
