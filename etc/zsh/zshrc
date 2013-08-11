@@ -1,4 +1,6 @@
 # modules
+export USER_CONFIG_HELP=""
+source ~/local/conf/config.zsh
 source ~/local/etc/zsh/mods/*rc
 source ~/local/etc/zsh/env.zsh
 source ~/local/etc/zsh/color.zsh
