@@ -7,3 +7,8 @@ else
   #GNU ls
   alias ls="ls --color=auto"
 fi
+
+function user-config {
+  ~/local/bin/generate-zsh-env ~/local/conf/config.zsh ${1} ${2} ${3}
+  source ~/.zshrc
+}
