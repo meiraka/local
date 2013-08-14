@@ -23,7 +23,7 @@ def encode(path,obj):
 
 def help_list():
 	help_text = os.environ['USER_CONFIG_HELP']
-	return dict([i.split(' - ',1) for i in help_text.split('\n') if len(help_text.split(' - ', 1)) == 2])
+	return dict([i.split(' - ',1) for i in help_text.split('\n') if len(i.split(' - ', 1)) == 2])
 
 env_path = os.path.expanduser(sys.argv[1])
 env_dir = os.path.dirname(env_path)
