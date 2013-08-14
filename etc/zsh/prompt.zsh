@@ -2,7 +2,9 @@
 
 autoload -Uz vcs_info
 
-export USER_CONFIG_HELP=${USER_CONFIG_HELP}"powerline - off, top, bottom, new and other.."
+export USER_CONFIG_HELP=${USER_CONFIG_HELP}"powerline - off, top, bottom, new and other..
+"
+
 if [ "${powerline}" = "off" ]; then
   HARD_RIGHT_ARROW=""
   SOFT_RIGHT_ARROW=">"
