@@ -10,7 +10,10 @@ import commands
 
 def decode(path):
 	f = open(path).read()
-	return dict([i.replace('export','').strip().split('=',1) for i in f.split('\n') if len(i.split('=')) > 1])
+	def split(t):
+		b = t.replace('export','').strip().split('=',1)
+		return (b[0], b[1][1:-1])
+	return dict([split(i) for i in f.split('\n') if len(i.strip().split('=')) > 1])
 
 def encode(path,obj):
 	f = open(path, 'w')
@@ -22,7 +25,7 @@ def help_list():
 	help_text = os.environ['USER_CONFIG_HELP']
 	return dict([i.split(' - ',1) for i in help_text.split('\n') if len(help_text.split(' - ', 1)) == 2])
 
-env_path = '%s/local/conf/config.zsh' % os.environ['HOME']
+env_path = os.path.expanduser(sys.argv[1])
 env_dir = os.path.dirname(env_path)
 
 if not os.path.exists(env_dir):
@@ -34,18 +37,24 @@ if not os.path.exists(env_path):
 	f.write('')
 	f.close()
 
-if len(sys.argv) == 1:
-	helps = help_list()
-	for k, v in decode(env_path).iteritems():
-		help_text = helps[k] if k in helps else 'unknown settings'
-		print '%s: %s[%s]' % (k, v[1:-1], helps[k])
-
 if len(sys.argv) == 2:
 	helps = help_list()
-	help_text = helps[sys.argv[1]] if sys.argv[1] in helps else 'unknown settings'
-	print '%s: %s[%s]' % (sys.argv[1], decode(env_path)[sys.argv[1]][1:-1], help_text)
+	for k, v in decode(env_path).iteritems():
+		if k in helps:
+			help_text = helps[k]
+		else:
+			help_text = 'unknown settings'
+		print '%s: %s[%s]' % (k, v, help_text)
 
 if len(sys.argv) == 3:
+	helps = help_list()
+	if sys.argv[2] in helps:
+		help_text = helps[sys.argv[2]]
+	else:
+		help_text = 'unknown settings'
+	print '%s: %s[%s]' % (sys.argv[2], decode(env_path)[sys.argv[2]], help_text)
+
+if len(sys.argv) == 4:
 	obj = decode(env_path)
-	obj[sys.argv[1]] = sys.argv[2]
-	encode(env_path,obj)
+	obj[sys.argv[2]] = sys.argv[3]
+	encode(sys.argv[1],obj)
