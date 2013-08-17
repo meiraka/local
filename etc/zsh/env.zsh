@@ -16,3 +16,5 @@ setopt correct
 setopt hist_ignore_dups
 setopt share_history
 setopt transient_rprompt
+
+zstyle ':completion:*:default' menu select=1

@@ -32,51 +32,32 @@ else
   SOFT_LEFT_ARROW=` echo "\u2b83"`
 fi
 
-# set fixed tmux prompt
-if [ -n "$TMUX" ]; then
-  tmux set -g window-status-current-format "#[fg=colour${COLOR_BG_TMUX},bg=colour${COLOR_BG_LPROMPT}]${HARD_RIGHT_ARROW} #[fg=colour${COLOR_FG_LPROMPT}]#I.#W #[fg=colour${COLOR_BG_LPROMPT},bg=colour${COLOR_BG_TMUX}]${HARD_RIGHT_ARROW}" > /dev/null 2> /dev/null
-  tmux set -g status-bg colour${COLOR_BG_TMUX} > /dev/null 2> /dev/null
-  tmux set -g window-status-format " #I.#W " > /dev/null 2> /dev/null
-  tmux set -g status-right "#[fg=colour163]${HARD_LEFT_ARROW}#[fg=colour232,bg=colour163] %Y%m%d %a #[bold]${SOFT_LEFT_ARROW}#[default,fg=colour232,bg=colour163] %H:%M " > /dev/null 2> /dev/null
-fi
-
-#print out left prompt
-function left_prompt {
-  COLOR_BG_LPROMPT=${COLOR_BG_LPROMPT}
-  COLOR_FG_LPROMPT=${COLOR_FG_LPROMPT}
-  LEFT_TMUX_TEXT="\
-#[fg=colour${COLOR_FG_TMUX},bg=colour${COLOR_BG_TMUX}]\
- ## #S.#I \
-#[fg=colour${COLOR_BG_TMUX}]"
-  LEFT_PROMPT_TEXT="> "
-
-  # toggle arrow by vi INSERT/NORMAL mode
-  case $KEYMAP in
-    vicmd)
-      LEFT_PROMPT_TEXT="< "
-    ;;
-    main|viins)
-      LEFT_PROMPT_TEXT="> "
-    ;;
-  esac
-
-  # show user and hostname tmux status or zsh prompt
-  if [ -n "$TMUX" ]; then
-    LEFT_TMUX_TEXT=${LEFT_TMUX_TEXT}"\
-#[bg=colour${COLOR_BG_LPROMPT}]\
-${HARD_RIGHT_ARROW}\
-#[default,fg=colour${COLOR_FG_LPROMPT},bg=colour${COLOR_BG_LPROMPT}]\
- #(whoami)\
- #[bold]\
-${SOFT_RIGHT_ARROW}\
-#[default,fg=colour${COLOR_FG_LPROMPT},bg=colour${COLOR_BG_LPROMPT}]\
- #(hostname) \
-#[default,fg=colour${COLOR_BG_LPROMPT}]\
-"
+function color {
+  if [ "${PROMPT_MODE}" = "tmux" ]; then
+    if [ "$1" = "reset" ]; then
+      echo "#[default]"
+    else
+      echo "#[$1=colour$2]"
+    fi
   else
-    LEFT_PROMPT_TEXT="%n@%m "${LEFT_PROMPT_TEXT}
+    if [ "$1" = "reset" ]; then
+      echo $'\e[m'
+    elif [ "$1" = "bg" ]; then
+      echo $'\e[0;48;5;$2m'
+    else
+      echo $'\e[0;38;5;$2m'
+    fi
   fi
+}
 
+function tmux-color-wrapper {
+  echo "\
+#[bg=colour$1]${HARD_RIGHT_ARROW}\
+#[fg=colour$2] "$3" \
+#[fg=colour$1]"
+}
+
+function prompt-vcs {
   # vcs branch
   if git status > /dev/null 2> /dev/null; then
     VCS_TEXT="git"
@@ -92,43 +73,78 @@ ${SOFT_RIGHT_ARROW}\
     else
       VCS_BRANCH_TEXT=`echo "\u265F"`" ${VCS_BRANCH_TEXT}"
     fi
-    LEFT_TMUX_TEXT=${LEFT_TMUX_TEXT}"\
-#[bg=colour${COLOR_BG_VCS}]
-${HARD_RIGHT_ARROW} \
-#[default,fg=colour${COLOR_FG_VCS},bg=colour${COLOR_BG_VCS}]\
-${VCS_REMOTE_TEXT}\
-#[bold]\
- ${SOFT_RIGHT_ARROW} \
-#[default,fg=colour${COLOR_FG_VCS},bg=colour${COLOR_BG_VCS}]\
-${VCS_BRANCH_TEXT} \
-#[default,fg=colour${COLOR_BG_VCS}]"
   fi
+  if [ "${PROMPT_TYPE}" = 'left' ]; then
+    ARROW=${SOFT_RIGHT_ARROW}
+  else
+    ARROW=${SOFT_LEFT_ARROW}
+  fi
+  if [ "${VCS_TEXT}" = "" ]; then
+  else
+    echo "\
+${VCS_REMOTE_TEXT}\
+ ${ARROW} \
+${VCS_BRANCH_TEXT}"
+  fi
+}
+
+function prompt-hostname {
+  # show user and hostname tmux status or zsh prompt
+  echo "`whoami` ${SOFT_RIGHT_ARROW} `hostname`"
+}
+
+function prompt-window {
+  echo "## #S.#I"
+}
+
+function prompt-arrow {
+  arrow="> "
+  case $KEYMAP in
+    vicmd)
+      arrow="< "
+    ;;
+    main|viins)
+      arrow="> "
+    ;;
+  esac
+  echo "%F{$COLOR_BG_LPROMPT}${LEFT_PROMPT_TEXT}%f${arrow}%F{$COLOR_MAIN}"
+}
+
+#print out left prompt
+function left_prompt {
+  PROMPT_TYPE="left"
+  LEFT_PROMPT_TEXT=`prompt-arrow`
+
 
   if [ -n "$TMUX" ]; then
-    LEFT_TMUX_TEXT=${LEFT_TMUX_TEXT}"\
-${HARD_RIGHT_ARROW}"
+    PROMPT_MODE=tmux
+    LEFT_TMUX_TEXT="`color bg ${COLOR_BG_TMUX}``color fg ${COLOR_BG_TMUX}`\
+`tmux-color-wrapper ${COLOR_BG_TMUX} ${COLOR_FG_TMUX} "\`prompt-window\`"`\
+`tmux-color-wrapper ${COLOR_BG_LPROMPT} ${COLOR_FG_LPROMPT} "\`prompt-hostname\`"`\
+`tmux-color-wrapper ${COLOR_BG_VCS} ${COLOR_FG_VCS} "\`prompt-vcs\`"`\
+`color bg ${COLOR_BG_TMUX}`${HARD_RIGHT_ARROW}"
     tmux set -g status-left "${LEFT_TMUX_TEXT}" > /dev/null 2> /dev/null
   fi
-  echo "%F{$COLOR_BG_LPROMPT}${LEFT_PROMPT_TEXT}%f%F{$COLOR_MAIN}"
+  echo ${LEFT_PROMPT_TEXT}
 }
 
 
 # print out right prompt
 function right_prompt {
-  PROMPT_TEXT="%F{$COLOR_BG_RPROMPT}[zsh@%~]"
-
-  # show NORMAL message if vi NORMAL mode.
-  case $KEYMAP in
-    vicmd)
-      PROMPT_TEXT="--NORMAL--"
-    ;;
-    viins)
-      PROMPT_TEXT="--INSERT--"
-    ;;
-  esac
-
+  PROMPT_TYPE="right"
+  PROMPT_MODE=zsh
+  PROMPT_TEXT="%F{$COLOR_BG_RPROMPT}%f`prompt-vcs`"
   echo "${PROMPT_TEXT}"
 }
+
+# set fixed tmux prompt
+if [ -n "$TMUX" ]; then
+  tmux set -g window-status-current-format "#[fg=colour${COLOR_BG_TMUX},bg=colour${COLOR_BG_LPROMPT}]${HARD_RIGHT_ARROW} #[fg=colour${COLOR_FG_LPROMPT}]#I.#W #[fg=colour${COLOR_BG_LPROMPT}]#[bg=colour${COLOR_BG_TMUX}]${HARD_RIGHT_ARROW}" > /dev/null 2> /dev/null
+  tmux set -g status-bg colour${COLOR_BG_TMUX} > /dev/null 2> /dev/null
+  tmux set -g window-status-format " #I.#W " > /dev/null 2> /dev/null
+  tmux set -g status-right "#[fg=colour163]${HARD_LEFT_ARROW}#[fg=colour232,bg=colour163] %Y%m%d %a #[bold]${SOFT_LEFT_ARROW}#[default,fg=colour232,bg=colour163] %H:%M " > /dev/null 2> /dev/null
+fi
+
 
 
 # re eval prompt text
