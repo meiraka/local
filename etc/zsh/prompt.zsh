@@ -50,11 +50,39 @@ function color {
   fi
 }
 
+function tmux-color-wrapper-start {
+  echo "`color bg ${COLOR_BG_TMUX}``color fg ${COLOR_BG_TMUX}`"
+}
+function tmux-color-wrapper-end {}
+
 function tmux-color-wrapper {
-  echo "\
+  if  [ "${PROMPT_POS}" = "right" ]; then
+    echo "\
+#[fg=colour$1]${HARD_LEFT_ARROW}
+#[bg=colour$1,fg=colour$2] "$3" \
+"
+  else
+    echo "\
 #[bg=colour$1]${HARD_RIGHT_ARROW}\
 #[fg=colour$2] "$3" \
 #[fg=colour$1]"
+  fi
+}
+
+function zsh-color-wrapper-start {
+  echo ""
+}
+
+function zsh-color-wrapper-end {
+  echo "%k"
+}
+
+function zsh-color-wrapper {
+  if [ "${PROMPT_POS}" = "right" ]; then
+    echo "%F{$1}${HARD_LEFT_ARROW}\
+%K{$1}%F{$2}" $3 "%f%k\
+%K{$1}"
+  fi
 }
 
 function prompt-vcs {
@@ -97,6 +125,14 @@ function prompt-window {
   echo "## #S.#I"
 }
 
+function prompt-date {
+  echo "%Y%m%d %a"
+}
+
+function prompt-time {
+  echo `date +"%H:%M"`
+}
+
 function prompt-arrow {
   arrow="> "
   case $KEYMAP in
@@ -114,7 +150,7 @@ function prompt-arrow {
 function left_prompt {
   PROMPT_POS="left"
   LEFT_PROMPT_TEXT=`prompt-arrow`
-
+  echo ${LEFT_PROMPT_TEXT}
   if [ -n "$TMUX" ]; then
     PROMPT_SHELL=tmux
     if [ -n "$LEFT_TMUX" ];then
@@ -129,16 +165,43 @@ function left_prompt {
     LEFT_TMUX_TEXT="${LEFT_TMUX_TEXT}`color bg ${COLOR_BG_TMUX}`${HARD_RIGHT_ARROW}"
     tmux set -g status-left "${LEFT_TMUX_TEXT}" > /dev/null 2> /dev/null
   fi
-  echo ${LEFT_PROMPT_TEXT}
 }
 
 
 # print out right prompt
 function right_prompt {
-  PROMPT_TYPE="right"
-  PROMPT_MODE=zsh
-  PROMPT_TEXT="%F{$COLOR_BG_RPROMPT}%f`prompt-vcs`"
+  PROMPT_POS="right"
+
+  # zsh
+  PROMPT_SHELL=zsh
+  if [ -n "$PROMPT_RIGHT" ]; then
+    PROMPT_ZSH="$PROMPT_ZSH"
+  else
+    PROMPT_ZSH="$SAPPHIRE,$LAMP,vcs"
+  fi
+  PROMPT_TEXT=`zsh-color-wrapper-start`
+  for prompt in ${=PROMPT_ZSH}; do
+    CMD=`prompt-\`echo $prompt | cut -d"," -f3\``
+    PROMPT_TEXT=$PROMPT_TEXT`zsh-color-wrapper \`echo $prompt | cut -d"," -f1\` \`echo $prompt |  cut -d"," -f2\` "$CMD"`
+  done
+  PROMPT_TEXT=${PROMPT_TEXT}`zsh-color-wrapper-end`
   echo "${PROMPT_TEXT}"
+
+  # tmux
+  if [ -n "$TMUX" ]; then
+    PROMPT_SHELL=tmux
+    if [ -n "$PROMPT_RIGHT_TMUX" ];then
+      PROMPT_TMUX="$PROMPT_RIGHT_TMUX"
+    else
+      PROMPT_TMUX="$TURQUOISE,$LAMP,date $LAMP,$SNOW,time"
+    fi
+    PROMPT_TEXT=`tmux-color-wrapper-start`
+    for prompt in ${=PROMPT_TMUX}; do
+      CMD=`prompt-\`echo $prompt | cut -d"," -f3\``
+      PROMPT_TEXT=$PROMPT_TEXT`tmux-color-wrapper \`echo $prompt | cut -d"," -f1\` \`echo $prompt |  cut -d"," -f2\` "$CMD"`
+    done
+    tmux set -g status-right "${PROMPT_TEXT}" > /dev/null 2> /dev/null
+  fi
 }
 
 # set fixed tmux prompt
@@ -146,7 +209,6 @@ if [ -n "$TMUX" ]; then
   tmux set -g window-status-current-format "#[fg=colour${COLOR_BG_TMUX},bg=colour${COLOR_BG_LPROMPT}]${HARD_RIGHT_ARROW} #[fg=colour${COLOR_FG_LPROMPT}]#I.#W #[fg=colour${COLOR_BG_LPROMPT}]#[bg=colour${COLOR_BG_TMUX}]${HARD_RIGHT_ARROW}" > /dev/null 2> /dev/null
   tmux set -g status-bg colour${COLOR_BG_TMUX} > /dev/null 2> /dev/null
   tmux set -g window-status-format " #I.#W " > /dev/null 2> /dev/null
-  tmux set -g status-right "#[fg=colour163]${HARD_LEFT_ARROW}#[fg=colour232,bg=colour163] %Y%m%d %a #[bold]${SOFT_LEFT_ARROW}#[default,fg=colour232,bg=colour163] %H:%M " > /dev/null 2> /dev/null
 fi
 
 
