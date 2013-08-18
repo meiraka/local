@@ -53,7 +53,11 @@ function color {
 function tmux-color-wrapper-start {
   echo "`color bg ${COLOR_BG_TMUX}``color fg ${COLOR_BG_TMUX}`"
 }
-function tmux-color-wrapper-end {}
+function tmux-color-wrapper-end {
+  if [ ${PROMPT_POS} = 'left' ]; then
+    echo "#[bg=colour${COLOR_BG_TMUX}]${HARD_RIGHT_ARROW}"
+  fi
+}
 
 function tmux-color-wrapper {
   if  [ "${PROMPT_POS}" = "right" ]; then
@@ -146,61 +150,63 @@ function prompt-arrow {
   echo "%F{$COLOR_BG_LPROMPT}${LEFT_PROMPT_TEXT}%f${arrow}%F{$COLOR_MAIN}"
 }
 
-#print out left prompt
-function left_prompt {
-  PROMPT_POS="left"
-  LEFT_PROMPT_TEXT=`prompt-arrow`
-  echo ${LEFT_PROMPT_TEXT}
-  if [ -n "$TMUX" ]; then
-    PROMPT_SHELL=tmux
-    if [ -n "$LEFT_TMUX" ];then
-    else
-      LEFT_TMUX="$PINK,$LAMP,window $MILKEY,$LAMP,hostname"
-    fi
-    LEFT_TMUX_TEXT="`color bg ${COLOR_BG_TMUX}``color fg ${COLOR_BG_TMUX}`"
-    for prompt in ${=LEFT_TMUX}; do
-      CMD=`prompt-\`echo $prompt | cut -d"," -f3\``
-      LEFT_TMUX_TEXT=$LEFT_TMUX_TEXT`tmux-color-wrapper \`echo $prompt | cut -d"," -f1\` \`echo $prompt |  cut -d"," -f2\` "$CMD"`
-    done
-    LEFT_TMUX_TEXT="${LEFT_TMUX_TEXT}`color bg ${COLOR_BG_TMUX}`${HARD_RIGHT_ARROW}"
-    tmux set -g status-left "${LEFT_TMUX_TEXT}" > /dev/null 2> /dev/null
+function prompt {
+  if [ $1 = "right" ]; then
+    PROMPT_POS="right"
+  else
+    PROMPT_POS="left"
   fi
-}
-
-
-# print out right prompt
-function right_prompt {
-  PROMPT_POS="right"
 
   # zsh
   PROMPT_SHELL=zsh
-  if [ -n "$PROMPT_RIGHT" ]; then
-    PROMPT_ZSH="$PROMPT_ZSH"
+  if [ $1 = "right" ]; then
+    if [ -n "$PROMPT_RIGHT" ]; then
+      PROMPT_ZSH="$PROMPT_RIGHT"
+    else
+      PROMPT_ZSH="$SAPPHIRE,$LAMP,vcs"
+    fi
   else
-    PROMPT_ZSH="$SAPPHIRE,$LAMP,vcs"
+    if [ -n "$PROMPT_LEFT" ]; then
+      PROMPT_ZSH="$PROMPT_LEFT"
+    else
+      PROMPT_ZSH="off"
+    fi
   fi
-  PROMPT_TEXT=`zsh-color-wrapper-start`
-  for prompt in ${=PROMPT_ZSH}; do
-    CMD=`prompt-\`echo $prompt | cut -d"," -f3\``
-    PROMPT_TEXT=$PROMPT_TEXT`zsh-color-wrapper \`echo $prompt | cut -d"," -f1\` \`echo $prompt |  cut -d"," -f2\` "$CMD"`
-  done
-  PROMPT_TEXT=${PROMPT_TEXT}`zsh-color-wrapper-end`
-  echo "${PROMPT_TEXT}"
+  if [ "$PROMPT_ZSH" = "off" ]; then
+    echo `prompt-arrow`
+  else
+    PROMPT_TEXT=`zsh-color-wrapper-start`
+    for prompt in ${=PROMPT_ZSH}; do
+      CMD=`prompt-\`echo $prompt | cut -d"," -f3\``
+      PROMPT_TEXT=$PROMPT_TEXT`zsh-color-wrapper \`echo $prompt | cut -d"," -f1\` \`echo $prompt |  cut -d"," -f2\` "$CMD"`
+    done
+    PROMPT_TEXT=${PROMPT_TEXT}`zsh-color-wrapper-end`
+    echo "${PROMPT_TEXT}"
+  fi
 
   # tmux
   if [ -n "$TMUX" ]; then
     PROMPT_SHELL=tmux
-    if [ -n "$PROMPT_RIGHT_TMUX" ];then
-      PROMPT_TMUX="$PROMPT_RIGHT_TMUX"
+    if [ $1 =  "right" ]; then
+      if [ -n "$PROMPT_RIGHT_TMUX" ]; then
+        PROMPT_TMUX="$PROMPT_RIGHT_TMUX"
+      else
+        PROMPT_TMUX="$TURQUOISE,$LAMP,date $LAMP,$SNOW,time"
+      fi
     else
-      PROMPT_TMUX="$TURQUOISE,$LAMP,date $LAMP,$SNOW,time"
+      if [ -n "$PROMPT_LEFT_TMUX" ]; then
+        PROMPT_TMUX=${PROMPT_LEFT_TMUX}
+      else
+        PROMPT_TMUX="$PINK,$LAMP,window $MILKEY,$LAMP,hostname"
+      fi
     fi
     PROMPT_TEXT=`tmux-color-wrapper-start`
     for prompt in ${=PROMPT_TMUX}; do
       CMD=`prompt-\`echo $prompt | cut -d"," -f3\``
       PROMPT_TEXT=$PROMPT_TEXT`tmux-color-wrapper \`echo $prompt | cut -d"," -f1\` \`echo $prompt |  cut -d"," -f2\` "$CMD"`
     done
-    tmux set -g status-right "${PROMPT_TEXT}" > /dev/null 2> /dev/null
+    PROMPT_TEXT=${PROMPT_TEXT}`tmux-color-wrapper-end`
+    tmux set -g status-$1 "${PROMPT_TEXT}" > /dev/null 2> /dev/null
   fi
 }
 
@@ -216,8 +222,8 @@ fi
 # re eval prompt text
 function zle-line-init zle-keymap-select {
 
-  PROMPT="`left_prompt`"
-  RPROMPT="`right_prompt`"
+  PROMPT="`prompt left`"
+  RPROMPT="`prompt right`"
 
   zle reset-prompt
 }
@@ -229,7 +235,7 @@ zle -N zle-keymap-select
 setopt print_exit_value
 setopt prompt_subst
 
-PROMPT="`left_prompt`"
-RPROMPT="`right_prompt`"
+PROMPT="`prompt left`"
+RPROMPT="`prompt right`"
 SPROMPT="%F{$COLOR_BG_LPROMPT}%{$suggest%}(＠ﾟ△ﾟ%)ノ < もしかして %B%r%b かな? [そう!(y), 違う!(n),a,e] > "
 
