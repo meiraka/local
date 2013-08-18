@@ -33,7 +33,7 @@ else
 fi
 
 function color {
-  if [ "${PROMPT_MODE}" = "tmux" ]; then
+  if [ "${PROMPT_SHELL}" = "tmux" ]; then
     if [ "$1" = "reset" ]; then
       echo "#[default]"
     else
@@ -112,17 +112,21 @@ function prompt-arrow {
 
 #print out left prompt
 function left_prompt {
-  PROMPT_TYPE="left"
+  PROMPT_POS="left"
   LEFT_PROMPT_TEXT=`prompt-arrow`
 
-
   if [ -n "$TMUX" ]; then
-    PROMPT_MODE=tmux
-    LEFT_TMUX_TEXT="`color bg ${COLOR_BG_TMUX}``color fg ${COLOR_BG_TMUX}`\
-`tmux-color-wrapper ${COLOR_BG_TMUX} ${COLOR_FG_TMUX} "\`prompt-window\`"`\
-`tmux-color-wrapper ${COLOR_BG_LPROMPT} ${COLOR_FG_LPROMPT} "\`prompt-hostname\`"`\
-`tmux-color-wrapper ${COLOR_BG_VCS} ${COLOR_FG_VCS} "\`prompt-vcs\`"`\
-`color bg ${COLOR_BG_TMUX}`${HARD_RIGHT_ARROW}"
+    PROMPT_SHELL=tmux
+    if [ -n "$LEFT_TMUX" ];then
+    else
+      LEFT_TMUX="$PINK,$LAMP,window $MILKEY,$LAMP,hostname"
+    fi
+    LEFT_TMUX_TEXT="`color bg ${COLOR_BG_TMUX}``color fg ${COLOR_BG_TMUX}`"
+    for prompt in ${=LEFT_TMUX}; do
+      CMD=`prompt-\`echo $prompt | cut -d"," -f3\``
+      LEFT_TMUX_TEXT=$LEFT_TMUX_TEXT`tmux-color-wrapper \`echo $prompt | cut -d"," -f1\` \`echo $prompt |  cut -d"," -f2\` "$CMD"`
+    done
+    LEFT_TMUX_TEXT="${LEFT_TMUX_TEXT}`color bg ${COLOR_BG_TMUX}`${HARD_RIGHT_ARROW}"
     tmux set -g status-left "${LEFT_TMUX_TEXT}" > /dev/null 2> /dev/null
   fi
   echo ${LEFT_PROMPT_TEXT}
