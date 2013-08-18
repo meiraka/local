@@ -50,42 +50,42 @@ function color {
   fi
 }
 
-function tmux-color-wrapper-start {
-  echo "`color bg ${COLOR_BG_TMUX}``color fg ${COLOR_BG_TMUX}`"
+function powerline-color-wrapper-start {
+  if [ ${PROMPT_SHELL} = 'tmux' ]; then
+    echo "`color bg ${COLOR_BG_TMUX}``color fg ${COLOR_BG_TMUX}`"
+  else
+    echo ""
+  fi
 }
-function tmux-color-wrapper-end {
-  if [ ${PROMPT_POS} = 'left' ]; then
-    echo "#[bg=colour${COLOR_BG_TMUX}]${HARD_RIGHT_ARROW}"
+function powerline-color-wrapper-end {
+  if [ ${PROMPT_SHELL} = 'tmux' ]; then
+    if [ ${PROMPT_POS} = 'left' ]; then
+      echo "#[bg=colour${COLOR_BG_TMUX}]${HARD_RIGHT_ARROW}"
+    fi
+  else
+    echo "%k"
   fi
 }
 
-function tmux-color-wrapper {
-  if  [ "${PROMPT_POS}" = "right" ]; then
-    echo "\
+function powerline-color-wrapper {
+  if [ ${PROMPT_SHELL} = 'tmux' ]; then
+    if  [ "${PROMPT_POS}" = "right" ]; then
+      echo "\
 #[fg=colour$1]${HARD_LEFT_ARROW}
 #[bg=colour$1,fg=colour$2] "$3" \
 "
-  else
-    echo "\
+    else
+      echo "\
 #[bg=colour$1]${HARD_RIGHT_ARROW}\
 #[fg=colour$2] "$3" \
 #[fg=colour$1]"
-  fi
-}
-
-function zsh-color-wrapper-start {
-  echo ""
-}
-
-function zsh-color-wrapper-end {
-  echo "%k"
-}
-
-function zsh-color-wrapper {
-  if [ "${PROMPT_POS}" = "right" ]; then
-    echo "%F{$1}${HARD_LEFT_ARROW}\
+    fi
+  else
+    if [ "${PROMPT_POS}" = "right" ]; then
+      echo "%F{$1}${HARD_LEFT_ARROW}\
 %K{$1}%F{$2}" $3 "%f%k\
 %K{$1}"
+    fi
   fi
 }
 
@@ -151,6 +151,7 @@ function prompt-arrow {
 }
 
 function prompt {
+  # PROMPT_POS and PROMPT_SHELL env uses in powerline-* functions.
   if [ $1 = "right" ]; then
     PROMPT_POS="right"
   else
@@ -175,12 +176,12 @@ function prompt {
   if [ "$PROMPT_ZSH" = "off" ]; then
     echo `prompt-arrow`
   else
-    PROMPT_TEXT=`zsh-color-wrapper-start`
+    PROMPT_TEXT=`powerline-color-wrapper-start`
     for prompt in ${=PROMPT_ZSH}; do
       CMD=`prompt-\`echo $prompt | cut -d"," -f3\``
-      PROMPT_TEXT=$PROMPT_TEXT`zsh-color-wrapper \`echo $prompt | cut -d"," -f1\` \`echo $prompt |  cut -d"," -f2\` "$CMD"`
+      PROMPT_TEXT=$PROMPT_TEXT`powerline-color-wrapper \`echo $prompt | cut -d"," -f1\` \`echo $prompt |  cut -d"," -f2\` "$CMD"`
     done
-    PROMPT_TEXT=${PROMPT_TEXT}`zsh-color-wrapper-end`
+    PROMPT_TEXT=${PROMPT_TEXT}`powerline-color-wrapper-end`
     echo "${PROMPT_TEXT}"
   fi
 
@@ -200,24 +201,15 @@ function prompt {
         PROMPT_TMUX="$PINK,$LAMP,window $MILKEY,$LAMP,hostname"
       fi
     fi
-    PROMPT_TEXT=`tmux-color-wrapper-start`
+    PROMPT_TEXT=`powerline-color-wrapper-start`
     for prompt in ${=PROMPT_TMUX}; do
       CMD=`prompt-\`echo $prompt | cut -d"," -f3\``
-      PROMPT_TEXT=$PROMPT_TEXT`tmux-color-wrapper \`echo $prompt | cut -d"," -f1\` \`echo $prompt |  cut -d"," -f2\` "$CMD"`
+      PROMPT_TEXT=$PROMPT_TEXT`powerline-color-wrapper \`echo $prompt | cut -d"," -f1\` \`echo $prompt |  cut -d"," -f2\` "$CMD"`
     done
-    PROMPT_TEXT=${PROMPT_TEXT}`tmux-color-wrapper-end`
+    PROMPT_TEXT=${PROMPT_TEXT}`powerline-color-wrapper-end`
     tmux set -g status-$1 "${PROMPT_TEXT}" > /dev/null 2> /dev/null
   fi
 }
-
-# set fixed tmux prompt
-if [ -n "$TMUX" ]; then
-  tmux set -g window-status-current-format "#[fg=colour${COLOR_BG_TMUX},bg=colour${COLOR_BG_LPROMPT}]${HARD_RIGHT_ARROW} #[fg=colour${COLOR_FG_LPROMPT}]#I.#W #[fg=colour${COLOR_BG_LPROMPT}]#[bg=colour${COLOR_BG_TMUX}]${HARD_RIGHT_ARROW}" > /dev/null 2> /dev/null
-  tmux set -g status-bg colour${COLOR_BG_TMUX} > /dev/null 2> /dev/null
-  tmux set -g window-status-format " #I.#W " > /dev/null 2> /dev/null
-fi
-
-
 
 # re eval prompt text
 function zle-line-init zle-keymap-select {
@@ -227,6 +219,18 @@ function zle-line-init zle-keymap-select {
 
   zle reset-prompt
 }
+
+# set fixed tmux prompt
+if [ -n "$TMUX" ]; then
+  tmux set -g window-status-current-format "#[fg=colour${COLOR_BG_TMUX},bg=colour${COLOR_BG_LPROMPT}]${HARD_RIGHT_ARROW} #[fg=colour${COLOR_FG_LPROMPT}]#I.#W #[fg=colour${COLOR_BG_LPROMPT}]#[bg=colour${COLOR_BG_TMUX}]${HARD_RIGHT_ARROW}" > /dev/null 2> /dev/null
+  tmux set -g status-bg colour${COLOR_BG_TMUX}             > /dev/null 2> /dev/null
+  tmux set -g window-status-format " #I.#W "               > /dev/null 2> /dev/null
+  tmux set -g pane-active-border-fg colour${COLOR_BG_TMUX} > /dev/null 2> /dev/null
+  tmux set -g pane-active-border-bg colour${COLOR_BG_TMUX} > /dev/null 2> /dev/null
+  tmux set -g pane-border-bg 8 > /dev/null 2> /dev/null
+  tmux set -g pane-border-fg colour${COLOR_BG_TMUX} > /dev/null 2> /dev/null
+fi
+
 
 
 zle -N zle-line-init
