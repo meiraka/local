@@ -152,6 +152,12 @@ function prompt-arrow {
   echo "%F{$COLOR_BG_LPROMPT}${LEFT_PROMPT_TEXT}%f${arrow}%F{$COLOR_MAIN}"
 }
 
+
+export USER_CONFIG_HELP=${USER_CONFIG_HELP}"PROMPT_LEFT - off
+PROMPT_RIGHT - \$COLOR_SAPPHIRE,\$COLOR_LAMP,vcs
+PROMPT_RIGHT_TMUX - \$COLOR_TURQUOISE,\$COLOR_LAMP,date \$COLOR_LAMP,\$COLOR_SNOW,time
+PROMPT_LEFT_TMUX - \$COLOR_PINK,\$COLOR_LAMP,window \$COLOR_MILKEY,\$COLOR_LAMP,hostname
+"
 function prompt {
   # PROMPT_POS and PROMPT_SHELL env uses in powerline-* functions.
   if [ $1 = "right" ]; then
@@ -166,7 +172,7 @@ function prompt {
     if [ -n "$PROMPT_RIGHT" ]; then
       PROMPT_ZSH="$PROMPT_RIGHT"
     else
-      PROMPT_ZSH="$SAPPHIRE,$LAMP,vcs"
+      PROMPT_ZSH="$COLOR_SAPPHIRE,$COLOR_LAMP,vcs"
     fi
   else
     if [ -n "$PROMPT_LEFT" ]; then
@@ -194,13 +200,13 @@ function prompt {
       if [ -n "$PROMPT_RIGHT_TMUX" ]; then
         PROMPT_TMUX="$PROMPT_RIGHT_TMUX"
       else
-        PROMPT_TMUX="$TURQUOISE,$LAMP,date $LAMP,$SNOW,time"
+        PROMPT_TMUX="$COLOR_TURQUOISE,$COLOR_LAMP,date $COLOR_LAMP,$COLOR_SNOW,time"
       fi
     else
       if [ -n "$PROMPT_LEFT_TMUX" ]; then
         PROMPT_TMUX=${PROMPT_LEFT_TMUX}
       else
-        PROMPT_TMUX="$PINK,$LAMP,window $MILKEY,$LAMP,hostname"
+        PROMPT_TMUX="$COLOR_PINK,$COLOR_LAMP,window $COLOR_MILKEY,$COLOR_LAMP,hostname"
       fi
     fi
     PROMPT_TEXT=`powerline-color-wrapper-start`
