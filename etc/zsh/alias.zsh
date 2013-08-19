@@ -9,6 +9,6 @@ else
 fi
 
 function user-config {
-  ~/local/bin/generate-zsh-env ~/local/conf/config.zsh ${1} ${2} ${3}
+  ~/local/bin/generate-zsh-env ~/local/conf/user-env.zsh ${1} ${2} ${3}
   source ~/.zshrc
 }

@@ -1,5 +1,7 @@
 # zsh prompt settings.
 
+source ~/local/etc/zsh/prompt-*.zsh > /dev/null 2> /dev/null
+
 autoload -Uz vcs_info
 
 export USER_CONFIG_HELP=${USER_CONFIG_HELP}"powerline - off, top, bottom, new and other..

@@ -8,5 +8,5 @@ cd ~/
 #git clone hogehoge
 
 # copy settings.
-cp ~/local/etc/zsh/loadrc ~/.zshrc
-cp ~/local/etc/tmux.conf ~/.tmux.conf
+echo "source ~/local/etc/zsh/zshrc" >  ~/.zshrc
+echo "source-file ~/local/etc/tmux.conf" > ~/.tmux.conf
