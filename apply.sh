@@ -10,3 +10,7 @@ cd ~/
 # copy settings.
 cp ~/local/etc/zsh/loadrc ~/.zshrc
 cp ~/local/etc/tmux.conf ~/.tmux.conf
+
+# link settings.
+ln -si ~/local/share/vimrc .vimrc
+ln -si ~/local/share/vim/ .vim
