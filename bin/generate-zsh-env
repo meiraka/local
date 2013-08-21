@@ -39,12 +39,19 @@ if not os.path.exists(env_path):
 
 if len(sys.argv) == 2:
 	helps = help_list()
+	in_helps = []
 	for k, v in decode(env_path).iteritems():
 		if k in helps:
 			help_text = helps[k]
 		else:
 			help_text = 'unknown settings'
+		in_helps.append(k)
 		print '%s: %s[%s]' % (k, v, help_text)
+	for k, v in helps.iteritems():
+		if not k in in_helps:
+			help_text = helps[k]
+			print '%s: %s[%s]' % (k, '', help_text)
+		
 
 if len(sys.argv) == 3:
 	helps = help_list()

@@ -1,8 +1,8 @@
 # modules
 export USER_CONFIG_HELP=""
-source ~/local/etc/zsh/mods/*rc
 source ~/local/etc/zsh/env.zsh
-source ~/local/conf/config.zsh 2> /dev/null
+source ~/local/conf/user-env.zsh 2> /dev/null
+source ~/local/conf/user-config.zsh 2> /dev/null
 source ~/local/etc/zsh/color.zsh
 source ~/local/etc/zsh/keybind.zsh
 source ~/local/etc/zsh/prompt.zsh
