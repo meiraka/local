@@ -14,9 +14,9 @@ for line in lines:
 		if m:
 			fg, bg = m.groups()
 			out = '\033[0m'
-			if not fg == 'None':
+			if not fg == 'NONE':
 				out = out + '\033[38;5;%sm' % fg
-			if not bg == 'None':
+			if not bg == 'NONE':
 				out = out + '\033[48;5;%sm' % bg
 	
 			print out + line

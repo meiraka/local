@@ -21,7 +21,7 @@ hi Include guifg=#409090 guibg=NONE guisp=NONE gui=NONE ctermfg=176 ctermbg=NONE
 "hi TabLineSel -- no settings --
 hi StatusLineNC guifg=#b9b9b9 guibg=#3e3e5e guisp=#3e3e5e gui=NONE ctermfg=250 ctermbg=233 cterm=NONE
 "hi CTagsMember -- no settings --
-hi NonText guifg=#8b8bcd guibg=NONE guisp=NONE gui=NONE ctermfg=104 ctermbg=NONE cterm=NONE
+hi NonText guifg=#8b8bcd guibg=NONE guisp=NONE gui=NONE ctermfg=196 ctermbg=NONE cterm=NONE
 "hi CTagsGlobalConstant -- no settings --
 hi DiffText guifg=#ffffcd guibg=#4a2a4a guisp=#4a2a4a gui=NONE ctermfg=230 ctermbg=239 cterm=NONE
 hi ErrorMsg guifg=#ffffff guibg=#ce4e4e guisp=#ce4e4e gui=NONE ctermfg=253 ctermbg=167 cterm=NONE
@@ -55,8 +55,8 @@ hi Operator guifg=#ff8bff guibg=NONE guisp=NONE gui=NONE ctermfg=124 ctermbg=NON
 "hi CursorLine -- no settings --
 "hi Union -- no settings --
 "hi TabLineFill -- no settings --
-hi Question guifg=#ffcd00 guibg=NONE guisp=NONE gui=NONE ctermfg=220 ctermbg=NONE cterm=NONE
-hi WarningMsg guifg=#ffffff guibg=#ce8e4e guisp=#ce8e4e gui=NONE ctermfg=231 ctermbg=088 cterm=NONE
+hi Question guifg=#ffcd00 guibg=NONE guisp=NONE gui=NONE ctermfg=124 ctermbg=NONE cterm=NONE
+hi WarningMsg guifg=#ffffff guibg=#ce8e4e guisp=#ce8e4e gui=NONE ctermfg=231 ctermbg=196 cterm=NONE
 "hi VisualNOS -- no settings --
 hi DiffDelete guifg=#ffffcd guibg=#6d3030 guisp=#6d3030 gui=NONE ctermfg=230 ctermbg=95 cterm=NONE
 hi ModeMsg guifg=#7e7eae guibg=NONE guisp=NONE gui=NONE ctermfg=160 ctermbg=NONE cterm=NONE
@@ -64,7 +64,7 @@ hi ModeMsg guifg=#7e7eae guibg=NONE guisp=NONE gui=NONE ctermfg=160 ctermbg=NONE
 hi Define guifg=#409090 guibg=NONE guisp=NONE gui=NONE ctermfg=255 ctermbg=240 cterm=NONE
 hi Function guifg=#ff8bff guibg=NONE guisp=NONE gui=NONE ctermfg=124 ctermbg=NONE cterm=NONE
 hi FoldColumn guifg=#8b8bcd guibg=#2e2e2e guisp=#2e2e2e gui=NONE ctermfg=104 ctermbg=236 cterm=NONE
-hi PreProc guifg=#409090 guibg=NONE guisp=NONE gui=NONE ctermfg=255 ctermbg=240 cterm=NONE
+hi PreProc guifg=#409090 guibg=NONE guisp=NONE gui=NONE ctermfg=255 ctermbg=232 cterm=NONE
 "hi EnumerationName -- no settings --
 hi Visual guifg=#eeeeee guibg=#4e4e8f guisp=#4e4e8f gui=NONE ctermfg=255 ctermbg=088 cterm=NONE
 hi MoreMsg guifg=#7e7eae guibg=NONE guisp=NONE gui=NONE ctermfg=160 ctermbg=NONE cterm=NONE
@@ -78,7 +78,9 @@ hi Cursor guifg=#404040 guibg=#8b8bff guisp=#8b8bff gui=NONE ctermfg=238 ctermbg
 "hi SpellLocal -- no settings --
 hi Error guifg=#ffffff guibg=#6e2e2e guisp=#6e2e2e gui=NONE ctermfg=253 ctermbg=95 cterm=NONE
 hi PMenu guifg=#eeeeee guibg=#4e4e8f guisp=#4e4e8f gui=NONE ctermfg=233 ctermbg=231 cterm=NONE
-hi SpecialKey guifg=#ab60ed guibg=NONE guisp=NONE gui=NONE ctermfg=135 ctermbg=NONE cterm=NONE
+
+"Control keys
+hi SpecialKey guifg=#ab60ed guibg=NONE guisp=NONE gui=NONE ctermfg=088 ctermbg=232 cterm=NONE
 hi Constant guifg=#ffcd8b guibg=NONE guisp=NONE gui=NONE ctermfg=255 ctermbg=NONE cterm=NONE
 "hi DefinedName -- no settings --
 hi Tag guifg=#c080d0 guibg=NONE guisp=NONE gui=NONE ctermfg=176 ctermbg=NONE cterm=NONE
@@ -100,6 +102,7 @@ hi cursorim guifg=#404040 guibg=#8b8bff guisp=#8b8bff gui=NONE ctermfg=238 cterm
 hi mbenormal guifg=#cfbfad guibg=#2e2e3f guisp=#2e2e3f gui=NONE ctermfg=187 ctermbg=237 cterm=NONE
 hi perlspecialstring guifg=#c080d0 guibg=#404040 guisp=#404040 gui=NONE ctermfg=176 ctermbg=238 cterm=NONE
 hi doxygenspecial guifg=#fdd090 guibg=NONE guisp=NONE gui=NONE ctermfg=255 ctermbg=NONE cterm=NONE
+" search
 hi mbechanged guifg=#eeeeee guibg=#2e2e3f guisp=#2e2e3f gui=NONE ctermfg=124 ctermbg=231 cterm=NONE
 hi mbevisiblechanged guifg=#eeeeee guibg=#4e4e8f guisp=#4e4e8f gui=NONE ctermfg=232 ctermbg=231 cterm=NONE
 hi doxygenparam guifg=#fdd090 guibg=NONE guisp=NONE gui=NONE ctermfg=255 ctermbg=NONE cterm=NONE
