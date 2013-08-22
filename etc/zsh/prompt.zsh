@@ -153,10 +153,10 @@ function prompt-arrow {
 }
 
 
-export USER_CONFIG_HELP=${USER_CONFIG_HELP}"PROMPT_LEFT - off
-PROMPT_RIGHT - \$COLOR_SAPPHIRE,\$COLOR_LAMP,vcs
-PROMPT_RIGHT_TMUX - \$COLOR_TURQUOISE,\$COLOR_LAMP,date \$COLOR_LAMP,\$COLOR_SNOW,time
-PROMPT_LEFT_TMUX - \$COLOR_PINK,\$COLOR_LAMP,window \$COLOR_MILKEY,\$COLOR_LAMP,hostname
+export USER_CONFIG_HELP=${USER_CONFIG_HELP}"prompt_left - zsh left prompt
+prompt_right - zsh right prompt
+prompt_right_tmux - tmux right line
+prompt_left_tmux - tmux left status line
 "
 function prompt {
   # PROMPT_POS and PROMPT_SHELL env uses in powerline-* functions.
@@ -169,14 +169,14 @@ function prompt {
   # zsh
   PROMPT_SHELL=zsh
   if [ $1 = "right" ]; then
-    if [ -n "$PROMPT_RIGHT" ]; then
-      PROMPT_ZSH="$PROMPT_RIGHT"
+    if [ -n "$prompt_right" ]; then
+      PROMPT_ZSH="$prompt_right"
     else
-      PROMPT_ZSH="$COLOR_SAPPHIRE,$COLOR_LAMP,vcs"
+      PROMPT_ZSH="232,124,vcs"
     fi
   else
-    if [ -n "$PROMPT_LEFT" ]; then
-      PROMPT_ZSH="$PROMPT_LEFT"
+    if [ -n "$prompt_left" ]; then
+      PROMPT_ZSH="$prompt_left"
     else
       PROMPT_ZSH="off"
     fi
@@ -197,16 +197,16 @@ function prompt {
   if [ -n "$TMUX" ]; then
     PROMPT_SHELL=tmux
     if [ $1 =  "right" ]; then
-      if [ -n "$PROMPT_RIGHT_TMUX" ]; then
-        PROMPT_TMUX="$PROMPT_RIGHT_TMUX"
+      if [ -n "$prompt_right_tmux" ]; then
+        PROMPT_TMUX="$prompt_right_tmux"
       else
-        PROMPT_TMUX="$COLOR_TURQUOISE,$COLOR_LAMP,date $COLOR_LAMP,$COLOR_SNOW,time"
+        PROMPT_TMUX="255,233,date $COLOR_LAMP,$COLOR_SNOW,time"
       fi
     else
-      if [ -n "$PROMPT_LEFT_TMUX" ]; then
-        PROMPT_TMUX=${PROMPT_LEFT_TMUX}
+      if [ -n "$prompt_left_tmux" ]; then
+        PROMPT_TMUX=${prompt_left_tmux}
       else
-        PROMPT_TMUX="$COLOR_PINK,$COLOR_LAMP,window $COLOR_MILKEY,$COLOR_LAMP,hostname"
+        PROMPT_TMUX="088,255,window 255,233,hostname"
       fi
     fi
     PROMPT_TEXT=`powerline-color-wrapper-start`
