@@ -1,0 +1,24 @@
+#!/usr/bin/python
+
+import sys
+import os
+import re
+
+lines = open(sys.argv[1]).read().split('\n')
+
+colors = re.compile('ctermfg=([^\\s]+) +ctermbg=([^\\s]+)')
+
+for line in lines:
+	if line.startswith('hi'):
+		m = colors.search(line)
+		if m:
+			fg, bg = m.groups()
+			out = '\033[0m'
+			if not fg == 'None':
+				out = out + '\033[38;5;%sm' % fg
+			if not bg == 'None':
+				out = out + '\033[48;5;%sm' % bg
+	
+			print out + line
+		else:
+			print line
