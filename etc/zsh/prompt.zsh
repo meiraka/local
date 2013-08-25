@@ -136,7 +136,11 @@ function prompt-date {
 }
 
 function prompt-time {
-  echo `date +"%H:%M"`
+  if [ "PROMPT_SHELL" = "tmux" ]; then
+    echo "%I:%M"
+  else
+    echo `date +"%H:%M"`
+  fi
 }
 
 function prompt-arrow {
