@@ -6,33 +6,36 @@ autoload -Uz vcs_info
 
 export USER_CONFIG_HELP=${USER_CONFIG_HELP}"powerline - off, top, bottom, new and other..
 "
+function set-arrow {
+  if [ "$1" = "off" ]; then
+    HARD_RIGHT_ARROW=""
+    SOFT_RIGHT_ARROW=">"
+    HARD_LEFT_ARROW=""
+    SOFT_LEFT_ARROW="<"
+  elif [ "$1" = "top" ]; then
+    HARD_RIGHT_ARROW=`echo "\u25E4"`
+    SOFT_RIGHT_ARROW=`echo "\u29F8"`
+    HARD_LEFT_ARROW=`echo "\u25E5"`
+    SOFT_LEFT_ARROW=`echo "\u29F9"`
+  elif [ "$1" = "bottom" ]; then
+    HARD_RIGHT_ARROW=`echo "\u25E3"`
+    SOFT_RIGHT_ARROW=">"
+    HARD_LEFT_ARROW=`echo "\u25E2"`
+    SOFT_LEFT_ARROW="<"
+  elif [ "$1" = "new" ]; then
+    HARD_RIGHT_ARROW=`echo "\uE0B0"`
+    SOFT_RIGHT_ARROW=`echo "\uE0B1"`
+    HARD_LEFT_ARROW=`echo "\uE0B2"`
+    SOFT_LEFT_ARROW=`echo "\uE0B3"`
+  else
+    HARD_RIGHT_ARROW=`echo "\u2b80"`
+    SOFT_RIGHT_ARROW=`echo "\u2b81"`
+    HARD_LEFT_ARROW=` echo "\u2b82"`
+    SOFT_LEFT_ARROW=` echo "\u2b83"`
+  fi
+}
 
-if [ "${powerline}" = "off" ]; then
-  HARD_RIGHT_ARROW=""
-  SOFT_RIGHT_ARROW=">"
-  HARD_LEFT_ARROW=""
-  SOFT_LEFT_ARROW="<"
-elif [ "${powerline}" = "top" ]; then
-  HARD_RIGHT_ARROW=`echo "\u25E4"`
-  SOFT_RIGHT_ARROW=`echo "\u29F8"`
-  HARD_LEFT_ARROW=`echo "\u25E5"`
-  SOFT_LEFT_ARROW=`echo "\u29F9"`
-elif [ "${powerline}" = "bottom" ]; then
-  HARD_RIGHT_ARROW=`echo "\u25E3"`
-  SOFT_RIGHT_ARROW=">"
-  HARD_LEFT_ARROW=`echo "\u25E2"`
-  SOFT_LEFT_ARROW="<"
-elif [ "${powerline}" = "new" ]; then
-  HARD_RIGHT_ARROW=`echo "\uE0B0"`
-  SOFT_RIGHT_ARROW=`echo "\uE0B1"`
-  HARD_LEFT_ARROW=`echo "\uE0B2"`
-  SOFT_LEFT_ARROW=`echo "\uE0B3"`
-else
-  HARD_RIGHT_ARROW=`echo "\u2b80"`
-  SOFT_RIGHT_ARROW=`echo "\u2b81"`
-  HARD_LEFT_ARROW=` echo "\u2b82"`
-  SOFT_LEFT_ARROW=` echo "\u2b83"`
-fi
+set-arrow "${powerline}"
 
 function color {
   if [ "${PROMPT_SHELL}" = "tmux" ]; then
@@ -65,7 +68,7 @@ function powerline-color-wrapper-end {
       echo "#[bg=colour${COLOR_BG_TMUX}]${HARD_RIGHT_ARROW}"
     fi
   else
-    echo "%k"
+    echo "%f%k"
   fi
 }
 
@@ -87,6 +90,10 @@ function powerline-color-wrapper {
       echo "%F{$1}${HARD_LEFT_ARROW}\
 %K{$1}%F{$2}" $3 "%f%k\
 %K{$1}"
+    else
+      echo "%k%K{$1}${HARD_RIGHT_ARROW}%f\
+%F{$2}" $3 "%f\
+%F{$1}"
     fi
   fi
 }
@@ -144,21 +151,23 @@ function prompt-time {
 }
 
 function prompt-arrow {
-  arrow="> "
+  arrow=">"
   case $KEYMAP in
     vicmd)
-      arrow="< "
+      arrow="<"
     ;;
     main|viins)
       arrow="> "
     ;;
   esac
-  echo "%F{$COLOR_BG_LPROMPT}${LEFT_PROMPT_TEXT}%f${arrow}%F{$COLOR_MAIN}"
+  echo "${arrow}"
 }
 
 
 export USER_CONFIG_HELP=${USER_CONFIG_HELP}"prompt_left - zsh left prompt
+prompt_left_arrow - zsh left prompt powerline arrow
 prompt_right - zsh right prompt
+prompt_right_arrow - zsh left prompt powerline arrow
 prompt_right_tmux - tmux right line
 prompt_left_tmux - tmux left status line
 "
@@ -173,29 +182,31 @@ function prompt {
   # zsh
   PROMPT_SHELL=zsh
   if [ $1 = "right" ]; then
+    if [ -n "${prompt_right_arrow}" ]; then
+      set-arrow ${prompt_right_arrow}
+    fi
     if [ -n "$prompt_right" ]; then
       PROMPT_ZSH="$prompt_right"
     else
       PROMPT_ZSH="232,124,vcs"
     fi
   else
+    if [ -n "${prompt_left_arrow}" ]; then
+      set-arrow "${prompt_left_arrow}"
+    fi
     if [ -n "$prompt_left" ]; then
       PROMPT_ZSH="$prompt_left"
     else
-      PROMPT_ZSH="off"
+      PROMPT_ZSH="232,124,arrow"
     fi
   fi
-  if [ "$PROMPT_ZSH" = "off" ]; then
-    echo `prompt-arrow`
-  else
-    PROMPT_TEXT=`powerline-color-wrapper-start`
-    for prompt in ${=PROMPT_ZSH}; do
-      CMD=`prompt-\`echo $prompt | cut -d"," -f3\``
-      PROMPT_TEXT=$PROMPT_TEXT`powerline-color-wrapper \`echo $prompt | cut -d"," -f1\` \`echo $prompt |  cut -d"," -f2\` "$CMD"`
-    done
-    PROMPT_TEXT=${PROMPT_TEXT}`powerline-color-wrapper-end`
-    echo "${PROMPT_TEXT}"
-  fi
+  PROMPT_TEXT=`powerline-color-wrapper-start`
+  for prompt in ${=PROMPT_ZSH}; do
+    CMD=`prompt-\`echo $prompt | cut -d"," -f3\``
+    PROMPT_TEXT=$PROMPT_TEXT`powerline-color-wrapper \`echo $prompt | cut -d"," -f1\` \`echo $prompt |  cut -d"," -f2\` "${CMD}"`
+  done
+  PROMPT_TEXT=${PROMPT_TEXT}`powerline-color-wrapper-end`
+  echo "${PROMPT_TEXT}"
 
   # tmux
   if [ -n "$TMUX" ]; then
