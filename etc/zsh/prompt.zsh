@@ -1,10 +1,11 @@
 # zsh prompt settings.
+#TODO remove global vars
 
 source ~/local/etc/zsh/prompt-*.zsh > /dev/null 2> /dev/null
 
 autoload -Uz vcs_info
 
-export USER_CONFIG_HELP=${USER_CONFIG_HELP}"powerline - off, top, bottom, new and other..
+export USER_CONFIG_HELP=${USER_CONFIG_HELP}"hysteria - off, top, bottom, new and other..
 "
 function set-arrow {
   if [ "$1" = "off" ]; then
@@ -35,7 +36,7 @@ function set-arrow {
   fi
 }
 
-set-arrow "${powerline}"
+set-arrow "${hysteria}"
 
 function color {
   if [ "${PROMPT_SHELL}" = "tmux" ]; then
@@ -55,14 +56,14 @@ function color {
   fi
 }
 
-function powerline-color-wrapper-start {
+function hysteria-color-wrapper-start {
   if [ ${PROMPT_SHELL} = 'tmux' ]; then
     echo "`color bg ${COLOR_BG_TMUX}``color fg ${COLOR_BG_TMUX}`"
   else
     echo ""
   fi
 }
-function powerline-color-wrapper-end {
+function hysteria-color-wrapper-end {
   if [ ${PROMPT_SHELL} = 'tmux' ]; then
     if [ ${PROMPT_POS} = 'left' ]; then
       echo "#[bg=colour${COLOR_BG_TMUX}]${HARD_RIGHT_ARROW}"
@@ -72,7 +73,7 @@ function powerline-color-wrapper-end {
   fi
 }
 
-function powerline-color-wrapper {
+function hysteria-color-wrapper {
   if [ ${PROMPT_SHELL} = 'tmux' ]; then
     if  [ "${PROMPT_POS}" = "right" ]; then
       echo "\
@@ -87,13 +88,33 @@ function powerline-color-wrapper {
     fi
   else
     if [ "${PROMPT_POS}" = "right" ]; then
-      echo "%F{$1}${HARD_LEFT_ARROW}\
-%K{$1}%F{$2}" $3 "%f%k\
-%K{$1}"
+      if [ "$1" = "NONE" ];then
+        p1="%f%k${HARD_LEFT_ARROW}"
+        p3=""
+      else
+        p1="%F{$1}${HARD_LEFT_ARROW}%K{$1}"
+        p3="%K{$1}"
+      fi
+      if [ "$2" = "NONE" ]; then
+        p2=" $3 "
+      else
+        p2="%F{$2} $3 %f%k"
+      fi
+      echo ${p1}${p2}${p3}
     else
-      echo "%k%K{$1}${HARD_RIGHT_ARROW}%f\
-%F{$2}" $3 "%f\
-%F{$1}"
+      if [ "$1" = "NONE" ];then
+        p1="%f%k${HARD_RIGHT_ARROW}"
+        p3=""
+      else
+        p1="%k%K{$1}${HARD_RIGHT_ARROW}%f"
+        p3="%F{$1}"
+      fi
+      if [ "$2" = "NONE" ]; then
+        p2=" $3 "
+      else
+        p2="%F{$2} $3 %f"
+      fi
+      echo ${p1}${p2}${p3}
     fi
   fi
 }
@@ -165,14 +186,14 @@ function prompt-arrow {
 
 
 export USER_CONFIG_HELP=${USER_CONFIG_HELP}"prompt_left - zsh left prompt
-prompt_left_arrow - zsh left prompt powerline arrow
+prompt_left_arrow - zsh left prompt hysteria arrow
 prompt_right - zsh right prompt
-prompt_right_arrow - zsh left prompt powerline arrow
+prompt_right_arrow - zsh left prompt hysteria arrow
 prompt_right_tmux - tmux right line
 prompt_left_tmux - tmux left status line
 "
 function prompt {
-  # PROMPT_POS and PROMPT_SHELL env uses in powerline-* functions.
+  # PROMPT_POS and PROMPT_SHELL env uses in hysteria-* functions.
   if [ $1 = "right" ]; then
     PROMPT_POS="right"
   else
@@ -200,12 +221,12 @@ function prompt {
       PROMPT_ZSH="232,124,arrow"
     fi
   fi
-  PROMPT_TEXT=`powerline-color-wrapper-start`
+  PROMPT_TEXT=`hysteria-color-wrapper-start`
   for prompt in ${=PROMPT_ZSH}; do
     CMD=`prompt-\`echo $prompt | cut -d"," -f3\``
-    PROMPT_TEXT=$PROMPT_TEXT`powerline-color-wrapper \`echo $prompt | cut -d"," -f1\` \`echo $prompt |  cut -d"," -f2\` "${CMD}"`
+    PROMPT_TEXT=$PROMPT_TEXT`hysteria-color-wrapper \`echo $prompt | cut -d"," -f1\` \`echo $prompt |  cut -d"," -f2\` "${CMD}"`
   done
-  PROMPT_TEXT=${PROMPT_TEXT}`powerline-color-wrapper-end`
+  PROMPT_TEXT=${PROMPT_TEXT}`hysteria-color-wrapper-end`
   echo "${PROMPT_TEXT}"
 
   # tmux
@@ -224,12 +245,12 @@ function prompt {
         PROMPT_TMUX="088,255,window 255,233,hostname"
       fi
     fi
-    PROMPT_TEXT=`powerline-color-wrapper-start`
+    PROMPT_TEXT=`hysteria-color-wrapper-start`
     for prompt in ${=PROMPT_TMUX}; do
       CMD=`prompt-\`echo $prompt | cut -d"," -f3\``
-      PROMPT_TEXT=$PROMPT_TEXT`powerline-color-wrapper \`echo $prompt | cut -d"," -f1\` \`echo $prompt |  cut -d"," -f2\` "$CMD"`
+      PROMPT_TEXT=$PROMPT_TEXT`hysteria-color-wrapper \`echo $prompt | cut -d"," -f1\` \`echo $prompt |  cut -d"," -f2\` "$CMD"`
     done
-    PROMPT_TEXT=${PROMPT_TEXT}`powerline-color-wrapper-end`
+    PROMPT_TEXT=${PROMPT_TEXT}`hysteria-color-wrapper-end`
     tmux set -g status-$1 "${PROMPT_TEXT}" > /dev/null 2> /dev/null
   fi
 }

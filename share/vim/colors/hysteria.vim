@@ -46,15 +46,15 @@ call s:ApplyColor("Comment", "238", "245")
 call s:ApplyColor("SpecialComment", "None", "197")
 call s:ApplyColor("Todo", "245", "232")
 
-" defined wellknown values
-call s:ApplyColor("Define",  "240", "255")
 
 " defined wellknown labels
 "PreProcessor
-call s:ApplyColor("PreProc", "NONE", "232")
-call s:ApplyColor("Include", "NONE", "160")
-call s:ApplyColor("Macro",    "255", "240")
-call s:ApplyColor("Keyword", "NONE", "124")
+call s:ApplyColor("PreProc",   "NONE", "241")
+call s:ApplyColor("PreCondit", "NONE", "245")
+call s:ApplyColor("Include",   "NONE", "160")
+call s:ApplyColor("Define",    "NONE", "196")
+call s:ApplyColor("Macro",     "NONE", "196")
+call s:ApplyColor("Keyword",   "NONE", "124")
 
 " Special
 call s:ApplyColor("Special", "NONE", "160")
