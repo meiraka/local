@@ -205,6 +205,8 @@ function prompt {
   if [ $1 = "right" ]; then
     if [ -n "${prompt_right_arrow}" ]; then
       set-arrow ${prompt_right_arrow}
+    else
+      set-arrow "on"
     fi
     if [ -n "$prompt_right" ]; then
       PROMPT_ZSH="$prompt_right"
@@ -214,11 +216,13 @@ function prompt {
   else
     if [ -n "${prompt_left_arrow}" ]; then
       set-arrow "${prompt_left_arrow}"
+    else
+      set-arrow "off"
     fi
     if [ -n "$prompt_left" ]; then
       PROMPT_ZSH="$prompt_left"
     else
-      PROMPT_ZSH="232,124,arrow"
+      PROMPT_ZSH="NONE,124,arrow"
     fi
   fi
   PROMPT_TEXT=`hysteria-color-wrapper-start`
@@ -233,12 +237,25 @@ function prompt {
   if [ -n "$TMUX" ]; then
     PROMPT_SHELL=tmux
     if [ $1 =  "right" ]; then
+      if [ -n "${prompt_right_tmux_arrow}" ]; then
+        set-arrow "${prompt_right_tmux_arrow}"
+      else
+        set-arrow "on"
+      fi
+
       if [ -n "$prompt_right_tmux" ]; then
         PROMPT_TMUX="$prompt_right_tmux"
       else
         PROMPT_TMUX="255,233,date $COLOR_LAMP,$COLOR_SNOW,time"
       fi
     else
+      if [ -n "${prompt_left_tmux_arrow}" ]; then
+        set-arrow "${prompt_left_tmux_arrow}"
+      else
+        set-arrow "on"
+      fi
+
+
       if [ -n "$prompt_left_tmux" ]; then
         PROMPT_TMUX=${prompt_left_tmux}
       else

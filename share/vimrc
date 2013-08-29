@@ -1,3 +1,6 @@
 set t_Co=256
 colorscheme hysteria
 syntax on
+set hlsearch
+set incsearch
+set backspace=start,eol,indent
