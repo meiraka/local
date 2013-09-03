@@ -21,6 +21,11 @@ function set-arrow {
     SOFT_RIGHT_ARROW=">"
     HARD_LEFT_ARROW=`echo "\u25E2"`
     SOFT_LEFT_ARROW="<"
+  elif [ "$1" = "tab" ]; then
+    HARD_RIGHT_ARROW=`echo "\u2599"`
+    SOFT_RIGHT_ARROW=`echo "\u2599"`
+    HARD_LEFT_ARROW=`echo "\uE0B2"`
+    SOFT_LEFT_ARROW=`echo "\uE0B3"`
   elif [ "$1" = "new" ]; then
     HARD_RIGHT_ARROW=`echo "\uE0B0"`
     SOFT_RIGHT_ARROW=`echo "\uE0B1"`
@@ -266,30 +271,38 @@ function hysteria-line-update {
   fi
 }
 
-function zle-line-init zle-keymap-select {
+
+function hysteria-line-init {
+  function zle-line-init zle-keymap-select {
+    hysteria-line-update
+    zle reset-prompt
+  }
   hysteria-line-update
-  zle reset-prompt
+  
+  # set fixed tmux prompt
+  if [ -n "$TMUX" ]; then
+    if [ -n "${prompt_tmux_arrow}" ]; then
+      set-arrow "${prompt_tmux_arrow}"
+    else
+      set-arrow "off"
+    fi
+ 
+    tmux set -g window-status-current-format "#[fg=colour${COLOR_BG_TMUX},bg=colour${COLOR_BG_LPROMPT}]${HARD_RIGHT_ARROW} #[fg=colour${COLOR_FG_LPROMPT}]#I.#W #[fg=colour${COLOR_BG_LPROMPT}]#[bg=colour${COLOR_BG_TMUX}]${HARD_RIGHT_ARROW}" > /dev/null 2> /dev/null
+    tmux set -g status-bg colour${COLOR_BG_TMUX}             > /dev/null 2> /dev/null
+    tmux set -g window-status-format " #I.#W "               > /dev/null 2> /dev/null
+    tmux set -g pane-active-border-fg colour${COLOR_BG_TMUX} > /dev/null 2> /dev/null
+    tmux set -g pane-active-border-bg colour${COLOR_BG_TMUX} > /dev/null 2> /dev/null
+    tmux set -g pane-border-bg 8 > /dev/null 2> /dev/null
+    tmux set -g pane-border-fg colour${COLOR_BG_TMUX} > /dev/null 2> /dev/null
+  fi
+  
+  zle -N zle-line-init
+  zle -N zle-keymap-select
 }
-
-# set fixed tmux prompt
-if [ -n "$TMUX" ]; then
-  tmux set -g window-status-current-format "#[fg=colour${COLOR_BG_TMUX},bg=colour${COLOR_BG_LPROMPT}]${HARD_RIGHT_ARROW} #[fg=colour${COLOR_FG_LPROMPT}]#I.#W #[fg=colour${COLOR_BG_LPROMPT}]#[bg=colour${COLOR_BG_TMUX}]${HARD_RIGHT_ARROW}" > /dev/null 2> /dev/null
-  tmux set -g status-bg colour${COLOR_BG_TMUX}             > /dev/null 2> /dev/null
-  tmux set -g window-status-format " #I.#W "               > /dev/null 2> /dev/null
-  tmux set -g pane-active-border-fg colour${COLOR_BG_TMUX} > /dev/null 2> /dev/null
-  tmux set -g pane-active-border-bg colour${COLOR_BG_TMUX} > /dev/null 2> /dev/null
-  tmux set -g pane-border-bg 8 > /dev/null 2> /dev/null
-  tmux set -g pane-border-fg colour${COLOR_BG_TMUX} > /dev/null 2> /dev/null
-fi
-
-zle -N zle-line-init
-zle -N zle-keymap-select
 
 setopt print_exit_value
 setopt prompt_subst
 
-hysteria-line-update
-#PROMPT="`hysteria-line left`"
-#RPROMPT="`hysteria-line right`"
+hysteria-line-init
 SPROMPT="%F{$COLOR_BG_LPROMPT}%{$suggest%}(＠ﾟ△ﾟ%)ノ < もしかして %B%r%b かな? [そう!(y), 違う!(n),a,e] > "
 
