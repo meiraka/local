@@ -1,17 +1,8 @@
 # zsh prompt settings.
 #TODO remove global vars
 
-source ~/local/etc/zsh/prompt-*.zsh > /dev/null 2> /dev/null
-
-autoload -Uz vcs_info
-
 function set-arrow {
-  if [ "$1" = "off" ]; then
-    HARD_RIGHT_ARROW=""
-    SOFT_RIGHT_ARROW="|"
-    HARD_LEFT_ARROW=""
-    SOFT_LEFT_ARROW="|"
-  elif [ "$1" = "top" ]; then
+  if [ "$1" = "top" ]; then
     HARD_RIGHT_ARROW=`echo "\u25E4"`
     SOFT_RIGHT_ARROW=`echo "\u29F8"`
     HARD_LEFT_ARROW=`echo "\u25E5"`
@@ -31,11 +22,16 @@ function set-arrow {
     SOFT_RIGHT_ARROW=`echo "\uE0B1"`
     HARD_LEFT_ARROW=`echo "\uE0B2"`
     SOFT_LEFT_ARROW=`echo "\uE0B3"`
-  else
+  elif [ "$1" = "old" ]; then
     HARD_RIGHT_ARROW=`echo "\u2b80"`
     SOFT_RIGHT_ARROW=`echo "\u2b81"`
     HARD_LEFT_ARROW=` echo "\u2b82"`
     SOFT_LEFT_ARROW=` echo "\u2b83"`
+  else
+    HARD_RIGHT_ARROW=""
+    SOFT_RIGHT_ARROW="|"
+    HARD_LEFT_ARROW=""
+    SOFT_LEFT_ARROW="|"
   fi
 }
 
