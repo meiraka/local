@@ -1,6 +1,9 @@
 # zsh prompt settings.
 #TODO remove global vars
 
+# set this file path.
+PROMPT_SCRIPT=$0
+
 function set-arrow {
   if [ "$1" = "top" ]; then
     HARD_RIGHT_ARROW=`echo "\u25E4"`
@@ -76,7 +79,7 @@ function hysteria-color-wrapper {
   if [ ${PROMPT_SHELL} = 'tmux' ]; then
     if  [ "${PROMPT_POS}" = "right" ]; then
       echo "\
-#[fg=colour$1]${HARD_LEFT_ARROW}
+#[fg=colour$1]${HARD_LEFT_ARROW}\
 #[bg=colour$1,fg=colour$2] "$3" \
 "
     else
@@ -155,19 +158,15 @@ function prompt-hostname {
 }
 
 function prompt-window {
-  echo "## #S.#I"
+  tmux display -p "## #S.#I"
 }
 
 function prompt-date {
-  echo "%Y%m%d %a"
+  date +"%Y%m%d"
 }
 
 function prompt-time {
-  if [ "PROMPT_SHELL" = "tmux" ]; then
-    echo "%I:%M"
-  else
-    echo `date +"%H:%M"`
-  fi
+    date +"%H:%M"
 }
 
 function prompt-arrow {
@@ -227,6 +226,7 @@ function hysteria-line-update {
     PROMPT_ZSH="232,124,vcs"
   fi
   RPROMPT="`hysteria-line right zsh ${PROMPT_ZSH}`"
+
   if [ -n "${prompt_left_arrow}" ]; then
     set-arrow "${prompt_left_arrow}"
   else
@@ -237,33 +237,36 @@ function hysteria-line-update {
   else
     PROMPT_ZSH="NONE,124,arrow"
   fi
-  
   PROMPT="`hysteria-line left zsh ${PROMPT_ZSH}`"
+}
 
+function hysteria-line-view-tmux {
   if [ -n "$TMUX" ]; then
-    if [ -n "${prompt_left_tmux_arrow}" ]; then
-      set-arrow "${prompt_left_tmux_arrow}"
+    if [ $1 = "left" ]; then
+      if [ -n "${prompt_left_tmux_arrow}" ]; then
+        set-arrow "${prompt_left_tmux_arrow}"
+      else
+        set-arrow "on"
+      fi
+      if [ -n "$prompt_left_tmux" ]; then
+        PROMPT_TMUX=${prompt_left_tmux}
+      else
+        PROMPT_TMUX="088,255,window 255,233,hostname"
+      fi
+      echo "`hysteria-line left tmux ${PROMPT_TMUX}`"
     else
-      set-arrow "on"
+      if [ -n "${prompt_right_tmux_arrow}" ]; then
+        set-arrow "${prompt_right_tmux_arrow}"
+      else
+        set-arrow "on"
+      fi
+      if [ -n "$prompt_right_tmux" ]; then
+        PROMPT_TMUX="$prompt_right_tmux"
+      else
+        PROMPT_TMUX="255,233,date 232,250,time"
+      fi
+      echo "`hysteria-line right tmux ${PROMPT_TMUX}`"
     fi
-    if [ -n "$prompt_left_tmux" ]; then
-      PROMPT_TMUX=${prompt_left_tmux}
-    else
-      PROMPT_TMUX="088,255,window 255,233,hostname"
-    fi
-    tmux set -g status-left "`hysteria-line left tmux ${PROMPT_TMUX}`" > /dev/null 2> /dev/null
-
-    if [ -n "${prompt_right_tmux_arrow}" ]; then
-      set-arrow "${prompt_right_tmux_arrow}"
-    else
-      set-arrow "on"
-    fi
-    if [ -n "$prompt_right_tmux" ]; then
-      PROMPT_TMUX="$prompt_right_tmux"
-    else
-      PROMPT_TMUX="255,233,date $COLOR_LAMP,$COLOR_SNOW,time"
-    fi
-    tmux set -g status-right "`hysteria-line right tmux ${PROMPT_TMUX}`" > /dev/null 2> /dev/null
   fi
 }
 
@@ -282,7 +285,8 @@ function hysteria-line-init {
     else
       set-arrow "off"
     fi
- 
+    tmux set -g window-status-current-bg colour${COLOR_BG_TMUX} > /dev/null 2> /dev/null
+    tmux set -g window-status-current-fg colour${COLOR_FG_LPROMPT} > /dev/null 2> /dev/null
     tmux set -g window-status-current-format "#[fg=colour${COLOR_BG_TMUX},bg=colour${COLOR_BG_LPROMPT}]${HARD_RIGHT_ARROW} #[fg=colour${COLOR_FG_LPROMPT}]#I.#W #[fg=colour${COLOR_BG_LPROMPT}]#[bg=colour${COLOR_BG_TMUX}]${HARD_RIGHT_ARROW}" > /dev/null 2> /dev/null
     tmux set -g status-bg colour${COLOR_BG_TMUX}             > /dev/null 2> /dev/null
     tmux set -g window-status-format " #I.#W "               > /dev/null 2> /dev/null
@@ -290,15 +294,16 @@ function hysteria-line-init {
     tmux set -g pane-active-border-bg colour${COLOR_BG_TMUX} > /dev/null 2> /dev/null
     tmux set -g pane-border-bg 8 > /dev/null 2> /dev/null
     tmux set -g pane-border-fg colour${COLOR_BG_TMUX} > /dev/null 2> /dev/null
+    tmux set -g status-left  "#(zsh $PROMPT_SCRIPT command tmux left)"   > /dev/null 2> /dev/null
+    tmux set -g status-right "#(zsh $PROMPT_SCRIPT command tmux right)"  > /dev/null 2> /dev/null
   fi
   
   zle -N zle-line-init
   zle -N zle-keymap-select
 }
 
-setopt print_exit_value
-setopt prompt_subst
-
-hysteria-line-init
-SPROMPT="%F{$COLOR_BG_LPROMPT}%{$suggest%}(＠ﾟ△ﾟ%)ノ < もしかして %B%r%b かな? [そう!(y), 違う!(n),a,e] > "
-
+if [ $# = 3 ]; then
+  if [ $1 = "command" ]; then
+    hysteria-line-view-$2 $3
+  fi
+fi

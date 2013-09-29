@@ -8,4 +8,10 @@ source ~/local/etc/zsh/keybind.zsh
 source ~/local/etc/zsh/prompt.zsh
 source ~/local/etc/zsh/alias.zsh
 
+setopt print_exit_value
+setopt prompt_subst
+
+hysteria-line-init
+SPROMPT="%F{$COLOR_BG_LPROMPT}%{$suggest%}(＠ﾟ△ﾟ%)ノ < もしかして %B%r%b かな? [そう!(y), 違う!(n),a,e] > "
+
 
