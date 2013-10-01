@@ -1,6 +1,7 @@
 # zsh prompt settings.
 #TODO remove global vars
 
+
 # set this file path.
 PROMPT_SCRIPT=$0
 
@@ -304,6 +305,7 @@ function hysteria-line-init {
 
 if [ $# = 3 ]; then
   if [ $1 = "command" ]; then
+    source ~/local/conf/user-env.zsh
     hysteria-line-view-$2 $3
   fi
 fi
