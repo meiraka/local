@@ -286,6 +286,27 @@ function hysteria-line-init {
     else
       set-arrow "off"
     fi
+    if [ -n "${prompt_left_tmux_arrow}" ]; then
+      PROMPT_LEFT_TMUX_ARROW="${prompt_left_tmux_arrow}"
+    else
+      PROMPT_LEFT_TMUX_ARROW="on"
+    fi
+    if [ -n "$prompt_left_tmux" ]; then
+      PROMPT_LEFT_TMUX=${prompt_left_tmux}
+    else
+      PROMPT_LEFT_TMUX="088,255,window 255,233,hostname"
+    fi
+    if [ -n "${prompt_right_tmux_arrow}" ]; then
+      PROMPT_RIGHT_TMUX_ARROW="${prompt_right_tmux_arrow}"
+    else
+      PROMPT_RIGHT_TMUX_ARROW="on"
+    fi
+    if [ -n "$prompt_right_tmux" ]; then
+      PROMPT_RIGHT_TMUX="$prompt_right_tmux"
+    else
+      PROMPT_RIGHT_TMUX="255,233,date 232,250,time"
+    fi
+    
     tmux set -g window-status-current-bg colour${COLOR_BG_TMUX} > /dev/null 2> /dev/null
     tmux set -g window-status-current-fg colour${COLOR_FG_LPROMPT} > /dev/null 2> /dev/null
     tmux set -g window-status-current-format "#[fg=colour${COLOR_BG_TMUX},bg=colour${COLOR_BG_LPROMPT}]${HARD_RIGHT_ARROW} #[fg=colour${COLOR_FG_LPROMPT}]#I.#W #[fg=colour${COLOR_BG_LPROMPT}]#[bg=colour${COLOR_BG_TMUX}]${HARD_RIGHT_ARROW}" > /dev/null 2> /dev/null
@@ -295,17 +316,18 @@ function hysteria-line-init {
     tmux set -g pane-active-border-bg colour${COLOR_BG_TMUX} > /dev/null 2> /dev/null
     tmux set -g pane-border-bg 8 > /dev/null 2> /dev/null
     tmux set -g pane-border-fg colour${COLOR_BG_TMUX} > /dev/null 2> /dev/null
-    tmux set -g status-left  "#(zsh $PROMPT_SCRIPT command tmux left)"   > /dev/null 2> /dev/null
-    tmux set -g status-right "#(zsh $PROMPT_SCRIPT command tmux right)"  > /dev/null 2> /dev/null
+    tmux set -g status-left  "#(zsh $PROMPT_SCRIPT command tmux left ${PROMPT_LEFT_TMUX_ARROW} '${PROMPT_LEFT_TMUX}')"   > /dev/null 2> /dev/null
+    tmux set -g status-right  "#(zsh $PROMPT_SCRIPT command tmux right ${PROMPT_RIGHT_TMUX_ARROW} '${PROMPT_RIGHT_TMUX}')"   > /dev/null 2> /dev/null
   fi
   
   zle -N zle-line-init
   zle -N zle-keymap-select
 }
 
-if [ $# = 3 ]; then
+if [ $# = 5 ]; then
   if [ $1 = "command" ]; then
     source ~/local/conf/user-env.zsh
-    hysteria-line-view-$2 $3
+    set-arrow $4
+    hysteria-line $3 $2 "$5"
   fi
 fi
