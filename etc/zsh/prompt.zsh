@@ -58,17 +58,17 @@ function color {
 }
 
 function hysteria-color-wrapper-start {
-  if [ $1 = 'tmux' ]; then
-    echo "`color $1 bg ${COLOR_BG_TMUX}``color $1 fg ${COLOR_BG_TMUX}`"
+  if [ $2 = 'tmux' ]; then
+      echo "`color $2 bg ${5}``color $2 fg ${6}`$3"
   else
     echo ""
   fi
 }
 
 function hysteria-color-wrapper-end {
-  if [ $1 = 'tmux' ]; then
-    if [ ${PROMPT_POS} = 'left' ]; then
-      echo "#[bg=colour${COLOR_BG_TMUX}]${HARD_RIGHT_ARROW}"
+  if [ $2 = 'tmux' ]; then
+    if [ $1 = 'left' ]; then
+      echo "#[bg=colour${5}]$3"
     fi
   else
     echo "%f%k"
@@ -80,42 +80,42 @@ function hysteria-color-wrapper {
   if [ ${PROMPT_SHELL} = 'tmux' ]; then
     if  [ "${PROMPT_POS}" = "right" ]; then
       echo "\
-#[fg=colour$1]${HARD_LEFT_ARROW}\
-#[bg=colour$1,fg=colour$2] "$3" \
+#[fg=colour$7]${3}\
+#[bg=colour$7,fg=colour$8] "$9" \
 "
     else
       echo "\
-#[bg=colour$1]${HARD_RIGHT_ARROW}\
-#[fg=colour$2] "$3" \
-#[fg=colour$1]"
+#[bg=colour$7]${3}\
+#[fg=colour$8] "$9" \
+#[fg=colour$7]"
     fi
   else
-    if [ "${PROMPT_POS}" = "right" ]; then
-      if [ "$1" = "NONE" ];then
-        p1="%f%k${HARD_LEFT_ARROW}"
+    if [ $1 = "right" ]; then
+      if [ "$7" = "NONE" ];then
+        p1="%f%k${3}"
         p3=""
       else
-        p1="%F{$1}${HARD_LEFT_ARROW}%K{$1}"
-        p3="%K{$1}"
+        p1="%F{$7}${3}%K{$7}"
+        p3="%K{$7}"
       fi
-      if [ "$2" = "NONE" ]; then
-        p2=" $3 "
+      if [ "$8" = "NONE" ]; then
+        p2=" $9 "
       else
-        p2="%F{$2} $3 %f%k"
+        p2="%F{$8} $9 %f%k"
       fi
       echo ${p1}${p2}${p3}
     else
-      if [ "$1" = "NONE" ];then
+      if [ "$7" = "NONE" ];then
         p1="%f%k${HARD_RIGHT_ARROW}"
         p3=""
       else
-        p1="%k%K{$1}${HARD_RIGHT_ARROW}%f"
-        p3="%F{$1}"
+        p1="%k%K{$7}${HARD_RIGHT_ARROW}%f"
+        p3="%F{$7}"
       fi
-      if [ "$2" = "NONE" ]; then
-        p2=" $3 "
+      if [ "$8" = "NONE" ]; then
+        p2=" $9 "
       else
-        p2="%F{$2} $3 %f"
+        p2="%F{$8} $9 %f"
       fi
       echo ${p1}${p2}${p3}
     fi
@@ -194,7 +194,7 @@ prompt_left_tmux - tmux left status line
 prompt_left_tmux_arrow - tmux left status line arrow
 "
 
-# hysteria-line [left|right] [zsh|tmux] promptstyle
+# hysteria-line [left|right] [zsh|tmux] hardarrow softarrow bg fg promptstyle
 function hysteria-line {
   # PROMPT_POS and PROMPT_SHELL env uses in hysteria-* functions.
   if [ $1 = "right" ]; then
@@ -204,41 +204,44 @@ function hysteria-line {
   fi
 
   PROMPT_SHELL="$2"
-  PROMPT_STYLE="$3"
-  PROMPT_TEXT=`hysteria-color-wrapper-start $2`
+  PROMPT_STYLE="$7"
+  HARD_ARROW="$3"
+  SOFT_ARROW="$4"
+  BG="$5"
+  FG="$6"
+  PROMPT_TEXT=`hysteria-color-wrapper-start ${PROMPT_POS} ${PROMPT_SHELL} "${HARD_ARROW}" "${SOFT_ARROW}" "${BG}" "${FG}"`
   for prompt in ${=PROMPT_STYLE}; do
     CMD=`prompt-\`echo $prompt | cut -d"," -f3\``
-    PROMPT_TEXT=$PROMPT_TEXT`hysteria-color-wrapper \`echo $prompt | cut -d"," -f1\` \`echo $prompt |  cut -d"," -f2\` "${CMD}"`
+    PROMPT_TEXT=$PROMPT_TEXT`hysteria-color-wrapper ${PROMPT_POS} ${PROMPT_SHELL} "${HARD_ARROW}" "${SOFT_ARROW}" "${BG}" "${FG}" \`echo $prompt | cut -d"," -f1\` \`echo $prompt |  cut -d"," -f2\` "${CMD}"`
   done
-  PROMPT_TEXT=${PROMPT_TEXT}`hysteria-color-wrapper-end $2`
+  PROMPT_TEXT=${PROMPT_TEXT}`hysteria-color-wrapper-end ${PROMPT_POS} ${PROMPT_SHELL} "${HARD_ARROW}" "${SOFT_ARROW}" "${BG}" "${FG}"`
   echo "${PROMPT_TEXT}"
 }
 
 function hysteria-line-update {
 # re eval prompt text
+  PROMPT_RIGHT_ARROW="on"
   if [ -n "${prompt_right_arrow}" ]; then
-    set-arrow ${prompt_right_arrow}
-  else
-    set-arrow "on"
+    PROMPT_RIGHT_ARROW=${prompt_right_arrow}
   fi
+  PROMPT_ZSH="232,124,vcs"
   if [ -n "$prompt_right" ]; then
     PROMPT_ZSH="$prompt_right"
-  else
-    PROMPT_ZSH="232,124,vcs"
   fi
-  RPROMPT="`hysteria-line right zsh ${PROMPT_ZSH}`"
+  set-arrow ${PROMPT_RIGHT_ARROW}
+  RPROMPT=`hysteria-line right zsh "${HARD_LEFT_ARROW}" "${SOFT_LEFT_ARROW}" NONE NONE "${PROMPT_ZSH}"`
 
+  PROMPT_LEFT_ARROW="off"
   if [ -n "${prompt_left_arrow}" ]; then
-    set-arrow "${prompt_left_arrow}"
-  else
-    set-arrow "off"
+    PROMPT_LEFT_ARROW="${prompt_left_arrow}"
   fi
   if [ -n "$prompt_left" ]; then
     PROMPT_ZSH="$prompt_left"
   else
     PROMPT_ZSH="NONE,124,arrow"
   fi
-  PROMPT="`hysteria-line left zsh ${PROMPT_ZSH}`"
+  set-arrow ${PROMPT_LEFT_ARROW}
+  PROMPT=`hysteria-line left zsh "${HARD_RIGHT_ARROW}" "${SOFT_RIGHT_ARROW}" NONE NONE "${PROMPT_ZSH}"`
 }
 
 function hysteria-line-init {
@@ -250,15 +253,13 @@ function hysteria-line-init {
   
   # set fixed tmux prompt
   if [ -n "$TMUX" ]; then
+    PROMPT_TMUX_ARROW="off"
     if [ -n "${prompt_tmux_arrow}" ]; then
-      set-arrow "${prompt_tmux_arrow}"
-    else
-      set-arrow "off"
+      PROMPT_TMUX_ARROW="${prompt_tmux_arrow}"
     fi
+    PROMPT_LEFT_TMUX_ARROW="on"
     if [ -n "${prompt_left_tmux_arrow}" ]; then
       PROMPT_LEFT_TMUX_ARROW="${prompt_left_tmux_arrow}"
-    else
-      PROMPT_LEFT_TMUX_ARROW="on"
     fi
     if [ -n "$prompt_left_tmux" ]; then
       PROMPT_LEFT_TMUX=${prompt_left_tmux}
@@ -275,7 +276,7 @@ function hysteria-line-init {
     else
       PROMPT_RIGHT_TMUX="255,233,date 232,250,time"
     fi
-    
+    set-arrow ${PROMPT_TMUX_ARROW}
     tmux set -g window-status-current-bg colour${COLOR_BG_TMUX} > /dev/null 2> /dev/null
     tmux set -g window-status-current-fg colour${COLOR_FG_LPROMPT} > /dev/null 2> /dev/null
     tmux set -g window-status-current-format "#[fg=colour${COLOR_BG_TMUX},bg=colour${COLOR_BG_LPROMPT}]${HARD_RIGHT_ARROW} #[fg=colour${COLOR_FG_LPROMPT}]#I.#W #[fg=colour${COLOR_BG_LPROMPT}]#[bg=colour${COLOR_BG_TMUX}]${HARD_RIGHT_ARROW}" > /dev/null 2> /dev/null
@@ -285,18 +286,19 @@ function hysteria-line-init {
     tmux set -g pane-active-border-bg colour${COLOR_BG_TMUX} > /dev/null 2> /dev/null
     tmux set -g pane-border-bg 8 > /dev/null 2> /dev/null
     tmux set -g pane-border-fg colour${COLOR_BG_TMUX} > /dev/null 2> /dev/null
-    tmux set -g status-left  "#(zsh $PROMPT_SCRIPT command tmux left ${PROMPT_LEFT_TMUX_ARROW} '${PROMPT_LEFT_TMUX}')"   > /dev/null 2> /dev/null
-    tmux set -g status-right  "#(zsh $PROMPT_SCRIPT command tmux right ${PROMPT_RIGHT_TMUX_ARROW} '${PROMPT_RIGHT_TMUX}')"   > /dev/null 2> /dev/null
+    set-arrow ${PROMPT_LEFT_TMUX_ARROW}
+    tmux set -g status-left  "#(zsh $PROMPT_SCRIPT command tmux left '${HARD_RIGHT_ARROW}' '${SOFT_RIGHT_ARROW}' '${COLOR_BG_TMUX}' '${COLOR_FG_LPROMPT}' '${PROMPT_LEFT_TMUX}')"   > /dev/null 2> /dev/null
+    set-arrow ${PROMPT_RIGHT_TMUX_ARROW}
+    tmux set -g status-right  "#(zsh $PROMPT_SCRIPT command tmux right '${HARD_LEFT_ARROW}' '${SOFT_LEFT_ARROW}' '${COLOR_BG_TMUX}' '${COLOR_FG_LPROMPT}' '${PROMPT_RIGHT_TMUX}')"   > /dev/null 2> /dev/null
   fi
   
   zle -N zle-line-init
   zle -N zle-keymap-select
 }
 
-if [ $# = 5 ]; then
+if [ $# = 8 ]; then
   if [ $1 = "command" ]; then
     source ~/local/conf/user-env.zsh
-    set-arrow $4
-    hysteria-line $3 $2 "$5"
+    hysteria-line $3 $2 "$4" "$5" "$6" "$7" "$8"
   fi
 fi
