@@ -241,37 +241,6 @@ function hysteria-line-update {
   PROMPT="`hysteria-line left zsh ${PROMPT_ZSH}`"
 }
 
-function hysteria-line-view-tmux {
-  if [ -n "$TMUX" ]; then
-    if [ $1 = "left" ]; then
-      if [ -n "${prompt_left_tmux_arrow}" ]; then
-        set-arrow "${prompt_left_tmux_arrow}"
-      else
-        set-arrow "on"
-      fi
-      if [ -n "$prompt_left_tmux" ]; then
-        PROMPT_TMUX=${prompt_left_tmux}
-      else
-        PROMPT_TMUX="088,255,window 255,233,hostname"
-      fi
-      echo "`hysteria-line left tmux ${PROMPT_TMUX}`"
-    else
-      if [ -n "${prompt_right_tmux_arrow}" ]; then
-        set-arrow "${prompt_right_tmux_arrow}"
-      else
-        set-arrow "on"
-      fi
-      if [ -n "$prompt_right_tmux" ]; then
-        PROMPT_TMUX="$prompt_right_tmux"
-      else
-        PROMPT_TMUX="255,233,date 232,250,time"
-      fi
-      echo "`hysteria-line right tmux ${PROMPT_TMUX}`"
-    fi
-  fi
-}
-
-
 function hysteria-line-init {
   function zle-line-init zle-keymap-select {
     hysteria-line-update
