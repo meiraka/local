@@ -1,4 +1,4 @@
-# zsh prompt settings.
+# zsh prompt setting24
 #TODO remove global vars
 
 
@@ -120,6 +120,19 @@ function hysteria-color-wrapper {
       echo ${p1}${p2}${p3}
     fi
   fi
+}
+
+function prompt-mpd {
+  out=`mpc`
+  python -c "\
+import commands,sys,os;\
+a=commands.getoutput('mpc');\
+b = a.split('\n')[0] if a.split('\n')[1].startswith('[playing') else '';\
+c = ':%s' % os.environ['MPD_PORT'] if 'MPD_PORT' in os.environ else '';\
+c = 'at %s%s. ' % (os.environ['MPD_HOST'],c) if 'MPD_HOST' in os.environ else '';\
+d = 'now playing %s%s' % (c,b) if b else '';\
+print d"
+
 }
 
 function prompt-vcs {
@@ -271,10 +284,9 @@ function hysteria-line-init {
     else
       PROMPT_RIGHT_TMUX_ARROW="on"
     fi
+    PROMPT_RIGHT_TMUX="124,255,mpd 255,233,date 232,250,time"
     if [ -n "$prompt_right_tmux" ]; then
       PROMPT_RIGHT_TMUX="$prompt_right_tmux"
-    else
-      PROMPT_RIGHT_TMUX="255,233,date 232,250,time"
     fi
     set-arrow ${PROMPT_TMUX_ARROW}
     tmux set -g window-status-current-bg colour${COLOR_BG_TMUX} > /dev/null 2> /dev/null
