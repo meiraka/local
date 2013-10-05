@@ -75,8 +75,11 @@ function hysteria-color-wrapper-end {
   fi
 }
 
-
 function hysteria-color-wrapper {
+  # if empty
+  if [ -z $9 ]; then
+    return
+  fi
   if [ ${PROMPT_SHELL} = 'tmux' ]; then
     if  [ "${PROMPT_POS}" = "right" ]; then
       echo "\
