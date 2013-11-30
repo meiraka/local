@@ -1,3 +1,5 @@
+
+runtime! conf/*.vim
 set t_Co=256
 colorscheme hysteria
 syntax on
