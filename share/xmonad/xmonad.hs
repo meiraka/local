@@ -8,6 +8,7 @@ import XMonad.Util.EZConfig
 import XMonad.Layout.Fullscreen
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Spacing
+import XMonad.Layout.ToggleLayouts
 
 import XMonad.Hooks.FadeInactive
 import qualified XMonad.StackSet as W
@@ -37,7 +38,7 @@ myMouseBindings (XConfig {XMonad.modMask = modMask}) = M.fromList
 
 
 normalLayout = spacing 9 $ Tall 2 (7/12) (7/12)
-myLayout = normalLayout ||| Mirror normalLayout ||| Full
+myLayout = toggleLayouts Full (normalLayout ||| Mirror normalLayout)
 
 
 main = do
@@ -73,4 +74,5 @@ myConfig = defaultConfig
         [ ((mod4Mask, xK_w), kill) -- close window
         , ((mod4Mask .|. shiftMask, xK_r), io (exitWith ExitSuccess))
         , ((mod4Mask, xK_r     ), spawn "if type xmonad; then xmonad --recompile && xmonad --restart; else xmessage xmonad not in \\$PATH: \"$PATH\"; fi")
+        , ((mod4Mask, xK_f), sendMessage ToggleLayout)
         ]
