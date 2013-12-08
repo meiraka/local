@@ -36,6 +36,8 @@ myMouseBindings (XConfig {XMonad.modMask = modMask}) = M.fromList
     -- you may also bind events to the mouse scroll wheel (button4 and button5)
     ]
 
+keyModMask = mod4Mask
+
 
 normalLayout = spacing 9 $ Tall 2 (7/12) (7/12)
 myLayout = toggleLayouts Full (normalLayout ||| Mirror normalLayout)
@@ -54,7 +56,7 @@ main = do
         }
 
 myConfig = defaultConfig
-        { manageHook = manageDocks <+> manageHook defaultConfig
+        { manageHook         = manageDocks <+> manageHook defaultConfig
         , layoutHook         = avoidStruts $ myLayout
         , workspaces         = myWorkspaces
         , terminal           = "xfce4-terminal"
@@ -67,12 +69,12 @@ myConfig = defaultConfig
         , mouseBindings      = myMouseBindings
         }
         `removeKeys`
-        [ (mod4Mask              , xK_q)
-        , (mod4Mask .|. shiftMask, xK_q)
+        [ (keyModMask              , xK_q)
+        , (keyModMask .|. shiftMask, xK_q)
         ]
         `additionalKeys`
-        [ ((mod4Mask, xK_w), kill) -- close window
-        , ((mod4Mask .|. shiftMask, xK_r), io (exitWith ExitSuccess))
-        , ((mod4Mask, xK_r     ), spawn "if type xmonad; then xmonad --recompile && xmonad --restart; else xmessage xmonad not in \\$PATH: \"$PATH\"; fi")
-        , ((mod4Mask, xK_f), sendMessage ToggleLayout)
+        [ ((keyModMask, xK_w), kill) -- close window
+        , ((keyModMask .|. shiftMask, xK_r), io (exitWith ExitSuccess))
+        , ((keyModMask, xK_r     ), spawn "if type xmonad; then xmonad --recompile && xmonad --restart; else xmessage xmonad not in \\$PATH: \"$PATH\"; fi")
+        , ((keyModMask, xK_f), sendMessage ToggleLayout)
         ]
