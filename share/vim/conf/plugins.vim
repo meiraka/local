@@ -13,5 +13,4 @@ NeoBundle 'Shougo/vimproc'
 NeoBundle 'Shougo/vimshell.vim'
 NeoBundle 'ujihisa/vimshell-ssh'
 
-filetype plugin indent on
 filetype on

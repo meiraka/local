@@ -30,10 +30,65 @@ manageScratchPad = scratchpadManageHook (W.RationalRect 0 0 1 0.5)
 myTerminal = "gnome-terminal"
 scratchPad = scratchpadSpawnActionCustom "gnome-terminal --disable-factory --name scratchpad"
 
+-- Keyboard Settings
+keyModMask = mod4Mask
+    -- launching and killing programs
+    [ ((keyModMask .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf) -- %! Launch terminal
+    , ((keyModMask,               xK_p     ), spawn "dmenu_run") -- %! Launch dmenu
+    , ((keyModMask .|. shiftMask, xK_p     ), spawn "gmrun") -- %! Launch gmrun
+    , ((keyModMask,               xK_w     ), kill) -- %! Close the focused window
+    , ((keyModMask,               xK_a     ), sendMessage NextLayout) -- %! Rotate through the available layout algorithms
+    , ((keyModMask,            xK_f     ), sendMessage ToggleLayout)
+    , ((keyModMask,            xK_space ), scratchPad)
+    , ((keyModMask,               xK_n     ), refresh) -- %! Resize viewed windows to the correct size
+
+    -- move focus up or down the window stack
+    , ((keyModMask,               xK_Tab   ), windows W.focusDown) -- %! Move focus to the next window
+    , ((keyModMask .|. shiftMask, xK_Tab   ), windows W.focusUp  ) -- %! Move focus to the previous window
+    , ((keyModMask,               xK_j     ), windows W.focusDown) -- %! Move focus to the next window
+    , ((keyModMask,               xK_k     ), windows W.focusUp  ) -- %! Move focus to the previous window
+    , ((keyModMask,               xK_m     ), windows W.focusMaster  ) -- %! Move focus to the master window
+
+    -- modifying the window order
+    , ((keyModMask,               xK_Return), windows W.swapMaster) -- %! Swap the focused window and the master window
+    , ((keyModMask .|. shiftMask, xK_j     ), windows W.swapDown  ) -- %! Swap the focused window with the next window
+    , ((keyModMask .|. shiftMask, xK_k     ), windows W.swapUp    ) -- %! Swap the focused window with the previous window
+
+    -- resizing the master/slave ratio
+    , ((keyModMask,               xK_h     ), sendMessage Shrink) -- %! Shrink the master area
+    , ((keyModMask,               xK_l     ), sendMessage Expand) -- %! Expand the master area
+
+    -- floating layer support
+    , ((keyModMask,               xK_t     ), withFocused $ windows . W.sink) -- %! Push window back into tiling
+
+    -- increase or decrease number of windows in the master area
+    , ((keyModMask              , xK_comma ), sendMessage (IncMasterN 1)) -- %! Increment the number of windows in the master area
+    , ((keyModMask              , xK_period), sendMessage (IncMasterN (-1))) -- %! Deincrement the number of windows in the master area
+
+    -- quit, or restart
+    , ((keyModMask .|. shiftMask, xK_r     ), io (exitWith ExitSuccess)) -- %! Quit xmonad
+    , ((keyModMask              , xK_r     ), spawn "if type xmonad; then xmonad --recompile && xmonad --restart; else xmessage xmonad not in \\$PATH: \"$PATH\"; fi") -- %! Restart xmonad
+
+    ]
+    ++
+    -- mod-[1..9] %! Switch to workspace N
+    -- mod-shift-[1..9] %! Move client to workspace N
+    [((m .|. keyModMask, k), windows $ f i)
+        | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
+        , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
+    ++
+    -- mod-{w,e,r} %! Switch to physical/Xinerama screens 1, 2, or 3
+    -- mod-shift-{w,e,r} %! Move client to screen 1, 2, or 3
+    [((m .|. keyModMask, key), screenWorkspace sc >>= flip whenJust (windows . f))
+        | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]
+        , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
+
+
+
 -- Mouse Settings
 mouseModMask = mod1Mask
 
-myMouseBindings (XConfig {XMonad.modMask = modMask}) = M.fromList
+myMouseBindings (XConfig {XMonad.keyModMask = keyModMask}) = M.fromList
     -- mod-button1 %! Set the window to floating mode and move by dragging
     [ ((mouseModMask, button1), \w -> focus w >> mouseMoveWindow w
                                           >> windows W.shiftMaster)
@@ -45,7 +100,7 @@ myMouseBindings (XConfig {XMonad.modMask = modMask}) = M.fromList
     -- you may also bind events to the mouse scroll wheel (button4 and button5)
     ]
 
-keyModMask = mod4Mask
+
 
 
 normalLayout = spacing 9 $ Tall 2 (7/12) (7/12)
@@ -75,19 +130,8 @@ myConfig = defaultConfig
         , borderWidth        = 6
         , normalBorderColor  = "#303030"
         , focusedBorderColor = "#9B3453"
-        , modMask            = mod4Mask
         , focusFollowsMouse  = False
         , startupHook        = startup
+        , keys               = myKeys
         , mouseBindings      = myMouseBindings
         }
-        `removeKeys`
-        [ (keyModMask              , xK_q)
-        , (keyModMask .|. shiftMask, xK_q)
-        ]
-        `additionalKeys`
-        [ ((keyModMask, xK_w), kill) -- close window
-        , ((keyModMask .|. shiftMask, xK_r), io (exitWith ExitSuccess))
-        , ((keyModMask, xK_r     ), spawn "if type xmonad; then xmonad --recompile && xmonad --restart; else xmessage xmonad not in \\$PATH: \"$PATH\"; fi")
-        , ((keyModMask, xK_f), sendMessage ToggleLayout)
-        , ((keyModMask, xK_d), scratchPad)
-        ]
