@@ -5,6 +5,7 @@ import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
 import XMonad.Util.Run(spawnPipe)
 import XMonad.Util.EZConfig
+import XMonad.Util.Scratchpad
 import XMonad.Layout.Fullscreen
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Spacing
@@ -13,6 +14,7 @@ import XMonad.Layout.ToggleLayouts
 import XMonad.Hooks.FadeInactive
 import qualified XMonad.StackSet as W
 import qualified Data.Map as M
+import qualified Data.List
 
 startup :: X ()
 startup = do
@@ -20,6 +22,13 @@ startup = do
 
 myWorkspaces = [ "♥", "♦", "♠", "♣"] ++ map show [5..9]
 
+myManageHook = manageDocks <+> manageHook defaultConfig <+> manageScratchPad
+
+-- scratchpad for quake style terminal.
+manageScratchPad :: ManageHook
+manageScratchPad = scratchpadManageHook (W.RationalRect 0 0 1 0.5)
+myTerminal = "gnome-terminal"
+scratchPad = scratchpadSpawnActionCustom "gnome-terminal --disable-factory --name scratchpad"
 
 -- Mouse Settings
 mouseModMask = mod1Mask
@@ -49,17 +58,20 @@ main = do
         { logHook            = dynamicLogWithPP $ xmobarPP
                                { ppOutput = hPutStrLn xmproc
                                , ppCurrent  = xmobarColor "red" "" .wrap " " ""
-                               , ppHidden  = xmobarColor "#D0D0D0" "" .wrap " " ""
+                               , ppHidden  = xmobarColor "#D0D0D0" "" .wrap " " "" .noScratchPad
                                , ppTitle = xmobarColor "#9B3453" "" . shorten 80
                                }
 
         }
 
+        where
+          noScratchPad ws = if ws == "NSP" then "" else ws
+
 myConfig = defaultConfig
-        { manageHook         = manageDocks <+> manageHook defaultConfig
+        { manageHook         = myManageHook
         , layoutHook         = avoidStruts $ myLayout
         , workspaces         = myWorkspaces
-        , terminal           = "xfce4-terminal"
+        , terminal           = myTerminal
         , borderWidth        = 6
         , normalBorderColor  = "#303030"
         , focusedBorderColor = "#9B3453"
@@ -77,4 +89,5 @@ myConfig = defaultConfig
         , ((keyModMask .|. shiftMask, xK_r), io (exitWith ExitSuccess))
         , ((keyModMask, xK_r     ), spawn "if type xmonad; then xmonad --recompile && xmonad --restart; else xmessage xmonad not in \\$PATH: \"$PATH\"; fi")
         , ((keyModMask, xK_f), sendMessage ToggleLayout)
+        , ((keyModMask, xK_d), scratchPad)
         ]
