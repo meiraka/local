@@ -32,6 +32,9 @@ scratchPad = scratchpadSpawnActionCustom "gnome-terminal --disable-factory --nam
 
 -- Keyboard Settings
 keyModMask = mod4Mask
+
+myKeys :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
+myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     -- launching and killing programs
     [ ((keyModMask .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf) -- %! Launch terminal
     , ((keyModMask,               xK_p     ), spawn "dmenu_run") -- %! Launch dmenu
@@ -88,7 +91,7 @@ keyModMask = mod4Mask
 -- Mouse Settings
 mouseModMask = mod1Mask
 
-myMouseBindings (XConfig {XMonad.keyModMask = keyModMask}) = M.fromList
+myMouseBindings (XConfig {XMonad.modMask = keyModMask}) = M.fromList
     -- mod-button1 %! Set the window to floating mode and move by dragging
     [ ((mouseModMask, button1), \w -> focus w >> mouseMoveWindow w
                                           >> windows W.shiftMaster)
