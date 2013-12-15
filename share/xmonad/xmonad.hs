@@ -37,12 +37,11 @@ myKeys :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
 myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     -- launching and killing programs
     [ ((keyModMask .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf) -- %! Launch terminal
-    , ((keyModMask,               xK_p     ), spawn "dmenu_run") -- %! Launch dmenu
-    , ((keyModMask .|. shiftMask, xK_p     ), spawn "gmrun") -- %! Launch gmrun
+    , ((keyModMask,               xK_r     ), spawn "gmrun") -- %! Launch gmrun
     , ((keyModMask,               xK_w     ), kill) -- %! Close the focused window
     , ((keyModMask,               xK_a     ), sendMessage NextLayout) -- %! Rotate through the available layout algorithms
-    , ((keyModMask,            xK_f     ), sendMessage ToggleLayout)
-    , ((keyModMask,            xK_space ), scratchPad)
+    , ((keyModMask,               xK_f     ), sendMessage ToggleLayout)
+    , ((keyModMask,               xK_space ), scratchPad)
     , ((keyModMask,               xK_n     ), refresh) -- %! Resize viewed windows to the correct size
 
     -- move focus up or down the window stack
@@ -69,8 +68,8 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     , ((keyModMask              , xK_period), sendMessage (IncMasterN (-1))) -- %! Deincrement the number of windows in the master area
 
     -- quit, or restart
-    , ((keyModMask .|. shiftMask, xK_r     ), io (exitWith ExitSuccess)) -- %! Quit xmonad
-    , ((keyModMask              , xK_r     ), spawn "if type xmonad; then xmonad --recompile && xmonad --restart; else xmessage xmonad not in \\$PATH: \"$PATH\"; fi") -- %! Restart xmonad
+    , ((keyModMask .|. shiftMask, xK_q     ), io (exitWith ExitSuccess)) -- %! Quit xmonad
+    , ((keyModMask .|. shiftMask, xK_r     ), spawn "if type xmonad; then xmonad --recompile && xmonad --restart; else xmessage xmonad not in \\$PATH: \"$PATH\"; fi") -- %! Restart xmonad
 
     ]
     ++
@@ -79,12 +78,6 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     [((m .|. keyModMask, k), windows $ f i)
         | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
         , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
-    ++
-    -- mod-{w,e,r} %! Switch to physical/Xinerama screens 1, 2, or 3
-    -- mod-shift-{w,e,r} %! Move client to screen 1, 2, or 3
-    [((m .|. keyModMask, key), screenWorkspace sc >>= flip whenJust (windows . f))
-        | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]
-        , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
 
 
 
