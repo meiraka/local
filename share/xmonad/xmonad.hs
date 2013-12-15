@@ -23,12 +23,12 @@ startup = do
 main = do
     xmproc <- spawnPipe "xmobar"
     xmonad myConfig
-        { logHook            = dynamicLogWithPP $ xmobarPP
-                               { ppOutput = hPutStrLn xmproc
-                               , ppCurrent  = xmobarColor "red" "" .wrap " " ""
-                               , ppHidden  = xmobarColor "#D0D0D0" "" .wrap " " "" .noScratchPad
-                               , ppTitle = xmobarColor "#9B3453" "" . shorten 80
-                               }
+        { logHook            = do fadeInactiveLogHook 0xdddddddd
+                                  dynamicLogWithPP $ xmobarPP { ppOutput = hPutStrLn xmproc
+                                                              , ppCurrent  = xmobarColor "red" "" .wrap " " ""
+                                                              , ppHidden  = xmobarColor "#D0D0D0" "" .wrap " " "" .noScratchPad
+                                                              , ppTitle = xmobarColor "#9B3453" "" . shorten 80
+                                                              }
 
         }
 
