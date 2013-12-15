@@ -51,16 +51,15 @@ myConfig = defaultConfig
 
 myWorkspaces = [ "♥", "♦", "♠", "♣"] ++ map show [5..9]
 
-myManageHook = manageDocks <+> manageHook defaultConfig <+> manageScratchPad
+myManageHook = manageDocks <+>
+               scratchpadManageHook (W.RationalRect 0 0 1 (3/4)) <+>
+               manageHook defaultConfig
 
+myLayout     = toggleLayouts fullLayout (normalLayout ||| Mirror normalLayout)
 normalLayout = spacing 9 $ Tall 2 (7/12) (7/12)
-myLayout = toggleLayouts Full (normalLayout ||| Mirror normalLayout)
+fullLayout   = noBorders Full
 
-
-
--- scratchpad for quake style terminal.
-manageScratchPad :: ManageHook
-manageScratchPad = scratchpadManageHook (W.RationalRect 0 0 1 0.8)
+-- scratchpad for quake style terminal using gnome-terminal.
 myTerminal = "gnome-terminal"
 scratchPad = scratchpadSpawnActionCustom "gnome-terminal --disable-factory --name scratchpad"
 
