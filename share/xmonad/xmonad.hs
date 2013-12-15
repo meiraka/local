@@ -20,13 +20,47 @@ startup :: X ()
 startup = do
            spawn "sh ~/.xmonad/autostart.sh"
 
+main = do
+    xmproc <- spawnPipe "xmobar"
+    xmonad myConfig
+        { logHook            = dynamicLogWithPP $ xmobarPP
+                               { ppOutput = hPutStrLn xmproc
+                               , ppCurrent  = xmobarColor "red" "" .wrap " " ""
+                               , ppHidden  = xmobarColor "#D0D0D0" "" .wrap " " "" .noScratchPad
+                               , ppTitle = xmobarColor "#9B3453" "" . shorten 80
+                               }
+
+        }
+
+        where
+          noScratchPad ws = if ws == "NSP" then "" else ws
+
+myConfig = defaultConfig
+        { manageHook         = myManageHook
+        , layoutHook         = avoidStruts $ myLayout
+        , workspaces         = myWorkspaces
+        , terminal           = myTerminal
+        , borderWidth        = 6
+        , normalBorderColor  = "#303030"
+        , focusedBorderColor = "#9B3453"
+        , focusFollowsMouse  = False
+        , startupHook        = startup
+        , keys               = myKeys
+        , mouseBindings      = myMouseBindings
+        }
+
 myWorkspaces = [ "♥", "♦", "♠", "♣"] ++ map show [5..9]
 
 myManageHook = manageDocks <+> manageHook defaultConfig <+> manageScratchPad
 
+normalLayout = spacing 9 $ Tall 2 (7/12) (7/12)
+myLayout = toggleLayouts Full (normalLayout ||| Mirror normalLayout)
+
+
+
 -- scratchpad for quake style terminal.
 manageScratchPad :: ManageHook
-manageScratchPad = scratchpadManageHook (W.RationalRect 0 0 1 0.5)
+manageScratchPad = scratchpadManageHook (W.RationalRect 0 0 1 0.8)
 myTerminal = "gnome-terminal"
 scratchPad = scratchpadSpawnActionCustom "gnome-terminal --disable-factory --name scratchpad"
 
@@ -98,36 +132,3 @@ myMouseBindings (XConfig {XMonad.modMask = keyModMask}) = M.fromList
 
 
 
-
-normalLayout = spacing 9 $ Tall 2 (7/12) (7/12)
-myLayout = toggleLayouts Full (normalLayout ||| Mirror normalLayout)
-
-
-main = do
-    xmproc <- spawnPipe "xmobar"
-    xmonad myConfig
-        { logHook            = dynamicLogWithPP $ xmobarPP
-                               { ppOutput = hPutStrLn xmproc
-                               , ppCurrent  = xmobarColor "red" "" .wrap " " ""
-                               , ppHidden  = xmobarColor "#D0D0D0" "" .wrap " " "" .noScratchPad
-                               , ppTitle = xmobarColor "#9B3453" "" . shorten 80
-                               }
-
-        }
-
-        where
-          noScratchPad ws = if ws == "NSP" then "" else ws
-
-myConfig = defaultConfig
-        { manageHook         = myManageHook
-        , layoutHook         = avoidStruts $ myLayout
-        , workspaces         = myWorkspaces
-        , terminal           = myTerminal
-        , borderWidth        = 6
-        , normalBorderColor  = "#303030"
-        , focusedBorderColor = "#9B3453"
-        , focusFollowsMouse  = False
-        , startupHook        = startup
-        , keys               = myKeys
-        , mouseBindings      = myMouseBindings
-        }
