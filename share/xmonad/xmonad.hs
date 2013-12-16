@@ -23,7 +23,7 @@ startup = do
 main = do
     xmproc <- spawnPipe "xmobar"
     xmonad myConfig
-        { logHook            = do fadeInactiveLogHook 0xdddddddd
+        { logHook            = do fadeInactiveLogHook fadeAmount
                                   dynamicLogWithPP $ xmobarPP { ppOutput = hPutStrLn xmproc
                                                               , ppCurrent  = xmobarColor "red" "" .wrap " " ""
                                                               , ppHidden  = xmobarColor "#D0D0D0" "" .wrap " " "" .noScratchPad
@@ -34,6 +34,7 @@ main = do
 
         where
           noScratchPad ws = if ws == "NSP" then "" else ws
+          fadeAmount = 0.7
 
 myConfig = defaultConfig
         { manageHook         = myManageHook
@@ -52,7 +53,7 @@ myConfig = defaultConfig
 myWorkspaces = [ "♥", "♦", "♠", "♣"] ++ map show [5..9]
 
 myManageHook = manageDocks <+>
-               scratchpadManageHook (W.RationalRect 0 0 1 (3/4)) <+>
+               scratchpadManageHook (W.RationalRect (1/20) (1/20) (18/20) (18/20)) <+>
                manageHook defaultConfig
 
 myLayout     = toggleLayouts fullLayout (normalLayout ||| Mirror normalLayout)
