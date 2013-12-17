@@ -7,6 +7,7 @@ update_link ()
   then
     echo $2 "is already copied."
   else
+    mkdir -p `dirname $1`
     ln -si $1 $2
   fi
   return 0
@@ -14,9 +15,11 @@ update_link ()
 
 update_git ()
 {
+  mkdir -p `dirname $1`
   cwd=`pwd`
   if [ -e $1 ]
   then
+    echo "checking update ${1}"
     cd $1
     git pull
     cd $cwd
@@ -38,7 +41,6 @@ echo "source-file ~/local/etc/tmux.conf" > ~/.tmux.conf
 
 # clone vim plugins
 VIM_PLUGINS_DIR=~/.vim-plugins
-mkdir -p $VIM_PLUGINS_DIR
 update_git $VIM_PLUGINS_DIR/neobundle.vim git://github.com/Shougo/neobundle.vim
 update_git $VIM_PLUGINS_DIR/vimproc git://github.com/Shougo/vimproc
 
