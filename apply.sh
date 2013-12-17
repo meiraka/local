@@ -43,6 +43,8 @@ update_git $VIM_PLUGINS_DIR/neobundle.vim git://github.com/Shougo/neobundle.vim
 update_git $VIM_PLUGINS_DIR/vimproc git://github.com/Shougo/vimproc
 
 # link settings.
+mkdir -p ~/.config/sakura
+update_link ~/local/config/sakura/sakura.conf ~/.config/sakura/sakura.conf
 update_link ~/local/share/vimrc ~/.vimrc
 update_link ~/local/share/vim/ ~/.vim
 update_link ~/local/share/xmonad/ ~/.xmonad

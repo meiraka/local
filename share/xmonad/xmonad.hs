@@ -60,9 +60,9 @@ myLayout     = toggleLayouts fullLayout (normalLayout ||| Mirror normalLayout)
 normalLayout = spacing 9 $ Tall 2 (7/12) (7/12)
 fullLayout   = noBorders Full
 
--- scratchpad for quake style terminal using gnome-terminal.
-myTerminal = "gnome-terminal"
-scratchPad = scratchpadSpawnActionCustom "gnome-terminal --disable-factory --name scratchpad"
+-- scratchpad for quake style terminal using sakura.
+myTerminal = "sakura"
+scratchPad = scratchpadSpawnActionCustom "sakura --name scratchpad"
 
 -- Keyboard Settings
 keyModMask = mod4Mask
@@ -74,8 +74,8 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     , ((keyModMask,               xK_r     ), spawn "gmrun") -- %! Launch gmrun
     , ((keyModMask,               xK_w     ), kill) -- %! Close the focused window
     , ((keyModMask,               xK_a     ), sendMessage NextLayout) -- %! Rotate through the available layout algorithms
-    , ((keyModMask,               xK_f     ), sendMessage ToggleLayout)
-    , ((keyModMask,               xK_space ), scratchPad)
+    , ((keyModMask,               xK_f     ), sendMessage ToggleLayout) -- %! Toggle fullscreen mode
+    , ((keyModMask,               xK_space ), scratchPad) -- %! Toggle terminal
     , ((keyModMask,               xK_n     ), refresh) -- %! Resize viewed windows to the correct size
 
     -- move focus up or down the window stack
