@@ -1,2 +1,10 @@
-conf/*
 
+# generated files
+*.hi
+*.o
+*.d
+
+xmonad-x86_64-linux
+xmonad.errors
+.netrwhist
+conf/*
