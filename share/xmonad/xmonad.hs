@@ -10,6 +10,8 @@ import XMonad.Layout.Fullscreen
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Spacing
 import XMonad.Layout.ToggleLayouts
+import XMonad.Layout.Grid
+import XMonad.Actions.GridSelect
 
 import XMonad.Hooks.FadeInactive
 import qualified XMonad.StackSet as W
@@ -57,7 +59,7 @@ myManageHook = manageDocks <+>
                manageHook defaultConfig
 
 myLayout     = toggleLayouts fullLayout (normalLayout ||| Mirror normalLayout)
-normalLayout = spacing 9 $ Tall 2 (7/12) (7/12)
+normalLayout = spacing 9 $ Grid
 fullLayout   = noBorders Full
 
 -- scratchpad for quake style terminal using sakura.
@@ -77,6 +79,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     , ((keyModMask,               xK_f     ), sendMessage ToggleLayout) -- %! Toggle fullscreen mode
     , ((keyModMask,               xK_space ), scratchPad) -- %! Toggle terminal
     , ((keyModMask,               xK_n     ), refresh) -- %! Resize viewed windows to the correct size
+    , ((keyModMask,               xK_g     ), goToSelected defaultGSConfig)    
 
     -- move focus up or down the window stack
     , ((keyModMask,               xK_Tab   ), windows W.focusDown) -- %! Move focus to the next window
