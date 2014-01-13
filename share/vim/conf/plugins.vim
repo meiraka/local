@@ -1,6 +1,8 @@
+" require version 7.0 or later.
+if v:version >= 700
+
 set nocompatible
 filetype off
-
 
 if has('vim_starting')
   set runtimepath+=~/.vim-plugins/neobundle.vim/
@@ -14,3 +16,4 @@ NeoBundle 'Shougo/vimshell.vim'
 NeoBundle 'ujihisa/vimshell-ssh'
 
 filetype on
+endif

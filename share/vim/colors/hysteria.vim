@@ -1,3 +1,6 @@
+" require version 7.0 or later.
+if v:version >= 700
+
 set background=dark
 if version > 580
 	hi clear
@@ -99,4 +102,4 @@ call s:ApplyColor("IncSearch", "088", s:mono(2))
 call s:ApplyColor("StatusLineNC", "NONE", s:mono(21))
 call s:ApplyColor("StatusLine", "NONE", "160")
 
-
+endif
