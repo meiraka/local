@@ -44,6 +44,10 @@ VIM_PLUGINS_DIR=~/.vim-plugins
 update_git $VIM_PLUGINS_DIR/neobundle.vim git://github.com/Shougo/neobundle.vim
 update_git $VIM_PLUGINS_DIR/vimproc git://github.com/Shougo/vimproc
 
+# update hub command.
+mkdir -p ~/src
+update_git ~/src/hub git://github.com/github/hub.git
+
 # link settings.
 mkdir -p ~/.config/sakura
 update_link ~/local/config/sakura/sakura.conf ~/.config/sakura/sakura.conf
@@ -54,3 +58,6 @@ update_link ~/local/share/xmonad/ ~/.xmonad
 # compile
 cd $VIM_PLUGINS_DIR/vimproc
 make
+cd ~/src/hub
+export PREFIX="$HOME"/local
+rake install
