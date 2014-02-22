@@ -54,7 +54,8 @@ myConfig = defaultConfig
 
 myWorkspaces = [ "♥", "♦", "♠", "♣"] ++ map show [5..9]
 
-myManageHook = manageDocks <+>
+myManageHook = composeAll([className =? "Xfce4-notifyd" --> doIgnore]) <+>
+               manageDocks <+>
                scratchpadManageHook (W.RationalRect (1/20) (1/20) (18/20) (18/20)) <+>
                manageHook defaultConfig
 
