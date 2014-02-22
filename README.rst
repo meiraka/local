@@ -8,4 +8,4 @@ USAGE
 
   cd ~/
   git clone git@github.com:meiraka/local.git
-  ./local/apply.sh
+  ./local/bin/apply.sh
