@@ -28,8 +28,8 @@ main = do
         { logHook            = do fadeInactiveLogHook fadeAmount
                                   dynamicLogWithPP $ xmobarPP { ppOutput = hPutStrLn xmproc
                                                               , ppCurrent  = xmobarColor "red" "" .wrap " " ""
-                                                              , ppHidden  = xmobarColor "#D0D0D0" "" .wrap " " "" .noScratchPad
-                                                              , ppTitle = xmobarColor "#9B3453" "" . shorten 80
+                                                              , ppHidden  = xmobarColor "#c0c0c0" "" .wrap " " "" .noScratchPad
+                                                              , ppTitle = xmobarColor "#c0c0c0" "" . shorten 80
                                                               }
 
         }
@@ -44,8 +44,8 @@ myConfig = defaultConfig
         , workspaces         = myWorkspaces
         , terminal           = myTerminal
         , borderWidth        = 6
-        , normalBorderColor  = "#303030"
-        , focusedBorderColor = "#9B3453"
+        , normalBorderColor  = "#202020"
+        , focusedBorderColor = "#ffe6f1"
         , focusFollowsMouse  = False
         , startupHook        = startup
         , keys               = myKeys
