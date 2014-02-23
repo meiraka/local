@@ -13,8 +13,10 @@ call neobundle#rc(expand('~/.vim-plugins/'))
 NeoBundle 'Shougo/neobundle.vim'
 NeoBundle 'Shougo/vimproc'
 NeoBundle 'Shougo/vimshell.vim'
+NeoBundle 'Shougo/neocomplcache'
 NeoBundle 'ujihisa/vimshell-ssh'
 NeoBundle 'scrooloose/nerdtree'
+NeoBundle 'kien/ctrlp.vim'
 
 filetype on
 endif
