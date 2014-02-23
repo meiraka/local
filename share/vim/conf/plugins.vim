@@ -14,6 +14,7 @@ NeoBundle 'Shougo/neobundle.vim'
 NeoBundle 'Shougo/vimproc'
 NeoBundle 'Shougo/vimshell.vim'
 NeoBundle 'ujihisa/vimshell-ssh'
+NeoBundle 'scrooloose/nerdtree'
 
 filetype on
 endif

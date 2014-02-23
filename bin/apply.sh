@@ -58,6 +58,9 @@ update_link ~/local/share/xmonad/ ~/.xmonad
 # compile
 cd $VIM_PLUGINS_DIR/vimproc
 make
+mkdir -p ~/local/share/vim/autoload
+cp -r $VIM_PLUGINS_DIR/vimproc/autoload/* ~/local/share/vim/autoload/
+
 cd ~/src/hub
 export PREFIX="$HOME"/local
 rake install
