@@ -17,6 +17,7 @@ NeoBundle 'Shougo/neocomplcache'
 NeoBundle 'ujihisa/vimshell-ssh'
 NeoBundle 'scrooloose/nerdtree'
 NeoBundle 'kien/ctrlp.vim'
-
+" reStructuredText
+NeoBundle 'Rykka/riv.vim'
 filetype on
 endif
