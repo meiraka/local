@@ -1,3 +1,3 @@
 
 " toggle tree
-nnoremap <silent> <C-e>      :NERDTreeToggle
+nnoremap <silent> <C-e>      :NERDTreeToggle<CR>
