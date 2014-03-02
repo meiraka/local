@@ -17,9 +17,11 @@ NeoBundle 'Shougo/neocomplcache'
 NeoBundle 'ujihisa/vimshell-ssh'
 NeoBundle 'scrooloose/nerdtree'
 NeoBundle 'kien/ctrlp.vim'
+NeoBundle 'nathanaelkane/vim-indent-guides'
 " reStructuredText
 NeoBundle 'Rykka/riv.vim'
 " python
 NeoBundle 'davidhalter/jedi-vim', { 'rev': '3934359'}
+
 filetype on
 endif
