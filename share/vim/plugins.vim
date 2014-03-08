@@ -10,18 +10,26 @@ endif
 
 call neobundle#rc(expand('~/.vim-plugins/'))
 
-NeoBundle 'Shougo/neobundle.vim'
-NeoBundle 'Shougo/vimproc'
-NeoBundle 'Shougo/vimshell.vim'
-NeoBundle 'Shougo/neocomplcache'
-NeoBundle 'ujihisa/vimshell-ssh'
-NeoBundle 'scrooloose/nerdtree'
-NeoBundle 'kien/ctrlp.vim'
-NeoBundle 'nathanaelkane/vim-indent-guides'
+function! s:Plugin (label, ...)
+    let qlabel = "'" . a:label . "'"
+    for i in a:000
+        let qlabel = qlabel . ", " . i
+    endfor
+    call neobundle#parser#bundle(substitute(qlabel, '\s"[^"]\+$', '', ''))
+endfunction
+
+call s:Plugin('Shougo/neobundle.vim')
+call s:Plugin('Shougo/vimproc')
+call s:Plugin('Shougo/vimshell.vim')
+call s:Plugin('Shougo/neocomplcache')
+call s:Plugin('ujihisa/vimshell-ssh')
+call s:Plugin('scrooloose/nerdtree')
+call s:Plugin('kien/ctrlp.vim')
+call s:Plugin('nathanaelkane/vim-indent-guides')
 " reStructuredText
-NeoBundle 'Rykka/riv.vim'
+call s:Plugin('Rykka/riv.vim')
 " python
-NeoBundle 'davidhalter/jedi-vim', { 'rev': '3934359'}
+call s:Plugin('davidhalter/jedi-vim', "{ 'rev': '3934359'}")
 
 filetype on
 endif
