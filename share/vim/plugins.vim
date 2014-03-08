@@ -10,15 +10,29 @@ endif
 
 call neobundle#rc(expand('~/.vim-plugins/'))
 
-" Wrapper for NeoBundle command
-function! s:plugin (label)
+" get vim plugin config dir(dirty method).
+function! s:get_plugin_dir ()
+    return '~/.vim/plugins-config'
+endfunction
+
+" Wrapper NeoBundle command to load plugins config files.
+function! s:load_plugin (label)
     call neobundle#parser#bundle(substitute(a:label, '\s"[^"]\+$', '', ''))
     let plugin_name = substitute(matchstr(a:label, '\/\([^'']\+\)', 0), '\.vim', '', "g")
     let plugin_path = 'plugins-config' . plugin_name . '.vim'
     exec 'runtime! ' . plugin_path
 endfunction
 
-command! -nargs=+ LoadPlugin call s:plugin(<q-args>)
+" open plugin config file.
+function! s:config_plugin (plugin_name)
+    let plugin_name = substitute(a:plugin_name, '\.vim', '', "g")
+    let plugin_path = s:get_plugin_dir() . '/' . plugin_name . '.vim'
+    exec 'new ' . plugin_path
+endfunction   
+    
+
+command! -nargs=+ LoadPlugin call s:load_plugin(<q-args>)
+command! -nargs=+ ConfigPlugin call s:config_plugin(<q-args>)
 
 LoadPlugin 'Shougo/neobundle.vim'
 LoadPlugin 'Shougo/vimproc'
