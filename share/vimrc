@@ -2,7 +2,6 @@ set tabstop=4
 set shiftwidth=4
 set expandtab
 runtime! plugins.vim
-runtime! conf/*.vim
 set t_Co=256
 colorscheme hysteria
 syntax on

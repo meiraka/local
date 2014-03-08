@@ -10,26 +10,28 @@ endif
 
 call neobundle#rc(expand('~/.vim-plugins/'))
 
-function! s:Plugin (label, ...)
-    let qlabel = "'" . a:label . "'"
-    for i in a:000
-        let qlabel = qlabel . ", " . i
-    endfor
-    call neobundle#parser#bundle(substitute(qlabel, '\s"[^"]\+$', '', ''))
+" Wrapper for NeoBundle command
+function! s:plugin (label)
+    call neobundle#parser#bundle(substitute(a:label, '\s"[^"]\+$', '', ''))
+    let plugin_name = substitute(matchstr(a:label, '\/\([^'']\+\)', 0), '\.vim', '', "g")
+    let plugin_path = 'plugins-config' . plugin_name . '.vim'
+    exec 'runtime! ' . plugin_path
 endfunction
 
-call s:Plugin('Shougo/neobundle.vim')
-call s:Plugin('Shougo/vimproc')
-call s:Plugin('Shougo/vimshell.vim')
-call s:Plugin('Shougo/neocomplcache')
-call s:Plugin('ujihisa/vimshell-ssh')
-call s:Plugin('scrooloose/nerdtree')
-call s:Plugin('kien/ctrlp.vim')
-call s:Plugin('nathanaelkane/vim-indent-guides')
+command! -nargs=+ LoadPlugin call s:plugin(<q-args>)
+
+LoadPlugin 'Shougo/neobundle.vim'
+LoadPlugin 'Shougo/vimproc'
+LoadPlugin 'Shougo/vimshell.vim'
+LoadPlugin 'Shougo/neocomplcache'
+LoadPlugin 'ujihisa/vimshell-ssh'
+LoadPlugin 'scrooloose/nerdtree'
+LoadPlugin 'kien/ctrlp.vim'
+LoadPlugin 'nathanaelkane/vim-indent-guides'
 " reStructuredText
-call s:Plugin('Rykka/riv.vim')
+LoadPlugin 'Rykka/riv.vim'
 " python
-call s:Plugin('davidhalter/jedi-vim', "{ 'rev': '3934359'}")
+LoadPlugin 'davidhalter/jedi-vim', { 'rev': '3934359'}
 
 filetype on
 endif
