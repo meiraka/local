@@ -14,9 +14,9 @@ at ubuntu desktop(python package is already installed:):
 SETUP
 =====
 
-::
+Ubuntu::
 
-  cd ~/
-  git clone git@github.com:meiraka/local.git
-  ./local/bin/apply.sh
+  wget "https://github.com/meiraka/local/blob/master/dep/ubuntu.sh"
+  chmod +x ubuntu.sh
+  ./ubuntu.sh
   chsh -s /bin/zsh
