@@ -14,6 +14,8 @@ at ubuntu desktop(python package is already installed:):
 SETUP
 =====
 
+require github passed ssh key.
+
 Ubuntu::
 
   wget "https://github.com/meiraka/local/blob/master/dep/ubuntu.sh"
