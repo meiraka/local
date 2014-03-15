@@ -25,6 +25,7 @@ if grep Ubuntu /etc/issue > /dev/null
     install gmrun
     install xmonad
     install xmobar
+    install sakura
     wget "https://raw.github.com/meiraka/local/master/dep/ubuntu.sh" 2> /dev/null
     chmod +x ubuntu.sh
     ./ubuntu.sh
