@@ -3,7 +3,7 @@
 # 
 
 install() {
-    if dpkg -l "$1" > /dev/null
+    if dpkg -l "$1" | grep ii > /dev/null
     then
         echo > /dev/null
     else
