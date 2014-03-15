@@ -7,7 +7,7 @@ install() {
     then
         echo > /dev/null
     else
-        sudo apt-get install "$1"
+        sudo apt-get install -yes "$1"
     fi
 }
 
