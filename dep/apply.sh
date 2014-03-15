@@ -45,6 +45,7 @@ update_git ~/src/hub git://github.com/github/hub.git
 # link
 update_link ~/local/etc/zsh/zshrc ~/.zshrc
 update_link ~/local/etc/tmux.conf ~/.tmux.conf
+update_link ~/local/etc/Xresources ~/.Xresources
 mkdir -p ~/.config/sakura
 update_link ~/local/config/sakura/sakura.conf ~/.config/sakura/sakura.conf
 update_link ~/local/share/vimrc ~/.vimrc

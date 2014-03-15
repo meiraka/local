@@ -42,6 +42,7 @@ LoadPlugin 'ujihisa/vimshell-ssh'
 LoadPlugin 'scrooloose/nerdtree'
 LoadPlugin 'kien/ctrlp.vim'
 LoadPlugin 'nathanaelkane/vim-indent-guides'
+LoadPlugin 'tpope/vim-fugitive'
 " reStructuredText
 LoadPlugin 'Rykka/riv.vim'
 " python
