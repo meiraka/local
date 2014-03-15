@@ -1,4 +1,5 @@
 nitrogen --restore & 
+killall xcompmgr
 xcompmgr -I 0.1 -O 0.1 -D 8 -f -c &
 thunar --daemon &
 xfce4-power-manager &
