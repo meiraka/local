@@ -19,7 +19,7 @@ endfunction
 function! s:load_plugin (label)
     exec 'NeoBundle ' . a:label
     let plugin_name = substitute(matchstr(a:label, '\/\([^'']\+\)', 0)[1:], '\.vim', '', "g") "ugly
-    let plugin_path = 'plugins-config' . plugin_name . '.vim'
+    let plugin_path = 'plugins-config/' . plugin_name . '.vim'
     exec 'runtime! ' . plugin_path
 endfunction
 

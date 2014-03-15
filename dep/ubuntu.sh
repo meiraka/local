@@ -22,8 +22,9 @@ if grep Ubuntu /etc/issue > /dev/null
     then
         echo ~/local "is already copied." > /dev/null
     else
-        wget "https://raw.github.com/meiraka/local/master/dep/apply.sh"
+        wget "https://raw.github.com/meiraka/local/master/dep/apply.sh" 2> /dev/null
         chmod +x apply.sh
         sh apply.sh
+        rm apply.sh
     fi
 fi
