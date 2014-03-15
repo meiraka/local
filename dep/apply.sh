@@ -5,7 +5,7 @@ update_link ()
 {
   if [ -e $2 ]
   then
-    echo $2 "is already copied."
+    echo $2 "is already copied." > /dev/null
   else
     mkdir -p `dirname $1`
     ln -si $1 $2
@@ -33,22 +33,18 @@ update_git ()
 cd ~/
 
 # if there is no local git repo, clone.
-#git clone hogehoge
+update_git ~/local git://github.com/meiraka/local
 
-# copy settings.
-echo "source ~/local/etc/zsh/zshrc" >  ~/.zshrc
-echo "source-file ~/local/etc/tmux.conf" > ~/.tmux.conf
-
-# clone vim plugins
+# clone
 VIM_PLUGINS_DIR=~/.vim-plugins
 update_git $VIM_PLUGINS_DIR/neobundle.vim git://github.com/Shougo/neobundle.vim
 update_git $VIM_PLUGINS_DIR/vimproc git://github.com/Shougo/vimproc
-
-# update hub command.
 mkdir -p ~/src
 update_git ~/src/hub git://github.com/github/hub.git
 
-# link settings.
+# link
+update_link ~/local/etc/zsh/zshrc ~/.zshrc
+update_link ~/local/etc/tmux.conf ~/.tmux.conf
 mkdir -p ~/.config/sakura
 update_link ~/local/config/sakura/sakura.conf ~/.config/sakura/sakura.conf
 update_link ~/local/share/vimrc ~/.vimrc
