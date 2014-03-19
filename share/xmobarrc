@@ -1,4 +1,4 @@
-Config { font = "xft:Migu 2C:bold"
+Config { font = "xft:Migu 1C:bold"
        , bgColor = "#202020"
        , fgColor = "#c0c0c0"
        , position = TopW L 100
@@ -8,5 +8,5 @@ Config { font = "xft:Migu 2C:bold"
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = " %StdinReader% }{ <fc=#9B3453>%date%</fc> "
+       , template = " %StdinReader% }{ <fc=#c0c0c0>%date%</fc> "
        }
