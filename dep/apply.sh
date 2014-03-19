@@ -51,6 +51,7 @@ update_link ~/local/config/sakura/sakura.conf ~/.config/sakura/sakura.conf
 update_link ~/local/share/vimrc ~/.vimrc
 update_link ~/local/share/vim/ ~/.vim
 update_link ~/local/share/xmonad/ ~/.xmonad
+update_link ~/local/share/xmobarrc ~/.xmobarrc
 
 # compile
 cd $VIM_PLUGINS_DIR/vimproc
