@@ -9,3 +9,4 @@ xfce4-power-manager &
 /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1 & 
 eval $(shell gnome-keyring-daemon -s) &
 
+xmodmap ~/.Xmodmap
