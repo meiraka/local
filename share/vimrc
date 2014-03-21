@@ -3,8 +3,10 @@ set shiftwidth=4
 set expandtab
 runtime! plugins.vim
 set t_Co=256
+set background=dark
 colorscheme hysteria
 syntax on
 set hlsearch
 set incsearch
 set backspace=start,eol,indent
+

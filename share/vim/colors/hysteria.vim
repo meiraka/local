@@ -1,7 +1,7 @@
 " require version 7.0 or later.
 if v:version >= 700
 
-set background=dark
+"set background=dark
 if version > 580
 	hi clear
 	if exists("syntax_on")
@@ -111,4 +111,9 @@ call s:ApplyColor("IncSearch",       s:rgb(2, 0, 0), s:mono(2))
 call s:ApplyColor("StatusLineNC",    "NONE",         s:mono(21))
 call s:ApplyColor("StatusLine",      "NONE",         s:rgb(4, 0, 0))
 
+"VimDiff
+call s:ApplyColor("DiffAdd",         s:rgb(2, 0, 0), s:mono(2))
+call s:ApplyColor("DiffDelete",      s:mono(2), s:rgb(2, 0, 0))
+call s:ApplyColor("DiffChange",      s:rgb(2, 0, 0), s:mono(24))
+call s:ApplyColor("DiffText",        s:rgb(2, 0, 0), s:mono(20))
 endif
