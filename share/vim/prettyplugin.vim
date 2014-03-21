@@ -38,9 +38,18 @@ function! g:pretty_plugin_end ()
     filetype on
 endfunction
 
-command! -nargs=+ LoadingPlugin call g:pretty_plugin(<q-args>)
-command! EndLoadingPlugin  call g:pretty_plugin_end()
-command! -nargs=+ Load call g:pretty_plugin_load(<q-args>)
+function! g:pretty_plugin_with (plugins_path)
+    call g:pretty_plugin(a:plugins_path)
+    command! -nargs=+ Load call g:pretty_plugin_load(<q-args>)
+endfunction
+
+function! g:pretty_plugin_end_with()
+    call g:pretty_plugin_end()
+    delcommand Load
+endfunction
+
+command! -nargs=+ LoadingPlugin call g:pretty_plugin_with(<q-args>)
+command! EndLoadingPlugin  call g:pretty_plugin_end_with()
 command! -nargs=+ Config call g:pretty_plugin_config(<q-args>)
 
 
