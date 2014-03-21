@@ -18,16 +18,27 @@ endfunction
 " Wrapper NeoBundle command to load plugins config files.
 function! s:load_plugin (label)
     exec 'NeoBundle ' . a:label
-    let plugin_name = substitute(matchstr(a:label, '\/\([^'']\+\)', 0)[1:], '\.vim', '', "g") "ugly
-    let plugin_path = 'plugins-config/' . plugin_name . '.vim'
-    exec 'runtime! ' . plugin_path
+    let plugin_name = matchstr(a:label, '\/\([^'']\+\)', 0)[1:] "ugly
+    let plugin_config_path = 'plugins-config/' . substitute(plugin_name, '\.vim', '', "g") . '.vim'
+    let s:atr = neobundle#get(plugin_name)
+    let s:atr.config_path = plugin_config_path
+    let s:atr.config_full_path = '~/.vim/' . plugin_config_path
+    function! s:atr.hooks.on_source(bundle)
+        echom 'loading:' . self.config_path
+        exec 'runtime! ' . self.config_path
+    endfunction
+    unlet s:atr
 endfunction
 
 " open plugin config file.
 function! s:config_plugin (plugin_name)
-    let plugin_name = substitute(a:plugin_name, '\.vim', '', "g")
-    let plugin_path = s:get_plugin_dir() . plugin_name . '.vim'
-    exec 'new ' . plugin_path
+    let plugin_name = a:plugin_name
+    let s:atr = neobundle#get(plugin_name)
+    if has_key(s:atr, 'config_full_path')
+        exec 'new ' . s:atr.config_full_path
+    else
+        echoerr 'Plugin config for "' . plugin_name . '" is not found.'
+    endif
 endfunction   
     
 
