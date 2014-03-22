@@ -2,6 +2,11 @@
 if v:version >= 700
 
 "set background=dark
+if &background ==# 'dark' || &background ==# 'light'
+    "ok
+else
+    set background = dark
+endif
 if version > 580
 	hi clear
 	if exists("syntax_on")
@@ -10,6 +15,7 @@ if version > 580
 endif
 
 let g:colors_name = "hysteria"
+let g:base_background = 'dark'
 
 "TODO: Generates 256 color based 16, 24bit color
 function! s:ApplyColor (label, background, forguround)
@@ -42,7 +48,21 @@ function! s:rgb(r, g, b)
     if &background ==# 'dark'
         return 16 + a:r * 6 * 6 + a:g * 6 + a:b
     else
-        return 16 + (6 - a:r) * 6 * 6 + (6 - a:g) * 6 + (6 - a:b)
+        function! s:max(ar)
+            let m = 0
+            for i in a:ar
+                if m < i
+                    let m = i
+                endif
+            endfor
+            return m
+        endfunction
+
+        let m = s:max([a:r, a:g, a:b])
+        let rm = 5 - m
+        let di =  (rm * 1.0) / (m * 1.0)
+        let ret = 0
+        return 16 + float2nr(a:r * 6 * 6 * di) + float2nr(a:g * 6 * di) + float2nr(a:b * di)
     endif
 endfunction
 
@@ -116,4 +136,5 @@ call s:ApplyColor("DiffAdd",         s:rgb(2, 0, 0), s:mono(2))
 call s:ApplyColor("DiffDelete",      s:mono(2), s:rgb(2, 0, 0))
 call s:ApplyColor("DiffChange",      s:rgb(2, 0, 0), s:mono(24))
 call s:ApplyColor("DiffText",        s:rgb(2, 0, 0), s:mono(20))
+
 endif

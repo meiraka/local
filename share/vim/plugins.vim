@@ -2,7 +2,7 @@
 if v:version >= 700
 
 runtime! prettyplugin.vim
-LoadingPlugin ~/.vim-plugins/
+LoadingPlugin ~/.vim-plugins/ plugins-config
     Load 'Shougo/neobundle.vim'
     Load 'Shougo/vimproc'
     Load 'Shougo/vimshell.vim'
@@ -16,6 +16,7 @@ LoadingPlugin ~/.vim-plugins/
     Load 'Rykka/riv.vim'
     " python
     Load 'davidhalter/jedi-vim', { 'rev': '3934359'}
+    Load 'vim-jp/vimdoc-ja'
 EndLoadingPlugin
 
 endif
