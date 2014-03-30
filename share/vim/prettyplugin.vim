@@ -33,7 +33,6 @@ function! g:pretty_plugin_load (label)
     let s:atr.config_path = plugin_config_path
     let s:atr.config_full_path = '~/.vim/' . plugin_config_path
     function! s:atr.hooks.on_source(bundle)
-        echom 'loading:' . self.config_path
         exec 'runtime! ' . self.config_path
     endfunction
     unlet s:atr
