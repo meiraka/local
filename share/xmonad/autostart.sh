@@ -1,7 +1,15 @@
+
+# set background
 nitrogen --restore & 
+
+# re appling desktop composition
 killall xcompmgr
-xcompmgr -I 0.1 -O 0.1 -D 8 -f -c &
+sleep 3 && xcompmgr -I 0.1 -O 0.1 -D 8 -f -c &
+
+# file manager daemon
 thunar --daemon &
+
+# power management
 xfce4-power-manager &
 
 
