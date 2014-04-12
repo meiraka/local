@@ -5,7 +5,7 @@ import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
 import XMonad.Util.Run(spawnPipe)
 import XMonad.Util.EZConfig
-import XMonad.Util.Scratchpad
+import XMonad.Util.NamedScratchpad
 import XMonad.Layout.Fullscreen
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Spacing
@@ -56,16 +56,25 @@ myWorkspaces = [ "♥", "♦", "♠", "♣"] ++ map show [5..9]
 
 myManageHook = composeAll([className =? "Xfce4-notifyd" --> doIgnore]) <+>
                manageDocks <+>
-               scratchpadManageHook (W.RationalRect (1/20) (1/20) (18/20) (18/20)) <+>
+               namedScratchpadManageHook scratchpads <+>
                manageHook defaultConfig
 
 myLayout     = toggleLayouts fullLayout (normalLayout ||| Mirror normalLayout)
 normalLayout = spacing 9 $ Grid
 fullLayout   = noBorders Full
 
--- scratchpad for quake style terminal using sakura.
 myTerminal = "sakura"
-scratchPad = scratchpadSpawnActionCustom "sakura --name scratchpad"
+
+-- scratchpad for quake style terminal using sakura.
+scratchpads = [
+-- terminal
+    NS "terminal" "sakura --name terminalScratchpad" (resource =? "terminalScratchpad") largeCentre,
+-- trayer
+    NS "tray" "trayer" (resource =? "trayer") defaultFloating,
+    NS "sound" "pavucontrol" (className =? "Pavucontrol") defaultFloating
+ ]
+  where
+    largeCentre = customFloating $ W.RationalRect (1/20) (1/20) (18/20) (18/20)
 
 -- Keyboard Settings
 keyModMask = mod4Mask
@@ -75,10 +84,12 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     -- launching and killing programs
     [ ((keyModMask .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf) -- %! Launch terminal
     , ((keyModMask,               xK_r     ), spawn "gmrun") -- %! Launch gmrun
+    , ((keyModMask .|. shiftMask, xK_t     ), namedScratchpadAction scratchpads "tray") -- %! toggle trayer
+    , ((keyModMask .|. shiftMask, xK_s     ), namedScratchpadAction scratchpads "sound") -- %! toggle trayer
     , ((keyModMask,               xK_w     ), kill) -- %! Close the focused window
     , ((keyModMask,               xK_a     ), sendMessage NextLayout) -- %! Rotate through the available layout algorithms
     , ((keyModMask,               xK_f     ), sendMessage ToggleLayout) -- %! Toggle fullscreen mode
-    , ((keyModMask,               xK_space ), scratchPad) -- %! Toggle terminal
+    , ((keyModMask,               xK_space ), namedScratchpadAction scratchpads "terminal") -- %! Toggle terminal
     , ((keyModMask,               xK_n     ), refresh) -- %! Resize viewed windows to the correct size
     , ((keyModMask,               xK_g     ), goToSelected defaultGSConfig)    
 
