@@ -18,7 +18,7 @@ require github passed ssh key.
 
 Ubuntu::
 
-  wget "https://github.com/meiraka/local/blob/master/dep/ubuntu.sh"
+  wget "https://raw.github.com/meiraka/local/master/dep/ubuntu.sh"
   chmod +x ubuntu.sh
   ./ubuntu.sh
   chsh -s /bin/zsh
