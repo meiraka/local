@@ -1,7 +1,7 @@
 Config { font = "xft:Migu 1C:bold"
        , bgColor = "#202020"
        , fgColor = "#c0c0c0"
-       , position = TopW L 100
+       , position = TopW R 100
        , lowerOnStart = False
        , commands = [ Run Date "%a %b %_d %Y %H:%M:%S" "date" 10
                     , Run StdinReader

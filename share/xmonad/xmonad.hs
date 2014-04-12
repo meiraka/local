@@ -52,7 +52,7 @@ myConfig = defaultConfig
         , mouseBindings      = myMouseBindings
         }
 
-myWorkspaces = [ "♥", "♦", "♠", "♣"] ++ map show [5..9]
+myWorkspaces = ["♥", "♦", "♠", "♣", "♡", "♢", "♤", "♧"]
 
 myManageHook = composeAll([className =? "Xfce4-notifyd" --> doIgnore]) <+>
                manageDocks <+>
@@ -68,13 +68,16 @@ myTerminal = "sakura"
 -- scratchpad for quake style terminal using sakura.
 scratchpads = [
 -- terminal
-    NS "terminal" "sakura --name terminalScratchpad" (resource =? "terminalScratchpad") largeCentre,
--- trayer
-    NS "tray" "trayer" (resource =? "trayer") defaultFloating,
-    NS "sound" "pavucontrol" (className =? "Pavucontrol") defaultFloating
+    NS "terminal" "sakura --name terminalScratchpad" (resource =? "terminalScratchpad") large,
+-- tray
+    NS "tray" "trayer --SetDockType true" (className =? "trayer") little,
+-- sound mixer
+    NS "sound" "pavucontrol --name soundScratchpad" (resource =? "soundScratchpad") middle
  ]
   where
-    largeCentre = customFloating $ W.RationalRect (1/20) (1/20) (18/20) (18/20)
+    large = customFloating $ W.RationalRect (1/20) (1/20) (18/20) (18/20)
+    middle = customFloating $ W.RationalRect (3/20) (3/20) (14/20) (14/20)
+    little = customFloating $ W.RationalRect (5/20) (5/20) (10/20) (10/20)
 
 -- Keyboard Settings
 keyModMask = mod4Mask
