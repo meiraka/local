@@ -1,6 +1,7 @@
 #!/bin/sh
 # copy config files to user home.
 
+# create link if not file exists.
 update_link ()
 {
   if [ -e $2 ]
@@ -13,6 +14,8 @@ update_link ()
   return 0
 }
 
+# clone git repo if not exists.
+# pull git repo if exists.
 update_git ()
 {
   mkdir -p `dirname $1`
