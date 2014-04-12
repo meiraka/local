@@ -1,5 +1,5 @@
 #!/bin/sh
-# Setup develop applications for ubuntu
+# Setup desktop applications for ubuntu
 # 
 
 install() {
@@ -23,9 +23,10 @@ if grep Ubuntu /etc/issue > /dev/null
     install xcompmgr
     install nitrogen
     install gmrun
+    install sakura
+    install pavucontrol
     install xmonad
     install xmobar
-    install sakura
     wget "https://raw.github.com/meiraka/local/master/dep/ubuntu.sh" 2> /dev/null
     chmod +x ubuntu.sh
     ./ubuntu.sh
