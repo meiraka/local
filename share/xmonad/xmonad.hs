@@ -22,36 +22,6 @@ startup :: X ()
 startup = do
            spawn "sh ~/.xmonad/autostart.sh"
 
-main = do
-    xmproc <- spawnPipe "xmobar"
-    xmonad myConfig
-        { logHook            = do fadeInactiveLogHook fadeAmount
-                                  dynamicLogWithPP $ xmobarPP { ppOutput = hPutStrLn xmproc
-                                                              , ppCurrent  = xmobarColor "red" "" .wrap " " ""
-                                                              , ppHidden  = xmobarColor "#c0c0c0" "" .wrap " " "" .noScratchPad
-                                                              , ppTitle = xmobarColor "#c0c0c0" "" . shorten 80
-                                                              }
-
-        }
-
-        where
-          noScratchPad ws = if ws == "NSP" then "" else ws
-          fadeAmount = 0.7
-
-myConfig = defaultConfig
-        { manageHook         = myManageHook
-        , layoutHook         = avoidStruts $ myLayout
-        , workspaces         = myWorkspaces
-        , terminal           = myTerminal
-        , borderWidth        = 6
-        , normalBorderColor  = "#202020"
-        , focusedBorderColor = "#ffffff"
-        , focusFollowsMouse  = False
-        , startupHook        = startup
-        , keys               = myKeys
-        , mouseBindings      = myMouseBindings
-        }
-
 myWorkspaces = ["♥", "♦", "♠", "♣", "♡", "♢", "♤", "♧"]
 
 myManageHook = composeAll([className =? "Xfce4-notifyd" --> doIgnore]) <+>
@@ -59,28 +29,24 @@ myManageHook = composeAll([className =? "Xfce4-notifyd" --> doIgnore]) <+>
                namedScratchpadManageHook scratchpads <+>
                manageHook defaultConfig
 
-myLayout     = toggleLayouts fullLayout (normalLayout ||| Mirror normalLayout)
-normalLayout = spacing 9 $ Grid
-fullLayout   = noBorders Full
+myLayout = toggleLayouts fullLayout (normalLayout ||| Mirror normalLayout)
+  where
+    normalLayout = spacing 9 $ Grid
+    fullLayout   = noBorders Full
 
 myTerminal = "sakura"
 
--- scratchpad for quake style terminal using sakura.
-scratchpads = [
--- terminal
-    NS "terminal" "sakura --name terminalScratchpad" (resource =? "terminalScratchpad") large,
--- tray
-    NS "tray" "trayer --SetDockType true" (className =? "trayer") little,
--- sound mixer
-    NS "sound" "pavucontrol --name soundScratchpad" (resource =? "soundScratchpad") middle
- ]
-  where
-    large = customFloating $ W.RationalRect (1/20) (1/20) (18/20) (18/20)
-    middle = customFloating $ W.RationalRect (3/20) (3/20) (14/20) (14/20)
-    little = customFloating $ W.RationalRect (5/20) (5/20) (10/20) (10/20)
-
--- Keyboard Settings
-keyModMask = mod4Mask
+-- scratchpad apps
+scratchpads = 
+    -- Toggle terminal
+    [ NS "terminal" "sakura --name terminalScratchpad"   (resource =? "terminalScratchpad") large
+    -- Toggle sound mixer
+    , NS "sound"    "pavucontrol --name soundScratchpad" (resource =? "soundScratchpad"   ) middle
+    ]
+    where
+      large  = customFloating $ W.RationalRect (1/20) (1/20) (18/20) (18/20)
+      middle = customFloating $ W.RationalRect (3/20) (3/20) (14/20) (14/20)
+      little = customFloating $ W.RationalRect (5/20) (5/20) (10/20) (10/20)
 
 myKeys :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
 myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
@@ -131,10 +97,10 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
         | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
         , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
 
+    where
+      keyModMask = mod4Mask
 
 
--- Mouse Settings
-mouseModMask = mod1Mask
 
 myMouseBindings (XConfig {XMonad.modMask = keyModMask}) = M.fromList
     -- mod-button1 %! Set the window to floating mode and move by dragging
@@ -147,6 +113,37 @@ myMouseBindings (XConfig {XMonad.modMask = keyModMask}) = M.fromList
                                          >> windows W.shiftMaster)
     -- you may also bind events to the mouse scroll wheel (button4 and button5)
     ]
+    where
+      mouseModMask = mod1Mask
 
+
+main = do
+    xmproc <- spawnPipe "xmobar"
+    xmonad myConfig
+        { logHook  = do fadeInactiveLogHook fadeAmount
+                        dynamicLogWithPP $ xmobarPP { ppOutput = hPutStrLn xmproc
+                                                    , ppCurrent  = xmobarColor "red" "" .wrap " " ""
+                                                    , ppHidden  = xmobarColor "#c0c0c0" "" .wrap " " "" .noScratchPad
+                                                    , ppTitle = xmobarColor "#c0c0c0" "" . shorten 80
+                                                    }
+
+        }
+        where
+          noScratchPad ws = if ws == "NSP" then "" else ws
+          fadeAmount = 0.7
+
+myConfig = defaultConfig
+        { manageHook         = myManageHook
+        , layoutHook         = avoidStruts $ myLayout
+        , workspaces         = myWorkspaces
+        , terminal           = myTerminal
+        , borderWidth        = 6
+        , normalBorderColor  = "#202020"
+        , focusedBorderColor = "#ffffff"
+        , focusFollowsMouse  = False
+        , startupHook        = startup
+        , keys               = myKeys
+        , mouseBindings      = myMouseBindings
+        }
 
 
