@@ -18,23 +18,23 @@ import qualified XMonad.StackSet as W
 import qualified Data.Map as M
 import qualified Data.List
 
-startup :: X ()
-startup = do
-           spawn "sh ~/.xmonad/autostart.sh"
-
-myWorkspaces = ["♥", "♦", "♠", "♣", "♡", "♢", "♤", "♧"]
-
-myManageHook = composeAll([className =? "Xfce4-notifyd" --> doIgnore]) <+>
-               manageDocks <+>
-               namedScratchpadManageHook scratchpads <+>
-               manageHook defaultConfig
-
-myLayout = toggleLayouts fullLayout (normalLayout ||| Mirror normalLayout)
-  where
-    normalLayout = spacing 9 $ Grid
-    fullLayout   = noBorders Full
-
-myTerminal = "sakura"
+myStartupHook :: X ()
+myStartupHook        = do
+                       spawn "sh ~/.xmonad/autostart.sh"
+myBorderWidth        = 6
+myNormalBorderColor  = "#202020"
+myFocusedBorderColor = "#ffffff"
+myTerminal           = "sakura"
+myWorkspaces         = ["♥", "♦", "♠", "♣", "♡", "♢", "♤", "♧"]
+myManageHook         = composeAll([className =? "Xfce4-notifyd" --> doIgnore]) <+>
+                       manageDocks <+>
+                       namedScratchpadManageHook scratchpads <+>
+                       manageHook defaultConfig
+myLayoutHook         = avoidStruts $
+                       toggleLayouts fullLayout (normalLayout ||| Mirror normalLayout)
+                       where
+                         normalLayout = spacing 9 $ Grid
+                         fullLayout   = noBorders Full
 
 -- scratchpad apps
 scratchpads = 
@@ -134,14 +134,14 @@ main = do
 
 myConfig = defaultConfig
         { manageHook         = myManageHook
-        , layoutHook         = avoidStruts $ myLayout
+        , layoutHook         = myLayoutHook
         , workspaces         = myWorkspaces
         , terminal           = myTerminal
         , borderWidth        = 6
         , normalBorderColor  = "#202020"
         , focusedBorderColor = "#ffffff"
         , focusFollowsMouse  = False
-        , startupHook        = startup
+        , startupHook        = myStartupHook
         , keys               = myKeys
         , mouseBindings      = myMouseBindings
         }

@@ -3,8 +3,12 @@
 nitrogen --restore & 
 
 # re appling desktop composition
-killall xcompmgr
-sleep 3 && xcompmgr -I 0.1 -O 0.1 -D 8 -f -c &
+if killall xcompmgr ; then
+  sleep 1 && xcompmgr -I 0.1 -O 0.1 -D 8 -f -c &
+  sleep 2 && notify-send xmonad "restart xcompmgr" &
+else
+  xcompmgr -I 0.1 -O 0.1 -D 8 -f -c &
+fi
 
 # file manager daemon
 thunar --daemon &
