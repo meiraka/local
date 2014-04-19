@@ -267,46 +267,6 @@ function hysteria-line-init {
   }
   hysteria-line-update
   
-  # set fixed tmux prompt
-  if [ -n "$TMUX" ]; then
-    PROMPT_TMUX_ARROW="off"
-    if [ -n "${prompt_tmux_arrow}" ]; then
-      PROMPT_TMUX_ARROW="${prompt_tmux_arrow}"
-    fi
-    PROMPT_LEFT_TMUX_ARROW="on"
-    if [ -n "${prompt_left_tmux_arrow}" ]; then
-      PROMPT_LEFT_TMUX_ARROW="${prompt_left_tmux_arrow}"
-    fi
-    if [ -n "$prompt_left_tmux" ]; then
-      PROMPT_LEFT_TMUX=${prompt_left_tmux}
-    else
-      PROMPT_LEFT_TMUX="088,255,window 255,233,hostname"
-    fi
-    if [ -n "${prompt_right_tmux_arrow}" ]; then
-      PROMPT_RIGHT_TMUX_ARROW="${prompt_right_tmux_arrow}"
-    else
-      PROMPT_RIGHT_TMUX_ARROW="on"
-    fi
-    PROMPT_RIGHT_TMUX="124,255,mpd 255,233,date 232,250,time"
-    if [ -n "$prompt_right_tmux" ]; then
-      PROMPT_RIGHT_TMUX="$prompt_right_tmux"
-    fi
-    set-arrow ${PROMPT_TMUX_ARROW}
-    tmux set -g window-status-current-bg colour${COLOR_BG_TMUX} > /dev/null 2> /dev/null
-    tmux set -g window-status-current-fg colour${COLOR_FG_LPROMPT} > /dev/null 2> /dev/null
-    tmux set -g window-status-current-format "#[fg=colour${COLOR_BG_TMUX},bg=colour${COLOR_BG_LPROMPT}]${HARD_RIGHT_ARROW} #[fg=colour${COLOR_FG_LPROMPT}]#I.#W #[fg=colour${COLOR_BG_LPROMPT}]#[bg=colour${COLOR_BG_TMUX}]${HARD_RIGHT_ARROW}" > /dev/null 2> /dev/null
-    tmux set -g status-bg colour${COLOR_BG_TMUX}             > /dev/null 2> /dev/null
-    tmux set -g window-status-format " #I.#W "               > /dev/null 2> /dev/null
-    tmux set -g pane-active-border-fg colour${COLOR_BG_TMUX} > /dev/null 2> /dev/null
-    tmux set -g pane-active-border-bg colour${COLOR_BG_TMUX} > /dev/null 2> /dev/null
-    tmux set -g pane-border-bg 8 > /dev/null 2> /dev/null
-    tmux set -g pane-border-fg colour${COLOR_BG_TMUX} > /dev/null 2> /dev/null
-    set-arrow ${PROMPT_LEFT_TMUX_ARROW}
-    tmux set -g status-left  "#(zsh $PROMPT_SCRIPT command tmux left '${HARD_RIGHT_ARROW}' '${SOFT_RIGHT_ARROW}' '${COLOR_BG_TMUX}' '${COLOR_FG_LPROMPT}' '${PROMPT_LEFT_TMUX}')"   > /dev/null 2> /dev/null
-    set-arrow ${PROMPT_RIGHT_TMUX_ARROW}
-    tmux set -g status-right  "#(zsh $PROMPT_SCRIPT command tmux right '${HARD_LEFT_ARROW}' '${SOFT_LEFT_ARROW}' '${COLOR_BG_TMUX}' '${COLOR_FG_LPROMPT}' '${PROMPT_RIGHT_TMUX}')"   > /dev/null 2> /dev/null
-  fi
-  
   zle -N zle-line-init
   zle -N zle-keymap-select
 }
