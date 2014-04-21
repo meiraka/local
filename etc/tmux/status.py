@@ -10,15 +10,15 @@ ENCODING = u'utf-8'
 
 
 def flatten(box):
-    if box['type'] == u'shell':
+    if box[u'type'] == u'shell':
         output = box[u'text']
-        box['output'] = subprocess.check_output(output.split()).replace(u'\n', u'')
-    elif box['type'] == u'plain':
-        box['output'] = box[u'text']
-    elif box['type'] == u'func':
-        box['output'] = box[u'text']()
+        box[u'output'] = subprocess.check_output(output.split()).replace(u'\n', u'')
+    elif box[u'type'] == u'plain':
+        box[u'output'] = box[u'text']
+    elif box[u'type'] == u'func':
+        box[u'output'] = box[u'text']()
     else:
-        box['output'] = ''
+        box['output'] = u''
     return box
     
 
@@ -50,9 +50,18 @@ def splitter(p, n, bold=u'\u2b80', thin=u'\u2b81'):
 def color(style, color):
     return u'#[%s=colour%s]' % (style, color)
 
+def cu(p):
+    if type(p) == dict:
+        return dict([(cu(k), cu(v)) for k,v in p.iteritems()])
+    if type(p) == list:
+        return [cu(i) for i in p]
+    if type(p) == str:
+        return p.decode(ENCODING)
+    else:
+        return p
 
 if __name__ == '__main__':
-    obj = settings.data
+    obj = cu(settings.data)
     key = sys.argv[1]
 
     default = obj[u'default']

@@ -1,5 +1,6 @@
 import System.IO
 import System.Exit
+import Text.Printf
 import XMonad
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
@@ -40,6 +41,8 @@ myLayoutHook         = avoidStruts $
 scratchpads = 
     -- Toggle terminal
     [ NS "terminal" "sakura --name terminalScratchpad"   (resource =? "terminalScratchpad") large
+    -- Toggle tray
+    , NS "tray"    "stalonetray" (resource =? "stalonetray") middle
     -- Toggle sound mixer
     , NS "sound"    "pavucontrol --name soundScratchpad" (resource =? "soundScratchpad"   ) middle
     ]
