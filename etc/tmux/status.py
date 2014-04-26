@@ -10,13 +10,17 @@ ENCODING = u'utf-8'
 
 
 def flatten(box):
-    if box['type'] == u'shell':
-        output = box[u'text']
-        box['output'] = subprocess.check_output(output.split()).replace(u'\n', u'')
-    elif box['type'] == u'plain':
-        box['output'] = box[u'text']
-    elif box['type'] == u'func':
-        box['output'] = box[u'text']()
+    """flatten output string by box type."""
+    box_type = box[u'type']
+    text = box[u'text']
+    if box_type == u'shell':
+        box['output'] = subprocess.check_output(text.split()).replace(u'\n', u'')
+    elif box_type == u'env':
+        output = os.environ[text] if text in os.environ else ''
+    elif box_type == u'plain':
+        box['output'] = text
+    elif box_type == u'func':
+        box['output'] = text()
     else:
         box['output'] = ''
     return box

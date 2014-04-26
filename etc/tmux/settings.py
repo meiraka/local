@@ -3,7 +3,11 @@ from lib import *
 data = {"default": {"type": "plain"
                    ,"bg": 8
                    ,"fg": 232}
-       ,"left": [{"type": "shell"
+       ,"left": [{"type": "plain"
+                 ,"text": "[#F] #I #S #T"
+                 ,"bg": 160
+                 ,"fg": 232}
+                ,{"type": "shell"
                  ,"text": "whoami"
                  ,"bg": 160
                  ,"fg": 232}
