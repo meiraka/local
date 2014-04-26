@@ -1,8 +1,10 @@
 import System.IO
 import System.Exit
+import Text.Printf
 import XMonad
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
+import XMonad.Hooks.UrgencyHook
 import XMonad.Util.Run(spawnPipe)
 import XMonad.Util.EZConfig
 import XMonad.Util.NamedScratchpad
@@ -40,6 +42,8 @@ myLayoutHook         = avoidStruts $
 scratchpads = 
     -- Toggle terminal
     [ NS "terminal" "sakura --name terminalScratchpad"   (resource =? "terminalScratchpad") large
+    -- Toggle tray
+    , NS "tray"    "stalonetray" (resource =? "stalonetray") middle
     -- Toggle sound mixer
     , NS "sound"    "pavucontrol --name soundScratchpad" (resource =? "soundScratchpad"   ) middle
     ]
@@ -124,6 +128,7 @@ main = do
                         dynamicLogWithPP $ xmobarPP { ppOutput = hPutStrLn xmproc
                                                     , ppCurrent  = xmobarColor "red" "" .wrap " " ""
                                                     , ppHidden  = xmobarColor "#c0c0c0" "" .wrap " " "" .noScratchPad
+                                                    , ppHiddenNoWindows  = xmobarColor "#909090" "" .wrap " " "" .noScratchPad
                                                     , ppTitle = xmobarColor "#c0c0c0" "" . shorten 80
                                                     }
 
@@ -131,6 +136,18 @@ main = do
         where
           noScratchPad ws = if ws == "NSP" then "" else ws
           fadeAmount = 0.7
+
+myLogHook h = dynamicLogWithPP $ defaultPP
+              { ppCurrent         = dzenColor "#303030" "#909090" . pad
+              , ppHidden          = dzenColor "#909090" "" . pad
+              , ppHiddenNoWindows = dzenColor "#606060" "" . pad 
+              , ppLayout          = dzenColor "#909090" "" . pad 
+              , ppUrgent          = dzenColor "#ff0000" "" . pad . dzenStrip
+              , ppTitle           = shorten 100  
+              , ppWsSep           = ""
+              , ppSep             = "  "
+              , ppOutput          = hPutStrLn h
+              }
 
 myConfig = defaultConfig
         { manageHook         = myManageHook

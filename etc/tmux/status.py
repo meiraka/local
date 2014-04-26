@@ -22,7 +22,7 @@ def flatten(box):
     elif box_type == u'func':
         box['output'] = text()
     else:
-        box['output'] = ''
+        box['output'] = u''
     return box
     
 
@@ -54,9 +54,18 @@ def splitter(p, n, bold=u'\u2b80', thin=u'\u2b81'):
 def color(style, color):
     return u'#[%s=colour%s]' % (style, color)
 
+def cu(p):
+    if type(p) == dict:
+        return dict([(cu(k), cu(v)) for k,v in p.iteritems()])
+    if type(p) == list:
+        return [cu(i) for i in p]
+    if type(p) == str:
+        return p.decode(ENCODING)
+    else:
+        return p
 
 if __name__ == '__main__':
-    obj = settings.data
+    obj = cu(settings.data)
     key = sys.argv[1]
 
     default = obj[u'default']
