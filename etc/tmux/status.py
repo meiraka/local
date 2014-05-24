@@ -64,19 +64,22 @@ def cu(p):
     else:
         return p
 
-if __name__ == '__main__':
-    obj = cu(settings.data)
-    key = sys.argv[1]
-
-    default = obj[u'default']
-    boxes = [flatten(box) for box in obj[key]]
+def write(settings, pos):
+    default = settings[u'default']
+    boxes = [flatten(box) for box in settings[pos]]
     strings = [line(box) for box in boxes if box['output']]
     
     for index, box in enumerate(boxes):
         n = boxes[index+1] if index + 1 < len(boxes) else default
         p = boxes[index-1] if index - 1 >= 0 else default
-        if key == 'right':
+        if pos == 'right':
             sys.stdout.write(splitter(box, p, u'\u2b82', u'\u2b83').encode(ENCODING))
         sys.stdout.write(line(box).encode(ENCODING))
-        if key == 'left':
+        if pos == 'left':
             sys.stdout.write(splitter(box, n).encode(ENCODING))
+
+
+if __name__ == '__main__':
+    obj = cu(settings.data["status"])
+    key = sys.argv[1]
+    write(obj, key)
