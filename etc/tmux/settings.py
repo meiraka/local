@@ -1,7 +1,7 @@
 from lib import *
 
 status = {"default": {"type": "plain"
-                     ,"bg": 8
+                     ,"bg": 0
                      ,"fg": 232}
          ,"left": [{"type": "plain"
                    ,"text": "[#F] #I #S #T"
