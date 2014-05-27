@@ -16,6 +16,7 @@ LoadingPlugin ~/.vim-plugins/ plugins-config plugins.vim
     Load 'Rykka/riv.vim'
     " python
     Load 'davidhalter/jedi-vim', { 'rev': '3934359'}
+    Load 'nvie/vim-flake8'
     " Vim doc
     Load 'vim-jp/vimdoc-ja'
     " Scala
