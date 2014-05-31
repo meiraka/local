@@ -270,11 +270,3 @@ function hysteria-line-init {
   zle -N zle-line-init
   zle -N zle-keymap-select
 }
-
-if [ $# = 8 ]; then
-  if [ $1 = "command" ]; then
-    source ~/local/conf/user-env.zsh
-    source ~/local/conf/user-config.zsh
-    hysteria-line $3 $2 "$4" "$5" "$6" "$7" "$8"
-  fi
-fi
