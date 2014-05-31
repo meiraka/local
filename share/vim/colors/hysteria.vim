@@ -66,15 +66,25 @@ function! s:rgb(r, g, b)
     endif
 endfunction
 
+" apply color to multiple items
+function! s:applycolors(background, forground, ...)
+  for label in a:000
+    call s:ApplyColor(label, a:background, a:forground)
+  endfor
+endfunction
+
 " Normal texts.
-call s:ApplyColor("Normal",          "NONE",         s:mono(21))
-call s:ApplyColor("Folded",      s:mono(10),         s:mono(21))
+call s:applycolors("NONE", s:mono(21),
+\                  "Nornal",
+\                  "Folded")
 
 " values
-call s:ApplyColor("Constant",        "NONE",         s:mono(24))
-call s:ApplyColor("String",          "NONE",         s:mono(24))
-call s:ApplyColor("Float",           "NONE",         s:mono(24))
-call s:ApplyColor("Number",          "NONE",         s:mono(24))
+call s:applycolors("NONE", s:mono(24),
+\                  "Constant",
+\                  "String",
+\                  "Float",
+\                  "Number")
+
 call s:ApplyColor("Boolean",         "NONE",         s:rgb(4, 0, 0))
 
 call s:ApplyColor("Identifier",      "NONE",         s:mono(16))
@@ -105,10 +115,12 @@ call s:ApplyColor("Todo",            s:mono(14),     s:mono(2))
 "PreProcessor
 call s:ApplyColor("PreProc",         "NONE",         s:mono(10))
 call s:ApplyColor("PreCondit",       "NONE",         s:mono(14))
-call s:ApplyColor("Include",         "NONE",         s:rgb(4, 0, 0))
-call s:ApplyColor("Define",          "NONE",         s:rgb(5, 0, 0))
-call s:ApplyColor("Macro",           "NONE",         s:rgb(5, 0, 0))
-call s:ApplyColor("Keyword",         "NONE",         s:rgb(3, 0, 0))
+
+call s:applycolors("NONE", s:rgb(4, 0, 0),
+\                  "Include",
+\                  "Define",
+\                  "Macro",
+\                  "Keyword")
 
 " Special
 call s:ApplyColor("Special",         "NONE",         s:rgb(4, 0, 0))

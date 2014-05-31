@@ -9,4 +9,3 @@ syntax on
 set hlsearch
 set incsearch
 set backspace=start,eol,indent
-
