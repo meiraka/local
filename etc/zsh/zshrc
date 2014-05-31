@@ -1,12 +1,8 @@
 # modules
 export USER_CONFIG_HELP=""
-source ~/local/etc/zsh/env.zsh
-source ~/local/conf/user-env.zsh 2> /dev/null
-source ~/local/conf/user-config.zsh 2> /dev/null
-source ~/local/etc/zsh/color.zsh
-source ~/local/etc/zsh/keybind.zsh
-source ~/local/etc/zsh/prompt.zsh
-source ~/local/etc/zsh/alias.zsh
+source ~/local/etc/zsh/*.zsh
+source ~/local/conf/*.zsh 2> /dev/null
+
 source ~/local/etc/zsh/ssh-agent.zsh
 
 setopt print_exit_value
