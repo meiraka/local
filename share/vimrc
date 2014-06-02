@@ -3,8 +3,12 @@ set shiftwidth=4
 set expandtab
 runtime! plugins.vim
 set t_Co=256
-set background=dark
-colorscheme hysteria
+if has('gui_running')
+  set background=light
+else
+  set background=dark
+endif
+colorscheme tricolore
 syntax on
 set hlsearch
 set incsearch

@@ -12,6 +12,7 @@ LoadingPlugin ~/.vim-plugins/ plugins-config plugins.vim
     Load 'kien/ctrlp.vim'
     Load 'nathanaelkane/vim-indent-guides'
     Load 'tpope/vim-fugitive'
+    Load 'meiraka/vim-hysteric-colors'
     " reStructuredText
     Load 'Rykka/riv.vim'
     " python
