@@ -1,6 +1,7 @@
 export PATH=$PATH:~/local/bin:~/bin
 export CLICOLOR=1
 if which dircolors > /dev/null; then
+  python ~/local/etc/dir_colors.py > ~/local/etc/dir_colors
   eval $(dircolors -b ~/local/etc/dir_colors) > /dev/null 2> /dev/null
 fi
 
