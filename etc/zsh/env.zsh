@@ -5,6 +5,11 @@ if which dircolors > /dev/null; then
   eval $(dircolors -b ~/local/etc/dir_colors) > /dev/null 2> /dev/null
 fi
 
+
+if [ -n "$LS_COLORS" ]; then
+  zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+fi
+
 export LANG=ja_JP.UTF-8
 export LC_LANG=${LANG}
 export LC_ALL=${LANG}

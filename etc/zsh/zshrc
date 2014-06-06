@@ -2,7 +2,6 @@
 export USER_CONFIG_HELP=""
 source ~/local/etc/zsh/alias.zsh
 source ~/local/etc/zsh/env.zsh
-source ~/local/etc/zsh/color.zsh
 source ~/local/etc/zsh/keybind.zsh
 source ~/local/etc/zsh/prompt.zsh
 source ~/local/etc/zsh/ssh-agent.zsh
