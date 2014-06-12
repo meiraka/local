@@ -1,0 +1,41 @@
+#!/usr/bin/python
+
+import re
+import urllib
+
+
+def parse(html):
+    remove_tag = lambda x: re.compile(u'<[^>]+>').sub(u'', x)
+    midashi = re.compile(u'<span class="midashi">').search
+    split_items = re.compile(u'(</li>|</oi>)').split
+    stack = []
+    current_title = u''
+    current_item = []
+    for line in html.splitlines():
+        if midashi(line):
+            if current_title.strip():
+                stack.append((current_title, current_item))
+            current_title = remove_tag(line)
+            current_item = []
+        else:
+            items = split_items(line)
+            current_item.extend([remove_tag(i) for i in items if remove_tag(i)])
+    return stack
+
+
+def fetch(query):
+    url = 'http://eow.alc.co.jp/search?q=' + urllib.quote(query)
+    return urllib.urlopen(url).read().decode('utf-8')
+
+
+def print_result(query):
+    html = fetch(query)
+    for title, descreptions in parse(html):
+        print title.encode('utf-8')
+        for desc in descreptions:
+            print '    ' + desc.encode('utf-8')
+
+
+if __name__ == '__main__':
+    import sys
+    print_result(sys.argv[1])
