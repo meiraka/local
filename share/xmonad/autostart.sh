@@ -21,4 +21,11 @@ xfce4-power-manager &
 /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1 & 
 eval $(shell gnome-keyring-daemon -s) &
 
+# set touchpad settings
+synclient TapButton1=0
+synclient TapButton2=0
+synclient HorizTwoFingerScroll=1
+synclient VertScrollDelta=-237
+synclient HorizScrollDelta=-237
+
 xmodmap ~/.Xmodmap
