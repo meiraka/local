@@ -1,4 +1,4 @@
-export PATH=$PATH:~/local/bin:~/bin
+export PATH=~/local/bin:$PATH:~/bin
 export CLICOLOR=1
 if which dircolors > /dev/null; then
   python ~/local/etc/dir_colors.py > ~/local/etc/dir_colors
