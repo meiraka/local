@@ -8,6 +8,11 @@ if has('gui_running')
 else
   set background=dark
 endif
+set guifont=Migu\ 1M\ bold\ 12
+set guifontwide=Migu\ 1M\ bold\ 12
+set number
+set cursorline
+
 colorscheme tricolore
 syntax on
 set hlsearch
