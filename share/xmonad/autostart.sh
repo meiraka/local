@@ -27,5 +27,7 @@ synclient TapButton2=0
 synclient HorizTwoFingerScroll=1
 synclient VertScrollDelta=-237
 synclient HorizScrollDelta=-237
+synclient VertEdgeScroll=0
+synclient HorizEdgeScroll=0
 
 xmodmap ~/.Xmodmap
