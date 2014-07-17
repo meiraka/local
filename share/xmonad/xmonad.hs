@@ -8,6 +8,8 @@ import XMonad.Hooks.UrgencyHook
 import XMonad.Util.Run(spawnPipe)
 import XMonad.Util.EZConfig
 import XMonad.Util.NamedScratchpad
+import XMonad.Util.Themes
+import XMonad.Layout.Tabbed
 import XMonad.Layout.Fullscreen
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Spacing
@@ -19,6 +21,18 @@ import XMonad.Hooks.FadeInactive
 import qualified XMonad.StackSet as W
 import qualified Data.Map as M
 import qualified Data.List
+
+myTheme = defaultTheme { activeColor = "#FFFFFF"
+                       , inactiveColor = "#202020"
+                       , urgentColor = "#606060"
+                       , activeBorderColor = "#FFFFFF"
+                       , inactiveBorderColor = "#202020"
+                       , urgentBorderColor = "#606060"
+                       , activeTextColor = "red"
+                       , inactiveTextColor = "#c0c0c0"
+                       , urgentTextColor = "#606060"
+                       , fontName = "xft:Migu 1C:bold"}
+
 
 myStartupHook :: X ()
 myStartupHook        = do
@@ -33,10 +47,12 @@ myManageHook         = composeAll([className =? "Xfce4-notifyd" --> doIgnore]) <
                        namedScratchpadManageHook scratchpads <+>
                        manageHook defaultConfig
 myLayoutHook         = avoidStruts $
-                       toggleLayouts fullLayout (normalLayout ||| Mirror normalLayout)
+                       toggleLayouts (fullLayout ||| tabbedLayout) normalLayout
                        where
                          normalLayout = spacing 9 $ Grid
                          fullLayout   = noBorders Full
+                         --tabbedLayout = noBorders Full
+                         tabbedLayout = tabbed shrinkText myTheme
 
 -- scratchpad apps
 scratchpads = 
@@ -60,8 +76,8 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     , ((keyModMask .|. shiftMask, xK_t     ), namedScratchpadAction scratchpads "tray") -- %! toggle trayer
     , ((keyModMask .|. shiftMask, xK_s     ), namedScratchpadAction scratchpads "sound") -- %! toggle trayer
     , ((keyModMask,               xK_w     ), kill) -- %! Close the focused window
-    , ((keyModMask,               xK_a     ), sendMessage NextLayout) -- %! Rotate through the available layout algorithms
     , ((keyModMask,               xK_f     ), sendMessage ToggleLayout) -- %! Toggle fullscreen mode
+    , ((keyModMask,               xK_t     ), sendMessage NextLayout) -- %! Toggle tab view in fullscreen mode
     , ((keyModMask,               xK_space ), namedScratchpadAction scratchpads "terminal") -- %! Toggle terminal
     , ((keyModMask,               xK_n     ), refresh) -- %! Resize viewed windows to the correct size
     , ((keyModMask,               xK_g     ), goToSelected defaultGSConfig)    
@@ -83,7 +99,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     , ((keyModMask,               xK_l     ), sendMessage Expand) -- %! Expand the master area
 
     -- floating layer support
-    , ((keyModMask,               xK_t     ), withFocused $ windows . W.sink) -- %! Push window back into tiling
+    , ((keyModMask,               xK_i     ), withFocused $ windows . W.sink) -- %! Push window back into tiling
 
     -- increase or decrease number of windows in the master area
     , ((keyModMask              , xK_comma ), sendMessage (IncMasterN 1)) -- %! Increment the number of windows in the master area
