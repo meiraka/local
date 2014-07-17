@@ -47,7 +47,7 @@ myManageHook         = composeAll([className =? "Xfce4-notifyd" --> doIgnore]) <
                        namedScratchpadManageHook scratchpads <+>
                        manageHook defaultConfig
 myLayoutHook         = avoidStruts $
-                       toggleLayouts (fullLayout ||| tabbedLayout) normalLayout
+                       toggleLayouts (tabbedLayout ||| fullLayout) normalLayout
                        where
                          normalLayout = spacing 9 $ Grid
                          fullLayout   = noBorders Full
