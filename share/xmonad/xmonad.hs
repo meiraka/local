@@ -8,7 +8,7 @@ import XMonad.Hooks.UrgencyHook
 import XMonad.Util.Run(spawnPipe)
 import XMonad.Util.EZConfig
 import XMonad.Util.NamedScratchpad
-import XMonad.Util.Themes
+import XMonad.Layout.DecorationMadness
 import XMonad.Layout.Tabbed
 import XMonad.Layout.Fullscreen
 import XMonad.Layout.NoBorders
@@ -22,10 +22,10 @@ import qualified XMonad.StackSet as W
 import qualified Data.Map as M
 import qualified Data.List
 
-myTheme = defaultTheme { activeColor = "#FFFFFF"
+myTheme = defaultTheme { activeColor = "#202020"
                        , inactiveColor = "#202020"
                        , urgentColor = "#606060"
-                       , activeBorderColor = "#FFFFFF"
+                       , activeBorderColor = "#202020"
                        , inactiveBorderColor = "#202020"
                        , urgentBorderColor = "#606060"
                        , activeTextColor = "red"
@@ -37,7 +37,7 @@ myTheme = defaultTheme { activeColor = "#FFFFFF"
 myStartupHook :: X ()
 myStartupHook        = do
                        spawn "sh ~/.xmonad/autostart.sh"
-myBorderWidth        = 6
+myBorderWidth        = 0
 myNormalBorderColor  = "#202020"
 myFocusedBorderColor = "#ffffff"
 myTerminal           = "sakura"
@@ -49,10 +49,10 @@ myManageHook         = composeAll([className =? "Xfce4-notifyd" --> doIgnore]) <
 myLayoutHook         = avoidStruts $
                        toggleLayouts (tabbedLayout ||| fullLayout) normalLayout
                        where
-                         normalLayout = spacing 9 $ Grid
+                         normalLayout = circleDefault shrinkText myTheme
                          fullLayout   = noBorders Full
                          --tabbedLayout = noBorders Full
-                         tabbedLayout = tabbed shrinkText myTheme
+                         tabbedLayout = noBorders (tabbed shrinkText myTheme)
 
 -- scratchpad apps
 scratchpads = 
@@ -83,16 +83,14 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     , ((keyModMask,               xK_g     ), goToSelected defaultGSConfig)    
 
     -- move focus up or down the window stack
-    , ((keyModMask,               xK_Tab   ), windows W.focusDown) -- %! Move focus to the next window
-    , ((keyModMask .|. shiftMask, xK_Tab   ), windows W.focusUp  ) -- %! Move focus to the previous window
-    , ((keyModMask,               xK_j     ), windows W.focusDown) -- %! Move focus to the next window
-    , ((keyModMask,               xK_k     ), windows W.focusUp  ) -- %! Move focus to the previous window
+    , ((mouseModMask,               xK_Tab   ), windows W.focusDown) -- %! Move focus to the next window
+    , ((mouseModMask .|. shiftMask, xK_Tab   ), windows W.focusUp  ) -- %! Move focus to the previous window
+    , ((keyModMask,               xK_Tab   ), sequence_ [windows W.focusUp, windows W.swapDown]) -- %! Swap and move the focused window with the next window
+    , ((keyModMask .|. shiftMask, xK_Tab   ), sequence_ [windows W.swapUp, windows W.focusDown]) -- %! Swap and move the focused window with the previous window
     , ((keyModMask,               xK_m     ), windows W.focusMaster  ) -- %! Move focus to the master window
 
     -- modifying the window order
     , ((keyModMask,               xK_Return), windows W.swapMaster) -- %! Swap the focused window and the master window
-    , ((keyModMask .|. shiftMask, xK_j     ), windows W.swapDown  ) -- %! Swap the focused window with the next window
-    , ((keyModMask .|. shiftMask, xK_k     ), windows W.swapUp    ) -- %! Swap the focused window with the previous window
 
     -- resizing the master/slave ratio
     , ((keyModMask,               xK_h     ), sendMessage Shrink) -- %! Shrink the master area
@@ -119,6 +117,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
 
     where
       keyModMask = mod4Mask
+      mouseModMask = mod1Mask
 
 
 
@@ -170,9 +169,9 @@ myConfig = defaultConfig
         , layoutHook         = myLayoutHook
         , workspaces         = myWorkspaces
         , terminal           = myTerminal
-        , borderWidth        = 6
-        , normalBorderColor  = "#202020"
-        , focusedBorderColor = "#ffffff"
+        , borderWidth        = myBorderWidth
+        , normalBorderColor  = myNormalBorderColor
+        , focusedBorderColor = myFocusedBorderColor
         , focusFollowsMouse  = False
         , startupHook        = myStartupHook
         , keys               = myKeys
