@@ -8,6 +8,7 @@ import XMonad.Hooks.UrgencyHook
 import XMonad.Util.Run(spawnPipe)
 import XMonad.Util.EZConfig
 import XMonad.Util.NamedScratchpad
+import XMonad.Layout.Named
 import XMonad.Layout.DecorationMadness
 import XMonad.Layout.Tabbed
 import XMonad.Layout.Fullscreen
@@ -16,22 +17,34 @@ import XMonad.Layout.Spacing
 import XMonad.Layout.ToggleLayouts
 import XMonad.Layout.Grid
 import XMonad.Actions.GridSelect
+import XMonad.Actions.CycleWindows
+import XMonad.Actions.RotSlaves
 
 import XMonad.Hooks.FadeInactive
 import qualified XMonad.StackSet as W
 import qualified Data.Map as M
 import qualified Data.List
 
-myTheme = defaultTheme { activeColor = "#202020"
-                       , inactiveColor = "#202020"
-                       , urgentColor = "#606060"
-                       , activeBorderColor = "#202020"
-                       , inactiveBorderColor = "#202020"
-                       , urgentBorderColor = "#606060"
-                       , activeTextColor = "red"
-                       , inactiveTextColor = "#c0c0c0"
-                       , urgentTextColor = "#606060"
-                       , fontName = "xft:Migu 1C:bold"}
+myToolbarTheme = defaultTheme { activeColor = "#202020"
+                              , inactiveColor = "#202020"
+                              , urgentColor = "#606060"
+                              , activeBorderColor = "#202020"
+                              , inactiveBorderColor = "#202020"
+                              , urgentBorderColor = "#606060"
+                              , activeTextColor = "red"
+                              , inactiveTextColor = "#c0c0c0"
+                              , urgentTextColor = "#606060"
+                              , fontName = "xft:Migu 1C:bold"}
+
+myWindowTheme = myToolbarTheme { activeColor = "#ffffff"
+                               , inactiveColor = "#ffffff"
+                               , urgentColor = "#ffffff"
+                               , activeBorderColor = "#ffffff"
+                               , inactiveBorderColor = "#ffffff"
+                               , urgentBorderColor = "#ffffff"
+                               , activeTextColor = "#18214a"
+                               , urgentTextColor = "#ced6ef"
+                               , inactiveTextColor = "#ced6ef"}
 
 
 myStartupHook :: X ()
@@ -47,65 +60,59 @@ myManageHook         = composeAll([className =? "Xfce4-notifyd" --> doIgnore]) <
                        namedScratchpadManageHook scratchpads <+>
                        manageHook defaultConfig
 myLayoutHook         = avoidStruts $
-                       toggleLayouts (tabbedLayout ||| fullLayout) normalLayout
+                       toggleLayouts (tabbedFull ||| full) normal
                        where
-                         normalLayout = circleDefault shrinkText myTheme
-                         fullLayout   = noBorders Full
-                         --tabbedLayout = noBorders Full
-                         tabbedLayout = noBorders (tabbed shrinkText myTheme)
+                         normal     = named "Circle" (circleDefault shrinkText myWindowTheme)
+                         full       = named "FullScreen" (noBorders Full)
+                         tabbedFull = named "FullScreen Tabbed" (noBorders (tabbed shrinkText myToolbarTheme))
 
--- scratchpad apps
-scratchpads = 
-    -- Toggle terminal
-    [ NS "terminal" "sakura --name terminalScratchpad"   (resource =? "terminalScratchpad") large
-    -- Toggle tray
-    , NS "tray"    "stalonetray" (resource =? "stalonetray") middle
-    -- Toggle sound mixer
-    , NS "sound"    "pavucontrol --name soundScratchpad" (resource =? "soundScratchpad"   ) middle
-    ]
-    where
-      large  = customFloating $ W.RationalRect (1/20) (1/20) (18/20) (18/20)
-      middle = customFloating $ W.RationalRect (3/20) (3/20) (14/20) (14/20)
-      little = customFloating $ W.RationalRect (5/20) (5/20) (10/20) (10/20)
+scratchpads          = [ NS "terminal" "sakura --name terminalScratchpad"   (resource =? "terminalScratchpad") large
+                       , NS "tray"    "stalonetray" (resource =? "stalonetray") middle
+                       , NS "sound"    "pavucontrol --name soundScratchpad" (resource =? "soundScratchpad"   ) middle
+                       ]
+                       where
+                         large  = customFloating $ W.RationalRect (1/20) (1/20) (18/20) (18/20)
+                         middle = customFloating $ W.RationalRect (3/20) (3/20) (14/20) (14/20)
+                         little = customFloating $ W.RationalRect (5/20) (5/20) (10/20) (10/20)
 
 myKeys :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
 myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     -- launching and killing programs
-    [ ((keyModMask .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf) -- %! Launch terminal
-    , ((keyModMask,               xK_r     ), spawn "gmrun") -- %! Launch gmrun
-    , ((keyModMask .|. shiftMask, xK_t     ), namedScratchpadAction scratchpads "tray") -- %! toggle trayer
-    , ((keyModMask .|. shiftMask, xK_s     ), namedScratchpadAction scratchpads "sound") -- %! toggle trayer
-    , ((keyModMask,               xK_w     ), kill) -- %! Close the focused window
-    , ((keyModMask,               xK_f     ), sendMessage ToggleLayout) -- %! Toggle fullscreen mode
-    , ((keyModMask,               xK_t     ), sendMessage NextLayout) -- %! Toggle tab view in fullscreen mode
-    , ((keyModMask,               xK_space ), namedScratchpadAction scratchpads "terminal") -- %! Toggle terminal
-    , ((keyModMask,               xK_n     ), refresh) -- %! Resize viewed windows to the correct size
-    , ((keyModMask,               xK_g     ), goToSelected defaultGSConfig)    
+    [ ((keyModMask .|. shiftMask,   xK_Return), spawn $ XMonad.terminal conf) -- %! Launch terminal
+    , ((keyModMask,                 xK_r     ), spawn "gmrun") -- %! Launch gmrun
+    , ((keyModMask,                 xK_space ), namedScratchpadAction scratchpads "terminal") -- %! Toggle terminal
+    , ((keyModMask .|. shiftMask,   xK_t     ), namedScratchpadAction scratchpads "tray") -- %! Toggle trayer
+    , ((keyModMask .|. shiftMask,   xK_s     ), namedScratchpadAction scratchpads "sound") -- %! Toggle sound control
+    , ((keyModMask,                 xK_w     ), kill) -- %! Close the focused window
+    , ((keyModMask,                 xK_f     ), sendMessage ToggleLayout) -- %! Toggle fullscreen mode
+    , ((keyModMask,                 xK_t     ), sendMessage NextLayout) -- %! Toggle tab view in fullscreen mode
+    , ((keyModMask,                 xK_n     ), refresh) -- %! Resize viewed windows to the correct size
+    , ((keyModMask,                 xK_g     ), goToSelected defaultGSConfig)    
 
     -- move focus up or down the window stack
-    , ((mouseModMask,               xK_Tab   ), windows W.focusDown) -- %! Move focus to the next window
-    , ((mouseModMask .|. shiftMask, xK_Tab   ), windows W.focusUp  ) -- %! Move focus to the previous window
-    , ((keyModMask,               xK_Tab   ), sequence_ [windows W.focusUp, windows W.swapDown]) -- %! Swap and move the focused window with the next window
-    , ((keyModMask .|. shiftMask, xK_Tab   ), sequence_ [windows W.swapUp, windows W.focusDown]) -- %! Swap and move the focused window with the previous window
-    , ((keyModMask,               xK_m     ), windows W.focusMaster  ) -- %! Move focus to the master window
+    , ((keyModMask,                 xK_Tab   ), windows W.focusDown) -- %! Move focus to the next window
+    , ((keyModMask .|. shiftMask,   xK_Tab   ), windows W.focusUp  ) -- %! Move focus to the previous window
+    , ((mouseModMask,               xK_Tab   ), rotAllDown) -- %! Swap and move the focused window with the previous window
+    , ((mouseModMask .|. shiftMask, xK_Tab   ), rotAllUp) -- %! Swap and move the focused window with the next window
+    , ((keyModMask,                 xK_m     ), windows W.focusMaster  ) -- %! Move focus to the master window
 
     -- modifying the window order
-    , ((keyModMask,               xK_Return), windows W.swapMaster) -- %! Swap the focused window and the master window
+    , ((keyModMask,                 xK_Return), windows W.swapMaster) -- %! Swap the focused window and the master window
 
     -- resizing the master/slave ratio
-    , ((keyModMask,               xK_h     ), sendMessage Shrink) -- %! Shrink the master area
-    , ((keyModMask,               xK_l     ), sendMessage Expand) -- %! Expand the master area
+    , ((keyModMask,                 xK_h     ), sendMessage Shrink) -- %! Shrink the master area
+    , ((keyModMask,                 xK_l     ), sendMessage Expand) -- %! Expand the master area
 
     -- floating layer support
-    , ((keyModMask,               xK_i     ), withFocused $ windows . W.sink) -- %! Push window back into tiling
+    , ((keyModMask,                 xK_i     ), withFocused $ windows . W.sink) -- %! Push window back into tiling
 
     -- increase or decrease number of windows in the master area
-    , ((keyModMask              , xK_comma ), sendMessage (IncMasterN 1)) -- %! Increment the number of windows in the master area
-    , ((keyModMask              , xK_period), sendMessage (IncMasterN (-1))) -- %! Deincrement the number of windows in the master area
+    , ((keyModMask,                 xK_comma ), sendMessage (IncMasterN 1)) -- %! Increment the number of windows in the master area
+    , ((keyModMask,                 xK_period), sendMessage (IncMasterN (-1))) -- %! Deincrement the number of windows in the master area
 
     -- quit, or restart
-    , ((keyModMask .|. shiftMask, xK_q     ), io (exitWith ExitSuccess)) -- %! Quit xmonad
-    , ((keyModMask .|. shiftMask, xK_r     ), spawn "if type xmonad; then xmonad --recompile && xmonad --restart; else xmessage xmonad not in \\$PATH: \"$PATH\"; fi") -- %! Restart xmonad
+    , ((keyModMask .|. shiftMask,   xK_q     ), io (exitWith ExitSuccess)) -- %! Quit xmonad
+    , ((keyModMask .|. shiftMask,   xK_r     ), spawn "if type xmonad; then xmonad --recompile && xmonad --restart; else xmessage xmonad not in \\$PATH: \"$PATH\"; fi") -- %! Restart xmonad
 
     ]
     ++
