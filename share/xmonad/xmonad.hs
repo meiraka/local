@@ -54,7 +54,7 @@ myBorderWidth        = 0
 myNormalBorderColor  = "#202020"
 myFocusedBorderColor = "#ffffff"
 myTerminal           = "sakura"
-myWorkspaces         = ["♥", "♦", "♠", "♣", "♡", "♢", "♤", "♧"]
+myWorkspaces         = ["♥", "♡", "♦", "♢", "♠", "♤", "♣", "♧"]
 myManageHook         = composeAll([className =? "Xfce4-notifyd" --> doIgnore]) <+>
                        manageDocks <+>
                        namedScratchpadManageHook scratchpads <+>
@@ -146,8 +146,7 @@ myMouseBindings (XConfig {XMonad.modMask = keyModMask}) = M.fromList
 main = do
     xmproc <- spawnPipe "xmobar"
     xmonad myConfig
-        { logHook  = do fadeInactiveLogHook fadeAmount
-                        dynamicLogWithPP $ xmobarPP { ppOutput = hPutStrLn xmproc
+        { logHook  = do dynamicLogWithPP $ xmobarPP { ppOutput = hPutStrLn xmproc
                                                     , ppCurrent  = xmobarColor "red" "" .wrap " " ""
                                                     , ppHidden  = xmobarColor "#c0c0c0" "" .wrap " " "" .noScratchPad
                                                     , ppHiddenNoWindows  = xmobarColor "#909090" "" .wrap " " "" .noScratchPad
