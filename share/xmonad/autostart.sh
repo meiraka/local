@@ -10,8 +10,18 @@ else
   xcompmgr -I 0.1 -O 0.1 -D 8 -f -c &
 fi
 
+# tray
+killall trayer
+trayer --edge top --align left --SetDockType true \
+    --expand true --widthtype percent --width 10% \
+    --tint 0x202020 --transparent true --alpha 0 --height 25 &
+
 # file manager daemon
-thunar --daemon &
+if ps aux | grep "thunar --daemon" ; then
+  # pass
+else
+  thunar --daemon &
+fi
 
 # power management
 xfce4-power-manager &

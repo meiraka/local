@@ -67,7 +67,7 @@ myLayoutHook         = avoidStruts $
                          tabbedFull = named "FullScreen Tabbed" (noBorders (tabbed shrinkText myToolbarTheme))
 
 scratchpads          = [ NS "terminal" "sakura --name terminalScratchpad"   (resource =? "terminalScratchpad") large
-                       , NS "tray"    "stalonetray" (resource =? "stalonetray") middle
+                       , NS "tray"    "stalonetray --geometry 24x1-0+0 --icon-gravity SW" (resource =? "stalonetray") middle
                        , NS "sound"    "pavucontrol --name soundScratchpad" (resource =? "soundScratchpad"   ) middle
                        ]
                        where
