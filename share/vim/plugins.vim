@@ -9,6 +9,7 @@ LoadingPlugin ~/.vim-plugins/ plugins-config plugins.vim
     Load 'Shougo/neocomplcache'
     Load 'ujihisa/vimshell-ssh'
     Load 'scrooloose/nerdtree'
+    Load 'scrooloose/syntastic'
     Load 'kien/ctrlp.vim'
     Load 'nathanaelkane/vim-indent-guides'
     Load 'tpope/vim-fugitive'

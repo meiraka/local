@@ -71,5 +71,5 @@ endfunction
 
 command! -nargs=* LoadingPlugin call g:pretty_plugin_load_init_with(<f-args>)
 command! EndLoadingPlugin  call g:pretty_plugin_load_finish_with()
-command! -nargs=+ Config call g:pretty_plugin_edit_config(<q-args>)
+command! -nargs=+ PluginConfig call g:pretty_plugin_edit_config(<q-args>)
 command! PluginList call g:pretty_plugin_edit_list()
