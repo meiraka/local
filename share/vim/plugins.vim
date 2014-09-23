@@ -16,7 +16,7 @@ LoadingPlugin ~/.vim-plugins/ plugins-config plugins.vim
     " reStructuredText
     Load 'Rykka/riv.vim'
     " python
-    Load 'davidhalter/jedi-vim', { 'rev': '3934359'}
+    Load 'davidhalter/jedi-vim'
     Load 'nvie/vim-flake8'
     " Vim doc
     Load 'vim-jp/vimdoc-ja'
