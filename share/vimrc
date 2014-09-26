@@ -18,3 +18,7 @@ syntax on
 set hlsearch
 set incsearch
 set backspace=start,eol,indent
+
+let $LANG="en_US.utf8"
+let $LC_LANG="en_US.utf8"
+let $LC_ALL="en_US.utf8"
