@@ -67,7 +67,6 @@ myLayoutHook         = avoidStruts $
                          tabbedFull = named "FullScreen Tabbed" (noBorders (tabbed shrinkText myToolbarTheme))
 
 scratchpads          = [ NS "terminal" "sakura --name terminalScratchpad"   (resource =? "terminalScratchpad") large
-                       , NS "tray"    "stalonetray --geometry 24x1-0+0 --icon-gravity SW" (resource =? "stalonetray") middle
                        , NS "sound"    "pavucontrol --name soundScratchpad" (resource =? "soundScratchpad"   ) middle
                        ]
                        where
@@ -81,7 +80,6 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     [ ((keyModMask .|. shiftMask,   xK_Return), spawn $ XMonad.terminal conf) -- %! Launch terminal
     , ((keyModMask,                 xK_r     ), spawn "gmrun") -- %! Launch gmrun
     , ((keyModMask,                 xK_space ), namedScratchpadAction scratchpads "terminal") -- %! Toggle terminal
-    , ((keyModMask .|. shiftMask,   xK_t     ), namedScratchpadAction scratchpads "tray") -- %! Toggle trayer
     , ((keyModMask .|. shiftMask,   xK_s     ), namedScratchpadAction scratchpads "sound") -- %! Toggle sound control
     , ((keyModMask,                 xK_w     ), kill) -- %! Close the focused window
     , ((keyModMask,                 xK_f     ), sendMessage ToggleLayout) -- %! Toggle fullscreen mode
