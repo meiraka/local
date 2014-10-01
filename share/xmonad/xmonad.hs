@@ -46,10 +46,26 @@ myWindowTheme = myToolbarTheme { activeColor = "#ffffff"
                                , urgentTextColor = "#f4f4f4"
                                , inactiveTextColor = "#f4f4f4"}
 
+main = do
+    xmproc <- spawnPipe "xmobar"
+    xmonad defaultConfig
+         { manageHook         = myManageHook
+         , logHook = myLogHook xmproc
+         , layoutHook         = myLayoutHook
+         , workspaces         = myWorkspaces
+         , terminal           = myTerminal
+         , borderWidth        = myBorderWidth
+         , normalBorderColor  = myNormalBorderColor
+         , focusedBorderColor = myFocusedBorderColor
+         , focusFollowsMouse  = False
+         , startupHook        = myStartupHook
+         , keys               = myKeys
+         , mouseBindings      = myMouseBindings
+         }
 
 myStartupHook :: X ()
-myStartupHook        = do
-                       spawn "sh ~/.xmonad/autostart.sh"
+myStartupHook = do
+    spawn "sh ~/.xmonad/autostart.sh"
 myBorderWidth        = 0
 myNormalBorderColor  = "#141414"
 myFocusedBorderColor = "#ffffff"
@@ -65,6 +81,18 @@ myLayoutHook         = avoidStruts $
                          normal     = named "Circle" (circleDefault shrinkText myWindowTheme)
                          full       = named "FullScreen" (noBorders Full)
                          tabbedFull = named "FullScreen Tabbed" (noBorders (tabbed shrinkText myToolbarTheme))
+
+myLogHook statusbar = dynamicLogWithPP $ xmobarPP
+    { ppOutput          = hPutStrLn statusbar
+    , ppCurrent         = xmobarColor "#7a202f" "" .wrap " " ""
+    , ppHidden          = xmobarColor "#f4f4f4" "" .wrap " " "" .noScratchPad
+    , ppHiddenNoWindows = xmobarColor "#c4c4c4" "" .wrap " " "" .noScratchPad
+    , ppTitle           = xmobarColor "#7a202f" "" . shorten 80
+    , ppSep             = "  "
+    , ppLayout          = xmobarColor "#7a202f" ""
+    }
+    where
+        noScratchPad ws = if ws == "NSP" then "" else ws
 
 scratchpads          = [ NS "terminal" "sakura --name terminalScratchpad"   (resource =? "terminalScratchpad") large
                        , NS "sound"    "pavucontrol --name soundScratchpad" (resource =? "soundScratchpad"   ) middle
@@ -124,8 +152,6 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
       keyModMask = mod4Mask
       mouseModMask = mod1Mask
 
-
-
 myMouseBindings (XConfig {XMonad.modMask = keyModMask}) = M.fromList
     -- mod-button1 %! Set the window to floating mode and move by dragging
     [ ((mouseModMask, button1), \w -> focus w >> mouseMoveWindow w
@@ -139,49 +165,5 @@ myMouseBindings (XConfig {XMonad.modMask = keyModMask}) = M.fromList
     ]
     where
       mouseModMask = mod1Mask
-
-
-main = do
-    xmproc <- spawnPipe "xmobar"
-    xmonad myConfig
-        { logHook  = do dynamicLogWithPP $ xmobarPP { ppOutput = hPutStrLn xmproc
-                                                    , ppCurrent  = xmobarColor "#7a202f" "" .wrap " " ""
-                                                    , ppHidden  = xmobarColor "#f4f4f4" "" .wrap " " "" .noScratchPad
-                                                    , ppHiddenNoWindows  = xmobarColor "#c4c4c4" "" .wrap " " "" .noScratchPad
-                                                    , ppTitle = xmobarColor "#7a202f" "" . shorten 80
-                                                    , ppSep = "  "
-                                                    , ppLayout = xmobarColor "#7a202f" ""
-                                                    }
-
-        }
-        where
-          noScratchPad ws = if ws == "NSP" then "" else ws
-          fadeAmount = 0.7
-
-myLogHook h = dynamicLogWithPP $ defaultPP
-              { ppCurrent         = dzenColor "#303030" "#909090" . pad
-              , ppHidden          = dzenColor "#909090" "" . pad
-              , ppHiddenNoWindows = dzenColor "#f4f4f4" "" . pad 
-              , ppLayout          = dzenColor "#909090" "" . pad 
-              , ppUrgent          = dzenColor "#ff0000" "" . pad . dzenStrip
-              , ppTitle           = shorten 100  
-              , ppWsSep           = ""
-              , ppSep             = "  "
-              , ppOutput          = hPutStrLn h
-              }
-
-myConfig = defaultConfig
-        { manageHook         = myManageHook
-        , layoutHook         = myLayoutHook
-        , workspaces         = myWorkspaces
-        , terminal           = myTerminal
-        , borderWidth        = myBorderWidth
-        , normalBorderColor  = myNormalBorderColor
-        , focusedBorderColor = myFocusedBorderColor
-        , focusFollowsMouse  = False
-        , startupHook        = myStartupHook
-        , keys               = myKeys
-        , mouseBindings      = myMouseBindings
-        }
 
 
