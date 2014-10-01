@@ -25,15 +25,15 @@ import qualified XMonad.StackSet as W
 import qualified Data.Map as M
 import qualified Data.List
 
-myToolbarTheme = defaultTheme { activeColor = "#202020"
-                              , inactiveColor = "#202020"
-                              , urgentColor = "#606060"
-                              , activeBorderColor = "#202020"
-                              , inactiveBorderColor = "#202020"
-                              , urgentBorderColor = "#606060"
-                              , activeTextColor = "red"
+myToolbarTheme = defaultTheme { activeColor = "#141414"
+                              , inactiveColor = "#141414"
+                              , urgentColor = "#f4f4f4"
+                              , activeBorderColor = "#141414"
+                              , inactiveBorderColor = "#141414"
+                              , urgentBorderColor = "#f4f4f4"
+                              , activeTextColor = "#7a202f"
                               , inactiveTextColor = "#c0c0c0"
-                              , urgentTextColor = "#606060"
+                              , urgentTextColor = "#f4f4f4"
                               , fontName = "xft:Migu 1C:bold"}
 
 myWindowTheme = myToolbarTheme { activeColor = "#ffffff"
@@ -42,16 +42,16 @@ myWindowTheme = myToolbarTheme { activeColor = "#ffffff"
                                , activeBorderColor = "#ffffff"
                                , inactiveBorderColor = "#ffffff"
                                , urgentBorderColor = "#ffffff"
-                               , activeTextColor = "#18214a"
-                               , urgentTextColor = "#ced6ef"
-                               , inactiveTextColor = "#ced6ef"}
+                               , activeTextColor = "#141414"
+                               , urgentTextColor = "#f4f4f4"
+                               , inactiveTextColor = "#f4f4f4"}
 
 
 myStartupHook :: X ()
 myStartupHook        = do
                        spawn "sh ~/.xmonad/autostart.sh"
 myBorderWidth        = 0
-myNormalBorderColor  = "#202020"
+myNormalBorderColor  = "#141414"
 myFocusedBorderColor = "#ffffff"
 myTerminal           = "sakura"
 myWorkspaces         = ["♥", "♡", "♦", "♢", "♠", "♤", "♣", "♧"]
@@ -145,10 +145,12 @@ main = do
     xmproc <- spawnPipe "xmobar"
     xmonad myConfig
         { logHook  = do dynamicLogWithPP $ xmobarPP { ppOutput = hPutStrLn xmproc
-                                                    , ppCurrent  = xmobarColor "red" "" .wrap " " ""
-                                                    , ppHidden  = xmobarColor "#c0c0c0" "" .wrap " " "" .noScratchPad
-                                                    , ppHiddenNoWindows  = xmobarColor "#909090" "" .wrap " " "" .noScratchPad
-                                                    , ppTitle = xmobarColor "#c0c0c0" "" . shorten 80
+                                                    , ppCurrent  = xmobarColor "#7a202f" "" .wrap " " ""
+                                                    , ppHidden  = xmobarColor "#f4f4f4" "" .wrap " " "" .noScratchPad
+                                                    , ppHiddenNoWindows  = xmobarColor "#c4c4c4" "" .wrap " " "" .noScratchPad
+                                                    , ppTitle = xmobarColor "#7a202f" "" . shorten 80
+                                                    , ppSep = "  "
+                                                    , ppLayout = xmobarColor "#7a202f" ""
                                                     }
 
         }
@@ -159,7 +161,7 @@ main = do
 myLogHook h = dynamicLogWithPP $ defaultPP
               { ppCurrent         = dzenColor "#303030" "#909090" . pad
               , ppHidden          = dzenColor "#909090" "" . pad
-              , ppHiddenNoWindows = dzenColor "#606060" "" . pad 
+              , ppHiddenNoWindows = dzenColor "#f4f4f4" "" . pad 
               , ppLayout          = dzenColor "#909090" "" . pad 
               , ppUrgent          = dzenColor "#ff0000" "" . pad . dzenStrip
               , ppTitle           = shorten 100  

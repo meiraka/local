@@ -1,6 +1,6 @@
 Config { font = "xft:Migu 1C:bold:size=11:antialias=true"
-       , bgColor = "#202020"
-       , fgColor = "#c0c0c0"
+       , bgColor = "#141414"
+       , fgColor = "#f4f4f4"
        , position = TopW R 90
        , lowerOnStart = False
        , commands = [ Run Date "%a %b %_d %Y %H:%M:%S " "date" 10
@@ -8,5 +8,5 @@ Config { font = "xft:Migu 1C:bold:size=11:antialias=true"
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = " %StdinReader% }{ <fc=#c0c0c0>%date%</fc> "
+       , template = " %StdinReader% }{ %date% "
        }

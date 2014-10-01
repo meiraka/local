@@ -14,7 +14,7 @@ fi
 killall trayer
 trayer --edge top --align left --SetDockType true \
     --expand true --widthtype percent --width 10% \
-    --tint 0x202020 --transparent true --alpha 0 --height 25 &
+    --tint 0x141414 --transparent true --alpha 0 --height 25 &
 
 # file manager daemon
 if ps aux | grep "thunar --daemon" ; then
