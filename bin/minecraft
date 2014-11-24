@@ -1,0 +1,34 @@
+#!/bin/bash
+# download and run Minecraft on GTK+ platform
+
+MINECRAFT_DIR=~/.minecraft
+MINECRAFT_LAUNCHER_DIR=$MINECRAFT_DIR/launcher
+MINECRAFT_BACKUP_DIR=$MINECRAFT_DIR/backups
+export LD_LIBRARY_PATH="/usr/lib/jvm/java-8-oracle/jre/lib/amd64"
+
+# fetch launcher
+mkdir -p $MINECRAFT_LAUNCHER_DIR
+if [ -e $MINECRAFT_LAUNCHER_DIR/Minecraft.jar ]; then
+  echo already downloaded minecraft launcher: $MINECRAFT_LAUNCHER_DIR/Minecraft.jar
+else
+  echo download minecraft launcher: $MINECRAFT_LAUNCHER_DIR/Minecraft.jar
+  curl -o $MINECRAFT_LAUNCHER_DIR/Minecraft.jar http://s3.amazonaws.com/Minecraft.Download/launcher/Minecraft.jar
+fi
+
+# create backup
+mkdir -p $MINECRAFT_BACKUP_DIR
+BACKUP_POSTFIX=`date +%Y%m%d`
+for save in `ls $MINECRAFT_DIR/saves/`
+do
+  if [ -e $MINECRAFT_BACKUP_DIR/${save}_${BACKUP_POSTFIX}.tar.gz ]
+  then
+    echo already created backup: ${save}
+  else
+    echo create backup: ${save}
+    tar --directory $MINECRAFT_DIR/saves -cvzf $MINECRAFT_BACKUP_DIR/${save}_${BACKUP_POSTFIX}.tar.gz $save/
+  fi
+done
+
+# run
+cd $MINECRAFT_DIR
+java -Dsun.java3d.opengl=true '-Dswing.crossplatformlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel' '-Dawt.useSystemAAFontSettings=on -Dswing.aatext=true' -jar $MINECRAFT_LAUNCHER_DIR/Minecraft.jar
