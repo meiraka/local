@@ -1,24 +1,10 @@
-set tabstop=4
-set shiftwidth=4
-set expandtab
-runtime! plugins.vim
-set t_Co=256
-if has('gui_running')
-  set background=light
-else
-  set background=dark
-endif
-set guifont=Migu\ 1M\ bold\ 12
-set guifontwide=Migu\ 1M\ bold\ 12
-set number
-set cursorline
-
-colorscheme tricolore
-syntax on
-set hlsearch
-set incsearch
-set backspace=start,eol,indent
-
 let $LANG="en_US.utf8"
 let $LC_LANG="en_US.utf8"
 let $LC_ALL="en_US.utf8"
+
+python << EOP
+import sys
+import os
+sys.path.append(os.path.expanduser('~/.vim/'))
+import vimrc
+EOP
