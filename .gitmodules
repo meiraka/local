@@ -1,0 +1,6 @@
+[submodule "lib/urxvt-perls"]
+	path = lib/urxvt-perls
+	url = git@github.com:muennich/urxvt-perls.git
+[submodule "etc/urxvt/ext"]
+	path = etc/urxvt/ext
+	url = git@github.com:muennich/urxvt-perls.git
