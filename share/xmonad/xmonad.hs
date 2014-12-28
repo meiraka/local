@@ -9,6 +9,7 @@ import XMonad.Util.Run(spawnPipe)
 import XMonad.Util.EZConfig
 import XMonad.Util.NamedScratchpad
 import XMonad.Layout.Named
+import XMonad.Layout.Circle
 import XMonad.Layout.DecorationMadness
 import XMonad.Layout.Tabbed
 import XMonad.Layout.Fullscreen
@@ -36,15 +37,7 @@ myToolbarTheme = defaultTheme { activeColor = "#141414"
                               , urgentTextColor = "#f4f4f4"
                               , fontName = "xft:Migu 1C:bold"}
 
-myWindowTheme = myToolbarTheme { activeColor = "#ffffff"
-                               , inactiveColor = "#ffffff"
-                               , urgentColor = "#ffffff"
-                               , activeBorderColor = "#ffffff"
-                               , inactiveBorderColor = "#ffffff"
-                               , urgentBorderColor = "#ffffff"
-                               , activeTextColor = "#141414"
-                               , urgentTextColor = "#f4f4f4"
-                               , inactiveTextColor = "#f4f4f4"}
+myWindowTheme = myToolbarTheme { activeTextColor = "#ffffff" }
 
 main = do
     xmproc <- spawnPipe "xmobar"
@@ -66,19 +59,20 @@ main = do
 myStartupHook :: X ()
 myStartupHook = do
     spawn "sh ~/.xmonad/autostart.sh"
-myBorderWidth        = 0
+myBorderWidth        = 2
 myNormalBorderColor  = "#141414"
 myFocusedBorderColor = "#ffffff"
-myTerminal           = "sakura"
+myTerminal           = "urxvt"
 myWorkspaces         = ["♥", "♡", "♦", "♢", "♠", "♤", "♣", "♧"]
 myManageHook         = composeAll([className =? "Xfce4-notifyd" --> doIgnore]) <+>
                        manageDocks <+>
                        namedScratchpadManageHook scratchpads <+>
                        manageHook defaultConfig
 myLayoutHook         = avoidStruts $
-                       toggleLayouts (tabbedFull ||| full) normal
+                       toggleLayouts (tabbedFull ||| full) (break ||| fill)
                        where
-                         normal     = named "Circle" (circleDefault shrinkText myWindowTheme)
+                         fill       = named "fill" (spacing 12 $ Grid)
+                         break      = Circle
                          full       = named "FullScreen" (noBorders Full)
                          tabbedFull = named "FullScreen Tabbed" (noBorders (tabbed shrinkText myToolbarTheme))
 
@@ -94,7 +88,7 @@ myLogHook statusbar = dynamicLogWithPP $ xmobarPP
     where
         noScratchPad ws = if ws == "NSP" then "" else ws
 
-scratchpads          = [ NS "terminal" "sakura --name terminalScratchpad"   (resource =? "terminalScratchpad") large
+scratchpads          = [ NS "terminal" "urxvt -name terminalScratchpad"   (resource =? "terminalScratchpad") large
                        , NS "sound"    "pavucontrol --name soundScratchpad" (resource =? "soundScratchpad"   ) middle
                        ]
                        where

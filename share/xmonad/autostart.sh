@@ -39,5 +39,5 @@ synclient VertScrollDelta=-237
 synclient HorizScrollDelta=-237
 synclient VertEdgeScroll=0
 synclient HorizEdgeScroll=0
-
+xrdb ~/.Xresources
 xmodmap ~/.Xmodmap
