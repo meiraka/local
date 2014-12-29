@@ -42,25 +42,27 @@ if vim.functions.has('vim_starting'):
     # syntax checker.
     # :SyntasticInfo to show checkers
     vim.commands.NeoBundle("'scrooloose/syntastic'")
-    vim.globals.syntastic_python_checkers = ['python', 'pylint',
-                                             'flake8', 'pep257']
-    vim.globals.syntastic_cpp_cpplint_args = ('"--verbose=3'
-                                              'filter=-legal/copyright'
-                                              '--extensions=hpp,cpp"')
-    vim.globals.syntastic_cpp_check_header = 1
-    vim.globals.syntastic_cpp_no_include_search = 1
-    vim.globals.syntastic_cpp_auto_refresh_includes = 1
+    vim.variables.syntastic_python_checkers = ['python', 'pylint',
+                                               'flake8', 'pep257']
+    vim.variables.syntastic_cpp_cpplint_args = ('"--verbose=3'
+                                                'filter=-legal/copyright'
+                                                '--extensions=hpp,cpp"')
+    vim.variables.syntastic_cpp_check_header = 1
+    vim.variables.syntastic_cpp_no_include_search = 1
+    vim.variables.syntastic_cpp_auto_refresh_includes = 1
     # vim.commands.NeoBundle("'kien/ctrlp.vim'")
     vim.commands.NeoBundle("'nathanaelkane/vim-indent-guides'")
-    vim.globals.indent_guides_enable_on_vim_startup = 1
-    vim.globals.indent_guides_start_level = 2
-    vim.globals.indent_guides_color_change_percent = 30
-    vim.globals.indent_guides_guide_size = 1
+    vim.variables.indent_guides_enable_on_vim_startup = 1
+    vim.variables.indent_guides_start_level = 2
+    vim.variables.indent_guides_color_change_percent = 30
+    vim.variables.indent_guides_guide_size = 1
 
     vim.commands.NeoBundle("'tpope/vim-fugitive'")
     vim.commands.NeoBundle("'davidhalter/jedi-vim'")
+    vim.autocmd.bind('FileType python', '',
+                     lambda: setattr(vim.buffer, 'did_ftplugin', 1), False)
     vim.commands.NeoBundle("'nvie/vim-flake8'")
-    vim.commands.NeoBundle("'vim-jp/vimdoc-ja'")
+    # vim.commands.NeoBundle("'vim-jp/vimdoc-ja'")
     vim.commands.NeoBundle("'derekwyatt/vim-scala'")
 
     vim.autoloads.neobundle.end()
