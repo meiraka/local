@@ -14,7 +14,7 @@ fi
 #
 # env
 #
-export TERM="xterm-256color"
+# export TERM="xterm-256color"
 export PATH=~/local/bin:$PATH:~/bin
 export CLICOLOR=1
 export LANG=ja_JP.UTF-8
@@ -23,7 +23,7 @@ export LC_ALL=${LANG}
 export EDITOR=vi
 export MPD_HOST="voyage.local"
 
-if which dircolors > /dev/null; then
+if which ~/local/tmp/dircolors > /dev/null; then
   mkdir -p ~/local/tmp
   python ~/local/bin/dir_colors.py > ~/local/tmp/dir_colors
   eval $(dircolors -b ~/local/etc/dir_colors) > /dev/null 2> /dev/null
@@ -64,7 +64,6 @@ setopt hist_ignore_dups
 setopt share_history
 setopt nonomatch
 
-# tcsh like history search
 function history-all { history -E 1 }
 autoload history-search-end
 zle -N history-beginning-search-backward-end history-search-end
