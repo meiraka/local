@@ -4,6 +4,7 @@ pretty vim interface.
 Copyright 2014 mei raka
 """
 
+import re
 import vim
 
 _pyfuncs = {}
@@ -27,6 +28,19 @@ class _Function(object):
         return ret
 
 
+class _Command(object):
+
+    """Represent vim command as callable object."""
+
+    def __init__(self, name):
+        self.name = name
+
+    def __call__(self, *args):
+        encoded_args = u' '.join([unicode(i).replace(' ', '\\ ')
+                                  for i in args])
+        vim.command('%s %s' % (self.name, encoded_args))
+
+
 def _py2vimliteral(python_value):
     if type(python_value) == unicode:
         return u'"%s"' % python_value.replace(u'"', u'\\"')
@@ -44,11 +58,7 @@ def _py2vimliteral(python_value):
 
 class _Commands(object):
     def __getattr__(self, name):
-        def func(*args):
-            encoded_args = u' '.join([unicode(i).replace(' ', '\\ ')
-                                      for i in args])
-            vim.command('%s %s' % (name, encoded_args))
-        return func
+        return _Command(name)
 
 commands = _Commands()
 
@@ -146,37 +156,47 @@ class _AutoCommands(object):
             self._funcs = []
             self._func_count = 0
 
-        def bind(self, event, pattern, func, nested, *args):
+        def bind(self, event, pattern, func, args=None, nested=False):
             """bind function to vim events."""
             nested = 'nested' if nested else ''
-            if not type(func) == _Function:
-                name = 'PyAutocmd_%s_%s_%i' % (event,
-                                               pattern.replace('*', 'p'),
-                                               self._func_count)
-                name = name.replace(' ', '_')
-                setattr(globals.functions, name, func)
-                self._funcs.append((event, pattern, nested,
-                                    getattr(globals.functions, name).name,
-                                    args))
+            args = [] if args is None else args
+            if type(func) == _Function or type(func) == _Command:
+                self._funcs.append((event, pattern, nested, func, args))
             else:
-                self._funcs.append((event, pattern, nested, func.name, args))
+                name = 'PyAutocmd_%s_%s_%s_%i' % (event,
+                                                  pattern.replace('*', 'p'),
+                                                  func.__name__,
+                                                  self._func_count)
+                name = re.sub(re.compile("[!-/:-@[-`{-~\s]"), '_', name)
+
+                def wrap_func():
+                    func(*args)
+                setattr(globals.functions, name, wrap_func)
+                self._funcs.append((event, pattern, nested,
+                                    getattr(globals.functions, name), []))
 
         def update(self):
             """Update autocmd."""
             vim.command('augroup pyvim')
             vim.command('autocmd!')
-            for event, pattern, nested, name, args in self._funcs:
-                cmd = 'autocmd %s %s %s :call %s(%s)' % (
-                      event, pattern, nested, name, ' ,'.join(
+            for event, pattern, nested, func, args in self._funcs:
+                if type(func) == _Command:
+                    cmd = 'autocmd %s %s %s %s %s' % (
+                        event, pattern, nested, func.name, ' '.join(
+                          i for i in args))
+                    vim.command(cmd)
+                elif type(func) == _Function:
+                    cmd = 'autocmd %s %s %s :call %s(%s)' % (
+                        event, pattern, nested, func.name, ' ,'.join(
                           _py2vimliteral(i) for i in args))
-                vim.command(cmd)
+                    vim.command(cmd)
             vim.command('augroup END')
 
     def __init__(self):
         self._raw = _AutoCommands._RawAutoCommands()
 
-    def bind(self, event, pattern, func, nested, *args):
-        self._raw.bind(event, pattern, func, nested, *args)
+    def bind(self, event, pattern, func, args=None, nested=False):
+        self._raw.bind(event, pattern, func, args=args, nested=nested)
         self._raw.update()
 
     def unbind(event, pattern, func, nested=''):

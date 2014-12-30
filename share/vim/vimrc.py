@@ -5,10 +5,6 @@ import viimproved as vim
 
 BUNDLE_DIR = '~/.vim-plugins'
 
-vim.settings.tabstop = 4
-vim.settings.shiftwidth = 4
-vim.settings.expandtab = True
-
 if vim.functions.has('gui_running') == '1':
     vim.settings.background = 'light'
     vim.settings.guifont = "Migu 1M bold 12"
@@ -24,6 +20,10 @@ vim.commands.syntax('on')
 vim.settings.hlsearch = True
 vim.settings.incsearch = True
 vim.settings.backspace = 'start,eol,indent'
+vim.settings.tabstop = 4
+vim.settings.shiftwidth = 4
+vim.settings.expandtab = True
+# vim.settings.ambiwidth = 'single'
 
 if vim.functions.has('vim_starting'):
     if vim.settings.compatible:
@@ -60,7 +60,8 @@ if vim.functions.has('vim_starting'):
     vim.commands.NeoBundle("'tpope/vim-fugitive'")
     vim.commands.NeoBundle("'davidhalter/jedi-vim'")
     vim.autocmd.bind('FileType python', '',
-                     lambda: setattr(vim.buffer, 'did_ftplugin', 1), False)
+                     setattr, [vim.buffer, 'did_ftplugin', '1'])
+    setattr(vim.globals, 'jedi#use_tabs_not_buffers', 0)
     vim.commands.NeoBundle("'nvie/vim-flake8'")
     # vim.commands.NeoBundle("'vim-jp/vimdoc-ja'")
     vim.commands.NeoBundle("'derekwyatt/vim-scala'")
@@ -69,3 +70,4 @@ if vim.functions.has('vim_starting'):
     vim.commands.filetype("plugin", "indent", "on")
 
 vim.commands.colorscheme("tricolore")
+vim.autocmd.bind('BufNewFile', '*', vim.commands.put, ["='hogehoge'"])
