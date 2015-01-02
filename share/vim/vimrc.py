@@ -30,7 +30,7 @@ if vim.functions.has('vim_starting'):
         vim.settings.compatible = False
     vim.settings.runtimepath = (vim.settings.runtimepath + ',' +
                                 BUNDLE_DIR + '/neobundle.vim')
-    vim.autoloads.neobundle.begin(os.path.expanduser(BUNDLE_DIR))
+    vim.autoloads.neobundle.functions.begin(os.path.expanduser(BUNDLE_DIR))
     vim.commands.NeoBundleFetch("'Shougo/neobundle.vim'")
     vim.commands.NeoBundle("'meiraka/vim-hysteric-colors'")
     vim.commands.NeoBundle("'Shougo/vimproc'")
@@ -61,12 +61,12 @@ if vim.functions.has('vim_starting'):
     vim.commands.NeoBundle("'davidhalter/jedi-vim'")
     vim.autocmd.bind('FileType python', '',
                      setattr, [vim.buffer.variables, 'did_ftplugin', '1'])
-    setattr(vim.globals.variables, 'jedi#use_tabs_not_buffers', 0)
+    vim.autoloads.jedi.variables.use_tabs_not_buffers = 0
     vim.commands.NeoBundle("'nvie/vim-flake8'")
     # vim.commands.NeoBundle("'vim-jp/vimdoc-ja'")
     vim.commands.NeoBundle("'derekwyatt/vim-scala'")
 
-    vim.autoloads.neobundle.end()
+    vim.autoloads.neobundle.functions.end()
     vim.commands.filetype("plugin", "indent", "on")
 
 vim.commands.colorscheme("tricolore")

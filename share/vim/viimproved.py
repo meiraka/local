@@ -117,20 +117,12 @@ buffer = _Scope(u'b:')
 
 
 class _AutoloadFunctions(object):
-    class AutoLoad(object):
-        def __init__(self, name):
-            self.name = name
-
-        def __getattr__(self, name):
-            return _Functions.__getattr__(functions,
-                                          '%s#%s' % (self.name, name))
-
     def __init__(self):
         self.autoloads = {}
 
     def __getattr__(self, name):
         return self.autoloads.setdefault(name,
-                                         _AutoloadFunctions.AutoLoad(name))
+                                         _Scope(name + u'#'))
 
 autoloads = _AutoloadFunctions()
 
