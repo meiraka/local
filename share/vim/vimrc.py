@@ -60,8 +60,8 @@ if vim.functions.has('vim_starting'):
     vim.commands.NeoBundle("'tpope/vim-fugitive'")
     vim.commands.NeoBundle("'davidhalter/jedi-vim'")
     vim.autocmd.bind('FileType python', '',
-                     setattr, [vim.buffer, 'did_ftplugin', '1'])
-    setattr(vim.globals, 'jedi#use_tabs_not_buffers', 0)
+                     setattr, [vim.buffer.variables, 'did_ftplugin', '1'])
+    setattr(vim.globals.variables, 'jedi#use_tabs_not_buffers', 0)
     vim.commands.NeoBundle("'nvie/vim-flake8'")
     # vim.commands.NeoBundle("'vim-jp/vimdoc-ja'")
     vim.commands.NeoBundle("'derekwyatt/vim-scala'")
