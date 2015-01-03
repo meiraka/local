@@ -30,18 +30,24 @@ if vim.functions.has('vim_starting'):
         vim.settings.compatible = False
     vim.settings.runtimepath = (vim.settings.runtimepath + ',' +
                                 BUNDLE_DIR + '/neobundle.vim')
-    vim.autoloads.neobundle.functions.begin(os.path.expanduser(BUNDLE_DIR))
-    vim.commands.NeoBundleFetch("'Shougo/neobundle.vim'")
-    vim.commands.NeoBundle("'meiraka/vim-hysteric-colors'")
-    vim.commands.NeoBundle("'Shougo/vimproc'")
-    vim.commands.NeoBundle("'Shougo/vimshell.vim'")
-    # vim.commands.NeoBundle("'Shougo/neocomplcache'")
-    # vim.commands.NeoBundle("'Shougo/neocomplete.vim'")
-    vim.commands.NeoBundle("'ujihisa/vimshell-ssh'")
-    vim.commands.NeoBundle("'scrooloose/nerdtree'")
+    neobundle = vim.autoloads.neobundle.functions
+    NeoBundleFetch, NeoBundle, NeoBundleCheck = [
+        getattr(vim.commands, i) for i in
+        ['NeoBundleFetch', 'NeoBundle', 'NeoBundleCheck']]
+
+    neobundle.begin(os.path.expanduser(BUNDLE_DIR))
+    NeoBundleFetch("'Shougo/neobundle.vim'")
+    NeoBundle("'meiraka/vim-hysteric-colors'")
+    NeoBundle("'Shougo/vimproc'")
+    NeoBundle("'Shougo/vimshell.vim'")
+    # NeoBundle("'Shougo/neocomplcache'")
+    # NeoBundle("'Shougo/neocomplete.vim'")
+    NeoBundle("'ujihisa/vimshell-ssh'")
+    NeoBundle("'scrooloose/nerdtree'")
+
     # syntax checker.
     # :SyntasticInfo to show checkers
-    vim.commands.NeoBundle("'scrooloose/syntastic'")
+    NeoBundle("'scrooloose/syntastic'")
     vim.variables.syntastic_python_checkers = ['python', 'pylint',
                                                'flake8', 'pep257']
     vim.variables.syntastic_cpp_cpplint_args = ('"--verbose=3'
@@ -50,24 +56,42 @@ if vim.functions.has('vim_starting'):
     vim.variables.syntastic_cpp_check_header = 1
     vim.variables.syntastic_cpp_no_include_search = 1
     vim.variables.syntastic_cpp_auto_refresh_includes = 1
-    # vim.commands.NeoBundle("'kien/ctrlp.vim'")
-    vim.commands.NeoBundle("'nathanaelkane/vim-indent-guides'")
+
+    # NeoBundle("'kien/ctrlp.vim'")
+    NeoBundle("'nathanaelkane/vim-indent-guides'")
     vim.variables.indent_guides_enable_on_vim_startup = 1
     vim.variables.indent_guides_start_level = 2
     vim.variables.indent_guides_color_change_percent = 30
     vim.variables.indent_guides_guide_size = 1
 
-    vim.commands.NeoBundle("'tpope/vim-fugitive'")
-    vim.commands.NeoBundle("'davidhalter/jedi-vim'")
+    NeoBundle("'tpope/vim-fugitive'")
+
+    # Lang: Python
+    NeoBundle("'davidhalter/jedi-vim'")
     vim.autocmd.bind('FileType python', '',
                      setattr, [vim.buffer.variables, 'did_ftplugin', '1'])
     vim.autoloads.jedi.variables.use_tabs_not_buffers = 0
-    vim.commands.NeoBundle("'nvie/vim-flake8'")
-    # vim.commands.NeoBundle("'vim-jp/vimdoc-ja'")
-    vim.commands.NeoBundle("'derekwyatt/vim-scala'")
+    NeoBundle("'nvie/vim-flake8'")
 
-    vim.autoloads.neobundle.functions.end()
+    # Lang: Haskell
+    NeoBundle("'kana/vim-filetype-haskell'")
+    # NeoBundle("'raichoo/haskell-vim'")
+    # vim.globals.variables.haskell_enable_quantification = 1
+    # vim.globals.variables.haskell_enable_arrowsyntax = 1
+
+    # Lang: Vim
+    # NeoBundle("'vim-jp/vimdoc-ja'")
+
+    # Lang: Scala
+    NeoBundle("'derekwyatt/vim-scala'")
+
+    neobundle.end()
     vim.commands.filetype("plugin", "indent", "on")
+    NeoBundleCheck()
 
 vim.commands.colorscheme("tricolore")
-vim.autocmd.bind('BufNewFile', '*', vim.commands.put, ["='hogehoge'"])
+
+
+def reload():
+    """Reload vimrc file."""
+    vim.commands.source('~/.vimrc')
