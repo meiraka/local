@@ -64,10 +64,14 @@ myNormalBorderColor  = "#141414"
 myFocusedBorderColor = "#ffffff"
 myTerminal           = "urxvt"
 myWorkspaces         = ["♥", "♡", "♦", "♢", "♠", "♤", "♣", "♧"]
-myManageHook         = composeAll([className =? "Xfce4-notifyd" --> doIgnore]) <+>
-                       manageDocks <+>
-                       namedScratchpadManageHook scratchpads <+>
-                       manageHook defaultConfig
+myManageHook =
+    composeAll
+        [ className =? "Xfce4-notifyd" --> doIgnore
+        , className =? "Gimp" --> doFloat
+        ] <+>
+    manageDocks <+>
+    namedScratchpadManageHook scratchpads <+>
+    manageHook defaultConfi
 myLayoutHook         = avoidStruts $
                        toggleLayouts (tabbedFull ||| full) (break ||| fill)
                        where
@@ -88,13 +92,18 @@ myLogHook statusbar = dynamicLogWithPP $ xmobarPP
     where
         noScratchPad ws = if ws == "NSP" then "" else ws
 
-scratchpads          = [ NS "terminal" "urxvt -name terminalScratchpad"   (resource =? "terminalScratchpad") large
-                       , NS "sound"    "pavucontrol --name soundScratchpad" (resource =? "soundScratchpad"   ) middle
-                       ]
-                       where
-                         large  = customFloating $ W.RationalRect (1/20) (1/20) (18/20) (18/20)
-                         middle = customFloating $ W.RationalRect (3/20) (3/20) (14/20) (14/20)
-                         little = customFloating $ W.RationalRect (5/20) (5/20) (10/20) (10/20)
+scratchpads =
+    [ NS "terminal"
+         "urxvt -name terminalScratchpad -title terminal"
+         (resource =? "terminalScratchpad") large
+    , NS "sound"
+         "pavucontrol --name soundScratchpad"
+         (resource =? "soundScratchpad") middle
+    ]
+    where
+        large = customFloating $ W.RationalRect (1/20) (1/20) (18/20) (18/20)
+        middle = customFloating $ W.RationalRect (3/20) (3/20) (14/20) (14/20)
+        little = customFloating $ W.RationalRect (5/20) (5/20) (10/20) (10/20)
 
 myKeys :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
 myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
