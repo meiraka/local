@@ -52,6 +52,10 @@ def _py2vimliteral(python_value):
         return str(int(python_value))
     elif type(python_value) == list:
         return '[%s]' % ','.join([_py2vimliteral(i) for i in python_value])
+    elif type(python_value) == dict:
+        return '{%s}' % ','.join(
+            ['%s:%s' % (_py2vimliteral(k), _py2vimliteral(v))
+                for k, v in python_value.iteritems()])
     else:
         raise ValueError(python_value)
 

@@ -30,6 +30,7 @@ if vim.functions.has('vim_starting'):
         vim.settings.compatible = False
     vim.settings.runtimepath = (vim.settings.runtimepath + ',' +
                                 BUNDLE_DIR + '/neobundle.vim')
+    g = vim.globals.variables
     neobundle = vim.autoloads.neobundle.functions
     NeoBundleFetch, NeoBundle, NeoBundleCheck = [
         getattr(vim.commands, i) for i in
@@ -44,7 +45,6 @@ if vim.functions.has('vim_starting'):
     # NeoBundle("'Shougo/neocomplete.vim'")
     NeoBundle("'ujihisa/vimshell-ssh'")
     NeoBundle("'scrooloose/nerdtree'")
-
     # syntax checker.
     # :SyntasticInfo to show checkers
     NeoBundle("'scrooloose/syntastic'")
@@ -56,6 +56,24 @@ if vim.functions.has('vim_starting'):
     vim.variables.syntastic_cpp_check_header = 1
     vim.variables.syntastic_cpp_no_include_search = 1
     vim.variables.syntastic_cpp_auto_refresh_includes = 1
+
+    # Status line
+    NeoBundle("'itchyny/lightline.vim'")
+    vim.settings.laststatus = 2
+    g.lightline = {'colorscheme': 'wombat',
+                   'active': {'right': [['syntastic', 'lineinfo'],
+                                        ['percent'],
+                                        ['fileformat', 'fileencoding', 'filetype']]},
+                   'component_expand': {'syntastic': 'SyntasticStatuslineFlag'},
+                   'component_type': {'syntastic': 'error'}}
+
+    g.syntastic_mode_map = {'mode': 'passive'}
+
+    def show_syntastic_errors():
+        vim.commands.SyntasticCheck()
+        vim.autoloads.lightline.functions.update()
+    vim.autocmd.bind('BufWritePost', '*',
+                     show_syntastic_errors, [])
 
     # NeoBundle("'kien/ctrlp.vim'")
     NeoBundle("'nathanaelkane/vim-indent-guides'")
