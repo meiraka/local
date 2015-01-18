@@ -65,7 +65,8 @@ if vim.functions.has('vim_starting'):
     vim.variables.indent_guides_guide_size = 1
 
     NeoBundle("'tpope/vim-fugitive'")
-
+    # Lang: C++
+    NeoBundle("'meiraka/vim-google-cpp-style-indent'")
     # Lang: Python
     NeoBundle("'davidhalter/jedi-vim'")
     vim.autocmd.bind('FileType python', '',
@@ -80,7 +81,7 @@ if vim.functions.has('vim_starting'):
     # vim.globals.variables.haskell_enable_arrowsyntax = 1
 
     # Lang: Vim
-    # NeoBundle("'vim-jp/vimdoc-ja'")
+    NeoBundle("'vim-jp/vimdoc-ja'")
 
     # Lang: Scala
     NeoBundle("'derekwyatt/vim-scala'")
