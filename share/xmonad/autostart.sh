@@ -2,13 +2,7 @@
 # set background
 nitrogen --restore & 
 
-# re appling desktop composition
-if killall xcompmgr ; then
-  sleep 1 && xcompmgr -I 0.1 -O 0.1 -D 8 -f -c &
-  sleep 2 && notify-send xmonad "restart xcompmgr" &
-else
-  xcompmgr -I 0.1 -O 0.1 -D 8 -f -c &
-fi
+compton -r 20 -m 0.8 -f -I 0.1 -I 0.09 -i 0.8 -r 20 -o 0.25 -c -b &
 
 # tray
 killall trayer
