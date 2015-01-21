@@ -1,8 +1,9 @@
 .PHONY: all develop desktop
-all: develop
+all: develop desktop
 
 develop:
 	cd vim; make; make install
 
 desktop:
-	cd comton; make; make install
+	cd compton; make; make install
+
