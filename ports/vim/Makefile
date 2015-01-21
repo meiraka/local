@@ -1,5 +1,5 @@
 .PHONY: clean fetch extract build-dep build install
-all: fetch extract build
+all: build-dep fetch extract build
 
 INSTALL_PREFIX?=${HOME}/local
 
@@ -23,8 +23,8 @@ fetch: ${ARCHIVE}
 extract: ${WORKDIR}
 
 build-dep:
-	sudo apt-get build-dep vim
-	sudo apt-get install lua5.2 liblua5.2-dev luajit libluajit-5.1 autoconf automake cproto
+	-which apt-get > /dev/null && sudo apt-get build-dep vim
+	-which apt-get > /dev/null && sudo apt-get install lua5.2 liblua5.2-dev luajit libluajit-5.1 autoconf automake cproto
 
 CONFIGURE_ARGS+= --with-features=huge --enable-pythoninterp
 CONFIGURE_ARGS+= --enable-luainterp

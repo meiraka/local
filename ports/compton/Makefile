@@ -1,5 +1,5 @@
 .PHONY: clean fetch extract build-dep build install
-all: fetch extract build
+all: build-dep fetch extract build
 
 INSTALL_PREFIX?=${HOME}/local
 
@@ -24,7 +24,7 @@ fetch: ${ARCHIVE}
 extract: ${WORKDIR}
 
 build-dep:
-	sudo apt-get install libconfig-dev libdbus-1-dev libgl1-mesa-dev asciidoc
+	-which apt-get > /dev/null && sudo apt-get install libconfig-dev libdbus-1-dev libgl1-mesa-dev asciidoc
 
 build:
 	cd ${WORKDIR}; make; make docs
