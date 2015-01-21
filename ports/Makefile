@@ -2,7 +2,7 @@
 all: develop
 
 develop:
-	cd vim; make build-dep; make; make install
+	cd vim; make; make install
 
 desktop:
-	cd comton; make build-dep; make; make install
+	cd comton; make; make install
