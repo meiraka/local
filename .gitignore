@@ -3,8 +3,17 @@
 *.hi
 *.o
 *.d
+*.tar.gz
+*.pyc
 
 xmonad-x86_64-linux
 xmonad.errors
 .netrwhist
 conf/*
+tmp/*
+
+# ports
+ports/*/
+!ports/*/Makefile
+
+
