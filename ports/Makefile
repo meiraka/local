@@ -6,4 +6,5 @@ develop:
 
 desktop:
 	cd compton; make; make install
+	cd ttf-ricty; make; make install
 
