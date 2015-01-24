@@ -13,7 +13,7 @@ conf/*
 tmp/*
 
 # ports
-ports/*/
+ports/*/*
 !ports/*/Makefile
 
 

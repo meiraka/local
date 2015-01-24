@@ -1,0 +1,50 @@
+.PHONY: clean fetch extract build-dep build install
+all: build-dep fetch extract build
+
+USER=yascentur
+REPO=Ricty
+TAG=3.2.4
+
+ARCHIVE=$(TAG).tar.gz
+WORKDIR=$(REPO)-$(TAG)
+
+INCONSOLATA=Inconsolata.otf
+INCONSOLATA_URL=http://levien.com/type/myfonts/$(INCONSOLATA)
+
+MIGU=migu-1m-20130617
+MIGU_REGULAR=$(MIGU)/migu-1m-regular.ttf
+MIGU_BOLD=$(MIGU)/migu-1m-bold.ttf
+MIGU_ARCHIVE=$(MIGU).zip
+MIGU_URL="http://sourceforge.jp/frs/redir.php?m=jaist&f=%2Fmix-mplus-ipa%2F59022%2F"$(MIGU)
+
+$(MIGU_ARCHIVE):
+	curl -L $(MIGU_URL) -o $(MIGU_ARCHIVE)
+
+$(MIGU_REGULAR) $(MIGU_BOLD):
+	unzip $(MIGU_ARCHIVE)
+
+$(INCONSOLATA):
+	curl -L $(INCONSOLATA_URL) -o $(INCONSOLATA)
+
+$(ARCHIVE):
+	curl -L https://github.com/$(USER)/$(REPO)/archive/$(ARCHIVE) -o $(ARCHIVE)
+
+$(WORKDIR):| $(ARCHIVE)
+	tar -xzf $(ARCHIVE)
+
+clean:
+	rm -rf $(WORKDIR)
+	rm $(ARCHIVE)
+
+fetch: $(ARCHIVE)
+extract: $(WORKDIR)
+
+build-dep:
+	-which apt-get > /dev/null && sudo apt-get install fontforge
+
+build: $(WORKDIR) $(INCONSOLATA) $(MIGU_REGULAR) $(MIGU_BOLD)
+	cd $(WORKDIR); ./ricty_generator.sh ../$(INCONSOLATA) ../$(MIGU_REGULAR) ../$(MIGU_BOLD)
+
+install:
+	cp -f $(WORKDIR)/Ricty*.ttf ~/.fonts/
+	fc-cache -vf
