@@ -15,13 +15,13 @@ MIGU=migu-1m-20130617
 MIGU_REGULAR=$(MIGU)/migu-1m-regular.ttf
 MIGU_BOLD=$(MIGU)/migu-1m-bold.ttf
 MIGU_ARCHIVE=$(MIGU).zip
-MIGU_URL="http://sourceforge.jp/frs/redir.php?m=jaist&f=%2Fmix-mplus-ipa%2F59022%2F"$(MIGU)
+MIGU_URL=http://sourceforge.jp/frs/redir.php?m=jaist&f=%2Fmix-mplus-ipa%2F59022%2F$(MIGU_ARCHIVE)
 
 $(MIGU_ARCHIVE):
-	curl -L $(MIGU_URL) -o $(MIGU_ARCHIVE)
+	curl -L "$(MIGU_URL)" -o $(MIGU_ARCHIVE)
 
-$(MIGU_REGULAR) $(MIGU_BOLD):
-	unzip $(MIGU_ARCHIVE)
+$(MIGU_REGULAR) $(MIGU_BOLD):| $(MIGU_ARCHIVE)
+	unzip -o $(MIGU_ARCHIVE)
 
 $(INCONSOLATA):
 	curl -L $(INCONSOLATA_URL) -o $(INCONSOLATA)
@@ -32,9 +32,15 @@ $(ARCHIVE):
 $(WORKDIR):| $(ARCHIVE)
 	tar -xzf $(ARCHIVE)
 
+$(WORKDIR)/Ricty*.ttf:| $(WORKDIR) $(INCONSOLATA) $(MIGU_REGULAR) $(MIGU_BOLD)
+	cd $(WORKDIR); ./ricty_generator.sh ../$(INCONSOLATA) ../$(MIGU_REGULAR) ../$(MIGU_BOLD)
+
 clean:
 	rm -rf $(WORKDIR)
 	rm $(ARCHIVE)
+	rm $(INCONSOLATA)
+	rm -rf $(MIGU)
+	rm $(MIGU_ARCHIVE)
 
 fetch: $(ARCHIVE)
 extract: $(WORKDIR)
@@ -42,8 +48,7 @@ extract: $(WORKDIR)
 build-dep:
 	-which apt-get > /dev/null && sudo apt-get install fontforge
 
-build: $(WORKDIR) $(INCONSOLATA) $(MIGU_REGULAR) $(MIGU_BOLD)
-	cd $(WORKDIR); ./ricty_generator.sh ../$(INCONSOLATA) ../$(MIGU_REGULAR) ../$(MIGU_BOLD)
+build: $(WORKDIR)/Ricty*.ttf
 
 install:
 	cp -f $(WORKDIR)/Ricty*.ttf ~/.fonts/
