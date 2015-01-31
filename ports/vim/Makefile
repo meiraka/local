@@ -12,7 +12,7 @@ CONFIGURE_ARGS+= --enable-fail-if-missing
 CONFIGURE_ARGS+= --prefix=$(INSTALL_PREFIX)
 
 build-dep:
-	-which apt-get > /dev/null && sudo apt-get build-dep vim
+	-which apt-get > /dev/null && sudo apt-get build-dep -y vim
 	-which apt-get > /dev/null && sudo apt-get install -y lua5.2 liblua5.2-dev luajit libluajit-5.1 autoconf automake cproto
 
 ARCHIVE=$(TAG).tar.gz
