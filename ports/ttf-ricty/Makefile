@@ -46,7 +46,7 @@ fetch: $(ARCHIVE)
 extract: $(WORKDIR)
 
 build-dep:
-	-which apt-get > /dev/null && sudo apt-get install -y fontforge
+	-which apt-get > /dev/null && sudo apt-get install -y fontforge curl
 
 build: $(WORKDIR)/Ricty*.ttf
 

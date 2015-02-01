@@ -24,7 +24,7 @@ fetch: $(ARCHIVE)
 extract: $(WORKDIR)
 
 build-dep:
-	-which apt-get > /dev/null && sudo apt-get install -y libconfig-dev libdbus-1-dev libgl1-mesa-dev asciidoc
+	-which apt-get > /dev/null && sudo apt-get install -y libconfig-dev libdbus-1-dev libgl1-mesa-dev asciidoc curl
 
 build:
 	cd $(WORKDIR); make; make docs
