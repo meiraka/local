@@ -1,5 +1,5 @@
-.PHONY: clean fetch extract build-dep build install
-all: build-dep fetch extract build
+.PHONY: clean fetch extract configure build-dep build install
+all:: build-dep build
 
 INSTALL_PREFIX?=$(HOME)/local
 
@@ -17,23 +17,26 @@ build-dep:
 
 ARCHIVE=$(TAG).tar.gz
 WORKDIR=$(PROJ)-$(TAG)
+CONFIG_LOG=$(WORKDIR)/src/auto/config.log
 
 $(ARCHIVE):
 	curl -L http://$(PROJ).googlecode.com/archive/$(TAG).tar.gz -o $(TAG).tar.gz
 
 $(WORKDIR):| $(ARCHIVE)
-	tar -xzf $(ARCHIVE)
+	tar -xf $(ARCHIVE)
+
+$(CONFIG_LOG):| $(WORKDIR)
+	cd $(WORKDIR); ./configure $(CONFIGURE_ARGS)
 
 clean:
 	rm -rf $(ARCHIVE)
-	rm $(WORKDIR)
+	rm -rf $(WORKDIR)
 
 fetch: $(ARCHIVE)
 extract: $(WORKDIR)
-
-build:
-	cd $(WORKDIR); ./configure $(CONFIGURE_ARGS)
+configure: $(CONFIG_LOG)
+build: configure
 	cd $(WORKDIR); make
 
-install: 
+install:
 	cd $(WORKDIR); make install
