@@ -1,5 +1,5 @@
 .PHONY: clean fetch extract build-dep build install
-all: build-dep fetch extract build
+all: build-dep build
 
 INSTALL_PREFIX?=$(HOME)/local
 CONFIGURE_ARGS= --prefix $(INSTALL_PREFIX) --enable-optimized --enable-assertions=no --enable-targets=host-only
@@ -34,17 +34,21 @@ $(LLVM)/tools/clang:| $(CLANG) $(LLVM)
 $(LLVM)/projects/compiler-rt:| $(COMPILER_RT) $($LLVM)
 	cp -r $(COMPILER_RT) $(LLVM)/projects/compiler-rt
 
+$(LLVM)/config.log:| $(LLVM)/tools/clang $(LLVM)/projects/compiler-rt
+	cd $(LLVM); ./configure $(CONFIGURE_ARGS)
 
 fetch: $(ARCHIVES)
 
-extract: $(LLVM)/tools/clang $(LLVM)/projects/compiler-rt
+extract: $(DIRS)
 
 clean:
 	-rm -rf $(DIRS)
 	-rm $(ARCHIVES)
 
-build: extract
-	cd $(LLVM); ./configure $(CONFIGURE_ARGS)
+build-dep:
+	-sudo apt-get install build-essential
+
+build:| $(LLVM)/config.log
 	cd $(LLVM); make $(MAKE_ARGS)
 
 install:
