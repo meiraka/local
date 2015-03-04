@@ -4,7 +4,7 @@ all:: build-dep build
 INSTALL_PREFIX?=$(HOME)/local
 
 PROJ=vim
-TAG=v7-4-585
+TAG=v7-4-629
 
 CONFIGURE_ARGS+= --with-features=huge --enable-pythoninterp
 CONFIGURE_ARGS+= --enable-luainterp
