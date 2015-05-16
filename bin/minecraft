@@ -4,7 +4,6 @@
 MINECRAFT_DIR=~/.minecraft
 MINECRAFT_LAUNCHER_DIR=$MINECRAFT_DIR/launcher
 MINECRAFT_BACKUP_DIR=$MINECRAFT_DIR/backups
-export LD_LIBRARY_PATH="/usr/lib/jvm/java-8-oracle/jre/lib/amd64"
 
 # fetch launcher
 mkdir -p $MINECRAFT_LAUNCHER_DIR
