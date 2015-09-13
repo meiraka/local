@@ -4,7 +4,7 @@ all: develop desktop
 develop: build-dep
 	-which apt-get > /dev/null && sudo apt-get install -y git zsh tmux vim
 	cd ports; make develop
-	cd dotfiles; ./bootstrap
+	cd dotfiles; make
 
 desktop: build-dep
 	mkdir -p ~/.themes
