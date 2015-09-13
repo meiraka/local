@@ -5,6 +5,10 @@
 *.d
 *.tar.gz
 *.pyc
+*.so
+*.a
+bin/llvm-*
+bin/clang*
 
 xmonad-x86_64-linux
 xmonad.errors
