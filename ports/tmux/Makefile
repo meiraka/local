@@ -1,29 +1,22 @@
-.PHONY: clean fetch extract build-dep build install
+.PHONY: clean fetch extract patch build-dep build install
 all: build
 
 INSTALL_PREFIX?=$(HOME)/local
 
 
-USER=sunaku
+USER=tmux
 REPO=tmux
-# TAG=0.36.4
-BRANCH=24bit-color
+TAG=2.1
 
-# ARCHIVE=$(TAG).tar.gz
-ARCHIVE=$(BRANCH).zip
-# WORKDIR=$(REPO)-$(TAG)
-WORKDIR=$(REPO)-$(BRANCH)
+ARCHIVE=$(TAG).tar.gz
+WORKDIR=$(REPO)-$(TAG)
 CONFIGURE_ARGS+= --prefix=$(INSTALL_PREFIX)
-
-test:
-	echo $(CMAKE_ARGS)
 
 $(ARCHIVE):
 	curl -L https://github.com/$(USER)/$(REPO)/archive/$(ARCHIVE) -o $(ARCHIVE)
 
 $(WORKDIR):| $(ARCHIVE)
-	# tar -xzf $(ARCHIVE)
-	unzip $(ARCHIVE)
+	tar -xzf $(ARCHIVE)
 
 clean:
 	rm -rf $(WORKDIR)
@@ -35,7 +28,13 @@ extract: $(WORKDIR)
 build-dep:
 	-which apt-get > /dev/null && sudo apt-get build-dep -y tmux
 
-build: $(WORKDIR) build-dep
+truecolor.patch:
+	curl -L https://patch-diff.githubusercontent.com/raw/tmux/tmux/pull/112.patch -o truecolor.patch
+
+patch: $(WORKDIR) truecolor.patch
+	@cd $(WORKDIR); patch -t -p1 -d ./ < ../truecolor.patch
+
+build: $(WORKDIR) build-dep patch
 	cd $(WORKDIR); sh autogen.sh
 	cd $(WORKDIR); ./configure $(CONFIGURE_ARGS)
 	cd $(WORKDIR); make
