@@ -4,19 +4,22 @@ all: build
 INSTALL_PREFIX?=$(HOME)/local
 
 
-USER=tmux
+USER=sunaku
 REPO=tmux
 TAG=2.1
 
-ARCHIVE=$(TAG).tar.gz
-WORKDIR=$(REPO)-$(TAG)
+ARCHIVE=24bit-color.zip
+#ARCHIVE=$(TAG).tar.gz
+WORKDIR=tmux-24bit-color
+#WORKDIR=$(REPO)-$(TAG)
 CONFIGURE_ARGS+= --prefix=$(INSTALL_PREFIX)
 
 $(ARCHIVE):
 	curl -L https://github.com/$(USER)/$(REPO)/archive/$(ARCHIVE) -o $(ARCHIVE)
 
 $(WORKDIR):| $(ARCHIVE)
-	tar -xzf $(ARCHIVE)
+	#tar -xzf $(ARCHIVE)
+	unzip $(ARCHIVE)
 
 clean:
 	rm -rf $(WORKDIR)
@@ -28,13 +31,7 @@ extract: $(WORKDIR)
 build-dep:
 	-which apt-get > /dev/null && sudo apt-get build-dep -y tmux
 
-truecolor.patch:
-	curl -L https://patch-diff.githubusercontent.com/raw/tmux/tmux/pull/112.patch -o truecolor.patch
-
-patch: $(WORKDIR) truecolor.patch
-	@cd $(WORKDIR); patch -t -p1 -d ./ < ../truecolor.patch
-
-build: $(WORKDIR) build-dep patch
+build: $(WORKDIR) build-dep
 	cd $(WORKDIR); sh autogen.sh
 	cd $(WORKDIR); ./configure $(CONFIGURE_ARGS)
 	cd $(WORKDIR); make
