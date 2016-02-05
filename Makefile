@@ -1,5 +1,6 @@
 .PHONY: develop desktop
-all: develop desktop
+
+all: develop
 
 develop: build-dep
 	-which apt-get > /dev/null && sudo apt-get install -y git zsh tmux vim
