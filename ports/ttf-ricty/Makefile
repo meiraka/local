@@ -53,3 +53,5 @@ build: $(WORKDIR)/Ricty*.ttf
 install:
 	cp -f $(WORKDIR)/Ricty*.ttf ~/.fonts/
 	fc-cache -vf
+
+include ../make.rules

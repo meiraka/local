@@ -1,16 +1,16 @@
 .PHONY: clean fetch extract patch build-dep build install
 all: build
 
-INSTALL_PREFIX?=$(HOME)/local
+INSTALL_PREFIX?=$(HOME)
+REQUIRE_APT=libevent-dev
 
-
-USER=sunaku
+USER=tmux
 REPO=tmux
 TAG=2.1
 
-ARCHIVE=24bit-color.zip
+ARCHIVE=master.zip
 #ARCHIVE=$(TAG).tar.gz
-WORKDIR=tmux-24bit-color
+WORKDIR=tmux-master
 #WORKDIR=$(REPO)-$(TAG)
 CONFIGURE_ARGS+= --prefix=$(INSTALL_PREFIX)
 
@@ -27,15 +27,14 @@ clean:
 
 fetch: $(ARCHIVE)
 extract: $(WORKDIR)
-
-build-dep:
-	-which apt-get > /dev/null && sudo apt-get build-dep -y tmux
+build-dep: apt
 
 build: $(WORKDIR) build-dep
 	cd $(WORKDIR); sh autogen.sh
 	cd $(WORKDIR); ./configure $(CONFIGURE_ARGS)
 	cd $(WORKDIR); make
 
-
 install:
 	cd $(WORKDIR); make install
+
+include ../make.rules

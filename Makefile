@@ -1,9 +1,10 @@
-.PHONY: develop desktop
+.PHONY: devel desktop
 
-all: develop
+REQUIRE_APT=git build-essential curl git zsh vim
 
-develop: build-dep
-	-which apt-get > /dev/null && sudo apt-get install -y git zsh tmux vim
+all: devel
+
+devel: build-dep
 	cd ports; make develop
 	cd dotfiles; make
 
@@ -13,5 +14,6 @@ desktop: build-dep
 	-which apt-get > /dev/null && sudo apt-get install -y thunar thunar-archive-plugin thunar-media-tags-plugin xfce4-power-manager xfce4-power-manager-plugins vlc lxappearance nitrogen gmrun pavucontrol xmonad xmobar trayer rxvt-unicode-256color
 	cd ports; make desktop
 
-build-dep:
-	-which apt-get > /dev/null && sudo apt-get install -y git build-essential
+build-dep: apt
+
+include make.rules

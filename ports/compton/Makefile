@@ -1,7 +1,8 @@
 .PHONY: clean fetch extract build-dep build install
 all: build-dep fetch extract build
 
-INSTALL_PREFIX?=$(HOME)/local
+INSTALL_PREFIX?=$(HOME)
+REQUIRE_APT=libconfig8-dev libdbus-1-dev libgl1-mesa-dev asciidoc curl
 
 USER=chjj
 REPO=compton
@@ -17,17 +18,17 @@ $(WORKDIR):| $(ARCHIVE)
 	tar -xzf $(ARCHIVE)
 
 clean:
-	rm -rf $(WORKDIR)
-	rm $(ARCHIVE)
+	-rm -rf $(WORKDIR)
+	-rm $(ARCHIVE)
 
 fetch: $(ARCHIVE)
 extract: $(WORKDIR)
+build-dep: apt
 
-build-dep:
-	-which apt-get > /dev/null && sudo apt-get install -y libconfig-dev libdbus-1-dev libgl1-mesa-dev asciidoc curl
-
-build:
+build: build-dep
 	cd $(WORKDIR); make; make docs
 
 install:
 	cd $(WORKDIR); PREFIX=$(INSTALL_PREFIX) make install
+
+include ../make.rules

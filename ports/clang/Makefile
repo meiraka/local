@@ -1,7 +1,8 @@
 .PHONY: clean fetch extract build-dep build install
 all: build-dep build
 
-INSTALL_PREFIX?=$(HOME)/local
+INSTALL_PREFIX?=$(HOME)
+REQUIRE_APT=build-essential
 CONFIGURE_ARGS= --prefix $(INSTALL_PREFIX) --enable-optimized --enable-assertions=no --enable-targets=host-only
 MAKE_ARGS= -j2
 
@@ -45,11 +46,12 @@ clean:
 	-rm -rf $(DIRS)
 	-rm $(ARCHIVES)
 
-build-dep:
-	-sudo apt-get install build-essential
+build-dep: apt
 
 build:| $(LLVM)/config.log
 	cd $(LLVM); make $(MAKE_ARGS)
 
 install:
 	cd $(LLVM); make install
+
+include ../make.rules

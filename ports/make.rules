@@ -1,0 +1,16 @@
+.PHONY: apt
+apt:
+	@LIST="$(REQUIRE_APT)";\
+        if /usr/bin/which apt-get > /dev/null; then\
+		INSTALL_PKGS=;\
+        for x in $$LIST; do\
+		if dpkg -l "$$x" | grep ii > /dev/null; then\
+		echo installed "$$x";\
+		else\
+        INSTALL_PKGS="$$INSTALL_PKGS $$x";\
+		fi\
+		done;\
+        if [ "$$INSTALL_PKGS" != "" ]; then\
+        sudo apt-get install $$INSTALL_PKGS;\
+        fi\
+        fi\

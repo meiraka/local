@@ -2,6 +2,7 @@
 all: build-dep fetch extract
 
 MIGU_URL_BASE=http://sourceforge.jp/frs/redir.php?m=jaist&f=%2Fmix-mplus-ipa%2F59022%2F
+REQUIRE_APT=curl
 
 MIGU1M=migu-1m-20130617
 MIGU1M_REGULAR=$(MIGU1M)/migu-1m-regular.ttf
@@ -42,13 +43,10 @@ $(MIGU1P_REGULAR) $(MIGU1P_BOLD):| $(MIGU1P_ARCHIVE)
 clean:
 	rm -rf $(MIGU1M)
 	rm $(MIGU1M_ARCHIVE)
-	rm -rf $(MIGU!C)
-	rm $(MIGU!C_ARCHIVE)
-	rm -rf $(MIGU!P)
-	rm $(MIGU!P_ARCHIVE)
-
-build-dep:
-	-which apt-get > /dev/null && sudo apt-get install -y curl
+	rm -rf $(MIGU1C)
+	rm $(MIGU1C_ARCHIVE)
+	rm -rf $(MIGU1P)
+	rm $(MIGU1P_ARCHIVE)
 
 fetch: $(MIGU1M_ARCHIVE) $(MIGU1C_ARCHIVE) $(MIGU1P_ARCHIVE)
 extract: $(MIGU1M_REGULAR) $(MIGU1M_BOLD) $(MIGU1C_REGULAR) $(MIGU1C_BOLD) $(MIGU1P_REGULAR) $(MIGU1P_BOLD)
@@ -56,3 +54,5 @@ extract: $(MIGU1M_REGULAR) $(MIGU1M_BOLD) $(MIGU1C_REGULAR) $(MIGU1C_BOLD) $(MIG
 install:
 	cp -f ./*/*.ttf ~/.fonts/
 	fc-cache -vf
+
+include ../make.rules

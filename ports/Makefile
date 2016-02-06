@@ -1,11 +1,28 @@
-.PHONY: all develop desktop
-all: develop desktop
+.PHONY: all devel desktop
+all: devel desktop
 
-develop:
-	cd neovim; make; make install
-	cd neovim-python-client; make; make install
+ALL = $(filter-out Makefile $(wildcard *.rules) $(wildcard *.defs), $(wildcard *))
+DEVEL = clang neovim neovim-python-client tmux
+DESKTOP = $(filter-out $(DEVEL), $(ALL))
+
+echo:
+	echo $(ALL)
+
+.PHONY: clean
+clean:
+	@LIST="$(ALL)";\
+		for x in $$LIST; do\
+		cd "$$x"; make clean;cd ..;\
+		done
+
+devel:
+	@LIST="$(DEVEL)";\
+		for x in $$LIST; do\
+		cd "$$x"; make; make install;cd ..;\
+		done
 
 desktop:
-	cd compton; make; make install
-	cd ttf-ricty; make; make install
-	cd ttf-migu; make; make install
+	@LIST="$(DESKTOP)";\
+		for x in $$LIST; do\
+		cd "$$x"; make; make install;cd ..;\
+		done

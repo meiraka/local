@@ -1,7 +1,8 @@
 .PHONY: clean fetch extract build-dep build install
 all: build
 
-INSTALL_PREFIX?=$(HOME)/local
+INSTALL_PREFIX?=$(HOME)
+REQUIRE_APT=git libtool automake cmake libncurses5-dev g++
 
 USER=neovim
 REPO=neovim
@@ -10,9 +11,6 @@ TAG=0.1.1
 ARCHIVE=v$(TAG).tar.gz
 WORKDIR=$(REPO)-$(TAG)
 CMAKE_ARGS = -DCMAKE_INSTALL_PREFIX:PATH=$(INSTALL_PREFIX)
-
-test:
-	echo $(CMAKE_ARGS)
 
 $(ARCHIVE):
 	curl -L https://github.com/$(USER)/$(REPO)/archive/$(ARCHIVE) -o $(ARCHIVE)
@@ -26,13 +24,12 @@ clean:
 
 fetch: $(ARCHIVE)
 extract: $(WORKDIR)
-
-build-dep:
-	-which apt-get > /dev/null && sudo apt-get install -y git libtool automake cmake libncurses5-dev g++
+build-dep: apt
 
 build: $(WORKDIR) build-dep
 	cd $(WORKDIR); make CMAKE_EXTRA_FLAGS="$(CMAKE_ARGS)"
 
-
 install:
 	cd $(WORKDIR); make install
+
+include ../make.rules
