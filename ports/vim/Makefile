@@ -2,10 +2,11 @@
 all:: build-dep build
 
 INSTALL_PREFIX?=$(HOME)
-REQUIRE_APT=lua5.2 liblua5.2-dev luajit libluajit-5.1 autoconf automake cproto curl
+REQUIRE_APT=lua5.2 liblua5.2-dev luajit autoconf automake cproto curl
 
-PROJ=vim
-TAG=v7-4-629
+USER=vim
+REPO=vim
+TAG=7.4.1328
 
 CONFIGURE_ARGS+= --with-features=huge --enable-pythoninterp
 CONFIGURE_ARGS+= --enable-luainterp
@@ -14,12 +15,12 @@ CONFIGURE_ARGS+= --prefix=$(INSTALL_PREFIX)
 
 build-dep:apt
 
-ARCHIVE=$(TAG).tar.gz
-WORKDIR=$(PROJ)-$(TAG)
 CONFIG_LOG=$(WORKDIR)/src/auto/config.log
+ARCHIVE=v$(TAG).tar.gz
+WORKDIR=$(REPO)-$(TAG)
 
 $(ARCHIVE):
-	curl -L http://$(PROJ).googlecode.com/archive/$(TAG).tar.gz -o $(TAG).tar.gz
+	curl -L https://github.com/$(USER)/$(REPO)/archive/$(ARCHIVE) -o $(ARCHIVE)
 
 $(WORKDIR):| $(ARCHIVE)
 	tar -xf $(ARCHIVE)
