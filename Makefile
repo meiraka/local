@@ -5,7 +5,7 @@ REQUIRE_APT=git build-essential curl git zsh vim
 all: devel
 
 devel: build-dep
-	cd ports; make develop
+	cd ports; make devel
 	cd dotfiles; make
 
 desktop: build-dep
