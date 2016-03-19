@@ -4,6 +4,7 @@ all: build-dep fetch extract build
 USER=yascentur
 REPO=Ricty
 TAG=3.2.4
+REQUIRE_APT += fontforge curl
 
 ARCHIVE=$(TAG).tar.gz
 WORKDIR=$(REPO)-$(TAG)
@@ -45,8 +46,7 @@ clean:
 fetch: $(ARCHIVE)
 extract: $(WORKDIR)
 
-build-dep:
-	-which apt-get > /dev/null && sudo apt-get install -y fontforge curl
+build-dep: apt
 
 build: $(WORKDIR)/Ricty*.ttf
 
