@@ -1,3 +1,6 @@
+# build
+dotfiles/vim/autoload
+dotfiles/vim/bundle
 
 # generated files
 *.hi
@@ -7,8 +10,6 @@
 *.pyc
 *.so
 *.a
-bin/llvm-*
-bin/clang*
 
 xmonad-x86_64-linux
 xmonad.errors
