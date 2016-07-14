@@ -6,20 +6,17 @@ REQUIRE_APT=libevent-dev
 
 USER=tmux
 REPO=tmux
-TAG=2.1
+TAG=2.2
 
-ARCHIVE=master.zip
-#ARCHIVE=$(TAG).tar.gz
-WORKDIR=tmux-master
-#WORKDIR=$(REPO)-$(TAG)
+ARCHIVE=$(TAG).tar.gz
+WORKDIR=$(REPO)-$(TAG)
 CONFIGURE_ARGS+= CFLAGS="-I$(INSTALL_PREFIX)/include" LDFLAGS="-L$(INSTALL_PREFIX)/lib" --prefix=$(INSTALL_PREFIX)
 
 $(ARCHIVE):
 	curl -L https://github.com/$(USER)/$(REPO)/archive/$(ARCHIVE) -o $(ARCHIVE)
 
 $(WORKDIR):| $(ARCHIVE)
-	#tar -xzf $(ARCHIVE)
-	unzip $(ARCHIVE)
+	tar -xzf $(ARCHIVE)
 
 clean:
 	rm -rf $(WORKDIR)
