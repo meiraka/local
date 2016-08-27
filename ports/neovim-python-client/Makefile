@@ -3,7 +3,7 @@ all: extract
 
 USER=neovim
 REPO=python-client
-TAG=0.1.0
+TAG=0.1.9
 
 ARCHIVE=$(TAG).tar.gz
 WORKDIR=$(REPO)-$(TAG)

@@ -6,7 +6,7 @@ REQUIRE_APT=git libtool automake cmake libncurses5-dev g++
 
 USER=neovim
 REPO=neovim
-TAG=0.1.2
+TAG=0.1.5
 
 ARCHIVE=v$(TAG).tar.gz
 WORKDIR=$(REPO)-$(TAG)
