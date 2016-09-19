@@ -1,0 +1,41 @@
+#!/bin/sh
+
+git_remote_user() {
+  local git_repo=`git config --get remote.origin.url`
+  # TODO: support https url
+  local git_host=`echo $git_repo | cut -d : -f 1`
+  local git_path=`echo $git_repo | cut -d : -f 2-`
+  local git_dir=`echo $git_path | cut -d / -f 2-`
+  if [ "$1" = add ];
+  then
+    if [ $# -eq 2 ];
+    then
+      git remote add $2 "${git_host}:$2/${git_dir}"
+      return $?
+    elif [ $# -eq 4 -a $3 = "as" ];
+    then
+      git remote add $4 "${git_host}:$2/${git_dir}"
+      return $?
+    elif [ $# -eq 3 ];
+    then
+      git remote add $3 "${git_host}:$2/${git_dir}"
+      return $?
+    else
+      echo "usage: git remote-user add <username> [as <name>]"
+      return 1
+    fi
+  
+  elif [ $# -eq 0 ];
+  then
+    echo $git_path | cut -d / -f 1
+    return 0
+
+  else
+    echo error: Unknown subcommand: $1
+    echo "usage: git remote-user
+   or: git remote-user add <username> [as <name>]"
+    return 1
+  fi
+}
+
+git_remote_user $@
