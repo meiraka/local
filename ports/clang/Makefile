@@ -54,4 +54,4 @@ build:| $(LLVM)/config.log
 install:
 	cd $(LLVM); make install
 
-include ../make.rules
+include ../../share/make/apt.rules

@@ -54,4 +54,4 @@ install:
 	cp -f $(WORKDIR)/Ricty*.ttf ~/.fonts/
 	fc-cache -vf
 
-include ../make.rules
+include ../../share/make/apt.rules

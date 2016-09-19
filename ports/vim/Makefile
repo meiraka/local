@@ -41,4 +41,4 @@ build: configure
 install:
 	cd $(WORKDIR); make install
 
-include ../make.rules
+include ../../share/make/apt.rules

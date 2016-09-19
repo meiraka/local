@@ -16,4 +16,4 @@ desktop: build-dep
 
 build-dep: apt
 
-include ports/make.rules
+include share/make/apt.rules
