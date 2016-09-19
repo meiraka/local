@@ -7,7 +7,7 @@ DEVEL = $(filter-out $(DESKTOP), $(ALL))
 
 all: $(ALL)
 devel: $(DEVEL)
-develop: $(DESKTOP)
+desktop: $(DESKTOP)
 clean:
 	@LIST="$(ALL)";\
 		for x in $$LIST; do\
