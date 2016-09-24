@@ -20,5 +20,4 @@ tmp/*
 # ports
 ports/*/*
 !ports/*/Makefile
-
-
+/go
