@@ -1,6 +1,6 @@
 .PHONY: devel desktop
 
-REQUIRE_APT=git build-essential curl git zsh vim
+REQUIRE_APT=git build-essential curl zsh
 
 devel: build-dep
 	cd ports; make devel
