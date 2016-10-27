@@ -1,5 +1,5 @@
 .PHONY: clean fetch extract build-dep build install
-all: build-dep build
+all: install
 
 INSTALL_PREFIX?=$(HOME)
 REQUIRE_APT=build-essential
@@ -45,13 +45,20 @@ extract: $(DIRS)
 clean:
 	-rm -rf $(DIRS)
 	-rm $(ARCHIVES)
+	-rm installed_$(RELEASE)
 
 build-dep: apt
 
-build:| $(LLVM)/config.log
+builded_$(RELEASE):| $(LLVM)/config.log
 	cd $(LLVM); make $(MAKE_ARGS)
+	touch builded_$(RELEASE)
 
-install:
+build: builded_$(RELEASE)
+
+installed_$(RELEASE):| builded_$(RELEASE)
 	cd $(LLVM); make install
+	touch installed_$(RELEASE)
+
+install: installed_$(RELEASE)
 
 include ../../share/make/apt.rules
