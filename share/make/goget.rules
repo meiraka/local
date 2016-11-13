@@ -1,0 +1,8 @@
+.PHONY: goget
+goget:
+	@LIST="$(REQUIRE_GO)";\
+        if /usr/bin/which go > /dev/null; then\
+        for x in $$LIST; do\
+        go get "$$x";\
+		done;\
+        fi\
