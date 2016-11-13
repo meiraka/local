@@ -1,6 +1,6 @@
 # build
-dotfiles/vim/autoload
-dotfiles/vim/bundle
+dotfiles/config/nvim/autoload
+dotfiles/config/nvim/bundle
 
 # generated files
 *.hi
