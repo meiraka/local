@@ -1,7 +1,7 @@
 all: devel desktop
 
 ALL = $(filter-out Makefile $(wildcard *.rules) $(wildcard *.defs), $(wildcard *))
-DESKTOP = compton libvte ttf-migu  ttf-ricty
+DESKTOP = compton libvte ttf-migu ttf-ricty ttf-ricty-diminished
 DEVEL = $(filter-out $(DESKTOP), $(ALL))
 .PHONY: all clean devel desktop $(ALL)
 
