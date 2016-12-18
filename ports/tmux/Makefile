@@ -6,7 +6,7 @@ REQUIRE_APT=libevent-dev
 
 USER=tmux
 REPO=tmux
-TAG=2.2
+TAG=2.3
 
 ARCHIVE=$(TAG).tar.gz
 WORKDIR=$(REPO)-$(TAG)
