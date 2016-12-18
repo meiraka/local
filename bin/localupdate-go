@@ -1,4 +1,0 @@
-#!/bin/zsh
-source ~/.zshenv
-go get -u github.com/nsf/gocode
-go get -u github.com/golang/lint/golint

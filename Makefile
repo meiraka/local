@@ -1,12 +1,12 @@
 .PHONY: devel desktop
 
 REQUIRE_APT=git build-essential curl zsh
-REQUIRE_GO=github.com/motemen/ghq
+REQUIRE_GO = github.com/nsf/gocode github.com/golang/lint/golint
+REQUIRE_GO+= github.com/motemen/ghq github.com/peco/peco
 
 devel: build-dep
 	cd ports; make devel
 	cd dotfiles; make
-	zsh bin/localupdate-go
 
 desktop: devel
 	make -f Make.desktop
