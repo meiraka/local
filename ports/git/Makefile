@@ -2,7 +2,7 @@
 all: build
 
 INSTALL_PREFIX?=$(HOME)
-REQUIRE_APT=g++ libcurl4-openssl-dev
+REQUIRE_APT=g++ libcurl4-openssl-dev libssl-dev
 
 USER=git
 REPO=git

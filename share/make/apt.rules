@@ -11,6 +11,6 @@ apt:
 		fi\
 		done;\
         if [ "$$INSTALL_PKGS" != "" ]; then\
-        sudo apt-get install $$INSTALL_PKGS;\
+        sudo apt-get install $$INSTALL_PKGS -y;\
         fi\
         fi\

@@ -1,6 +1,7 @@
 .PHONY: clean fetch extract build-dep build install
-all: extract
+all: build-dep extract
 
+REQUIRE_APT=python-setuptools python3-setuptools python-dev python3-dev
 USER=neovim
 REPO=python-client
 TAG=0.1.9
@@ -21,6 +22,9 @@ clean:
 
 fetch: $(ARCHIVE)
 extract: $(WORKDIR)
+build-dep: apt
 
 install:
 	cd $(WORKDIR); /usr/bin/python2 setup.py install --user
+
+include ../../share/make/apt.rules

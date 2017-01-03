@@ -26,6 +26,8 @@ fetch: $(ARCHIVE)
 extract: $(WORKDIR)
 build-dep: apt
 
+build: build-dep fetch extract
+
 install:
 	cp RictyDiminished-$(TAG)/*.ttf ~/.fonts
 

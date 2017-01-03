@@ -2,7 +2,7 @@
 all: build
 
 INSTALL_PREFIX?=$(HOME)
-REQUIRE_APT=gperf
+REQUIRE_APT=gperf gtk-doc-tools libglib2.0-dev libgtk-3-dev gobject-introspection
 
 USER=GNOME
 REPO=vte

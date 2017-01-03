@@ -3,6 +3,7 @@ goget:
 	@LIST="$(REQUIRE_GO)";\
         if /usr/bin/which go > /dev/null; then\
         for x in $$LIST; do\
+        echo install "$$x";\
         go get "$$x";\
 		done;\
         fi\

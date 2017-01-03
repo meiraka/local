@@ -2,7 +2,7 @@
 all: build
 
 INSTALL_PREFIX?=$(HOME)
-REQUIRE_APT=git libtool automake cmake libncurses5-dev g++
+REQUIRE_APT=git libtool libtool-bin autoconf automake cmake libncurses5-dev g++ pkg-config unzip
 
 USER=neovim
 REPO=neovim
