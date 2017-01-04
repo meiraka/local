@@ -1,5 +1,5 @@
 .PHONY: clean fetch extract build-dep build install
-all: build
+all: build-dep build
 
 INSTALL_PREFIX?=$(HOME)
 REQUIRE_APT=gperf gtk-doc-tools libglib2.0-dev libgtk-3-dev gobject-introspection
@@ -26,8 +26,10 @@ fetch: $(ARCHIVE)
 extract: $(WORKDIR)
 build-dep: apt
 
-build: $(WORKDIR) build-dep
+$(WORKDIR)/Makefile:| $(WORKDIR)
 	cd $(WORKDIR); ./autogen.sh $(CONFIGURE_ARGS)
+
+build: $(WORKDIR)/Makefile
 	cd $(WORKDIR); make CMAKE_EXTRA_FLAGS="$(CMAKE_ARGS)"
 
 install:
