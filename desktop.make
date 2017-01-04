@@ -1,3 +1,4 @@
+#!/usr/bin/make
 .PHONY: desktop
 
 REQUIRE_APT=thunar thunar-archive-plugin thunar-media-tags-plugin xfce4-power-manager xfce4-power-manager-plugins vlc lxappearance nitrogen gmrun pavucontrol xmonad xmobar trayer rxvt-unicode-256color sakura
