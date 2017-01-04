@@ -1,12 +1,26 @@
 #!/usr/bin/make
-.PHONY: desktop
+.PHONY: desktop themes fonts
 
-REQUIRE_APT=thunar thunar-archive-plugin thunar-media-tags-plugin xfce4-power-manager xfce4-power-manager-plugins vlc lxappearance nitrogen gmrun pavucontrol xmonad xmobar trayer rxvt-unicode-256color sakura
+REQUIRE_APT =thunar thunar-archive-plugin thunar-media-tags-plugin
+REQUIRE_APT+=xfce4-power-manager xfce4-power-manager-plugins
+REQUIRE_APT+=lxappearance nitrogen gmrun pavucontrol
+REQUIRE_APT+=xmonad xmobar trayer sakura
 
-desktop: build-dep
+desktop: themes fonts build-dep
+	cd ports; make desktop
+
+themes: ~/.themes ~/.themes/gtk-theme-noise
+
+fonts: ~/.fonts
+
+~/.themes/gtk-theme-noise: ~/.themes
+	cd ~/.themes; git clone https://github.com/meiraka/gtk-theme-noise.git
+
+~/.themes:
 	mkdir -p ~/.themes
+
+~/.fonts:
 	mkdir -p ~/.fonts
-	cd ports; make 
 
 build-dep: apt
 
