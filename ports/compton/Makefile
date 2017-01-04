@@ -1,5 +1,5 @@
 .PHONY: clean fetch extract build-dep build install
-all: build-dep fetch extract build
+all: build-dep build
 
 INSTALL_PREFIX?=$(HOME)
 REQUIRE_APT=libconfig8-dev libdbus-1-dev libgl1-mesa-dev asciidoc curl
@@ -25,7 +25,7 @@ fetch: $(ARCHIVE)
 extract: $(WORKDIR)
 build-dep: apt
 
-build: build-dep
+build: $(WORKDIR)
 	cd $(WORKDIR); make; make docs
 
 install:
