@@ -9,7 +9,7 @@ devel: build-dep
 	cd dotfiles; make
 
 desktop: devel
-	make -f Make.desktop
+	make -f desktop.make
 
 build-dep: apt goget
 
