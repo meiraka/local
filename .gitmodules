@@ -1,3 +1,0 @@
-[submodule "dotfiles/urxvt/ext"]
-	path = dotfiles/urxvt/ext
-	url = git@github.com:muennich/urxvt-perls.git
