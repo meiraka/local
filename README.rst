@@ -1,8 +1,11 @@
-dotfiles and toy tools.
+=======
+~/local
+=======
+
+
+INSTALL
+=======
 
 ::
 
-  # desktop
-  make desktop
-  # dev apps only
-  make devel
+  make
