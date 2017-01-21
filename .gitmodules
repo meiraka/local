@@ -6,3 +6,7 @@
 	path = share/make
 	url = git@github.com:meiraka/make-anything.git
 	branch = master
+[submodule "ports"]
+	path = ports
+	url = git@github.com:meiraka/ports.git
+	branch = master

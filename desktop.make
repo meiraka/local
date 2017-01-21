@@ -5,9 +5,10 @@ REQUIRE_APT =thunar thunar-archive-plugin thunar-media-tags-plugin
 REQUIRE_APT+=xfce4-power-manager xfce4-power-manager-plugins
 REQUIRE_APT+=lxappearance nitrogen gmrun pavucontrol
 REQUIRE_APT+=xmonad xmobar trayer sakura
+DESKTOP_PORTS=compton libvte ttf-migu ttf-ricty-diminished
 
 desktop: themes fonts build-dep
-	cd ports; make desktop
+	cd ports; make $(DESKTOP_PORTS)
 
 themes: ~/.themes ~/.themes/gtk-theme-noise
 
