@@ -15,5 +15,5 @@ desktop: devel
 
 build-dep: apt goget
 
-include share/make/apt.rules
-include share/make/goget.rules
+include rules/apt.rules
+include rules/goget.rules

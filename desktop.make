@@ -25,4 +25,4 @@ fonts: ~/.fonts
 
 build-dep: apt
 
-include share/make/apt.rules
+include rules/apt.rules

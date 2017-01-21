@@ -3,7 +3,7 @@
 	url = git@github.com:meiraka/dotfiles.git
 	branch = master
 [submodule "share/make"]
-	path = share/make
+	path = rules
 	url = git@github.com:meiraka/make-anything.git
 	branch = master
 [submodule "ports"]
