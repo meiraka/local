@@ -2,3 +2,7 @@
 	path = dotfiles
 	url = git@github.com:meiraka/dotfiles.git
 	branch = master
+[submodule "share/make"]
+	path = share/make
+	url = git@github.com:meiraka/make-anything.git
+	branch = master
