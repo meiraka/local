@@ -1,10 +1,17 @@
 .PHONY: install dotfiles ports themes fonts
 
 REQUIRE_APT =git build-essential curl zsh
+# File manager
 REQUIRE_APT+=thunar thunar-archive-plugin thunar-media-tags-plugin
+# Desktop appearance
+REQUIRE_APT+=lxappearance nitrogen
+# Window Manager and tools
+REQUIRE_APT+=xmonad xmobar trayer gmrun pavucontrol
 REQUIRE_APT+=xfce4-power-manager xfce4-power-manager-plugins
-REQUIRE_APT+=lxappearance nitrogen gmrun pavucontrol
-REQUIRE_APT+=xmonad xmobar trayer sakura
+# Terminal
+REQUIRE_APT+=sakura
+# Document
+REQUIRE_APT+=mupdf
 
 REQUIRE_GO = github.com/nsf/gocode github.com/golang/lint/golint
 REQUIRE_GO+= github.com/motemen/ghq github.com/peco/peco
