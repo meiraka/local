@@ -30,4 +30,6 @@ done
 
 # run
 cd $MINECRAFT_DIR
-java -Dsun.java3d.opengl=true '-Dswing.crossplatformlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel' '-Dawt.useSystemAAFontSettings=on -Dswing.aatext=true' -jar $MINECRAFT_LAUNCHER_DIR/Minecraft.jar
+export _JAVA_OPTIONS='-Dawt.useSystemAAFontSettings=lcd -Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel -Dswing.crossplatformlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel'
+export FT2_SUBPIXEL_HINTING=2
+java -Dsun.java3d.opengl=true -jar $MINECRAFT_LAUNCHER_DIR/Minecraft.jar
