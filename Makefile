@@ -2,7 +2,7 @@
 
 REQUIRE_APT =git build-essential curl zsh nodejs
 # File manager
-REQUIRE_APT+=thunar thunar-archive-plugin thunar-media-tags-plugin
+REQUIRE_APT+=thunar thunar-archive-plugin thunar-media-tags-plugin tumbler-plugins-extra
 # Desktop appearance
 REQUIRE_APT+=lxappearance nitrogen
 # Window Manager
@@ -17,6 +17,7 @@ REQUIRE_APT+=mupdf
 
 REQUIRE_GO = github.com/nsf/gocode github.com/golang/lint/golint
 REQUIRE_GO+= github.com/motemen/ghq github.com/peco/peco
+REQUIRE_GO+=  golang.org/x/tools/cmd/gopls
 
 PORTS =fzf git go neovim neovim-python-client peco tmux
 PORTS+=compton libvte ttf-migu ttf-ricty-diminished
